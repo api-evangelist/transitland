@@ -39,7 +39,6 @@ apis:
   - name: TransitLand
     description: "Transit Aggregation"
     humanURL: https://www.transit.land/documentation/datastore/api-endpoints.html
-    baseURL: https://www.transit.land/documentation/datastore/api-endpoints.html
     tags:
       - Transportation
     properties:
