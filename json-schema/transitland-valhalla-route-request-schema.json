@@ -1,0 +1,1344 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/transitland/main/json-schema/transitland-valhalla-route-request-schema.json",
+  "title": "ValhallaRouteRequest",
+  "x-generated": "2026-10-19",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/transitland-routing-openapi.yml#/components/schemas/ValhallaRouteRequest",
+  "allOf": [
+    {
+      "$ref": "#/$defs/ValhallaBaseRequest"
+    },
+    {
+      "properties": {
+        "admin_crossings": {
+          "default": false,
+          "description": "When true, the route summary includes `admins` (array of administrative regions the route passes through) and `admin_crossings` (array of objects with `from_admin_index`, `to_admin_index`, `from_shape_index`, and `to_shape_index` indicating where and along which edge an administrative boundary is crossed).",
+          "type": "boolean"
+        },
+        "alternates": {
+          "default": 0,
+          "description": "Number of alternative routes to return. Forced to 0 for more than 2 waypoints.",
+          "minimum": 0,
+          "type": "integer",
+          "x-rad-max": 3
+        },
+        "banner_instructions": {
+          "default": false,
+          "description": "Include OSRM-format banner instructions, if format = osrm.",
+          "type": "boolean"
+        },
+        "directions_type": {
+          "$ref": "#/$defs/ValhallaDirectionsType"
+        },
+        "elevation_interval": {
+          "default": 0,
+          "description": "Elevation sample interval in meters along the path. 0 = no elevation.",
+          "minimum": 0,
+          "type": "number",
+          "x-rad-max": 100
+        },
+        "linear_references": {
+          "default": false,
+          "description": "Include base64-encoded OpenLR references per edge in the response..",
+          "type": "boolean"
+        },
+        "locations": {
+          "items": {
+            "$ref": "#/$defs/ValhallaLocation"
+          },
+          "minItems": 2,
+          "type": "array"
+        },
+        "prioritize_bidirectional": {
+          "default": false,
+          "description": "Prefer bidirectional A* even when date_time.type={depart_at,arrive_by,current} in /route, or prefer CostMatrix over TDMatrix when calling /sources_to_targets",
+          "type": "boolean"
+        },
+        "recostings": {
+          "description": "Re-score the found path under additional named costings.",
+          "items": {
+            "$ref": "#/$defs/ValhallaBaseCostingOptions"
+          },
+          "type": "array"
+        },
+        "roundabout_exits": {
+          "default": true,
+          "description": "When true, exit instructions at roundabouts are added to the output.",
+          "type": "boolean"
+        },
+        "shape_format": {
+          "$ref": "#/$defs/ValhallaShapeFormat"
+        },
+        "turn_lanes": {
+          "default": false,
+          "description": "When true, each maneuver may include a `lanes` array describing lane-level guidance: possible directions and which lanes are valid or active for following the maneuver.",
+          "type": "boolean"
+        },
+        "voice_instructions": {
+          "default": false,
+          "description": "Include OSRM-format voice instructions, if format = osrm.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "locations",
+        "costing"
+      ],
+      "type": "object"
+    }
+  ],
+  "$defs": {
+    "ValhallaAutoCostingOptions": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ValhallaBaseCostingOptions"
+        },
+        {
+          "description": "Options for auto, bus, and taxi costings. Parsed in src/sif/autocost.cc.",
+          "properties": {
+            "alley_factor": {
+              "default": 1,
+              "description": "A factor that modifies (multiplies) the cost when [alleys](https://wiki.openstreetmap.org/wiki/Tag:service%3Dalley) are encountered.  Auto routes generally want to avoid alleys or narrow service roads between buildings.",
+              "maximum": 100000,
+              "minimum": 0.1,
+              "type": "number"
+            },
+            "height": {
+              "default": 1.6,
+              "description": "Vehicle height in meters for access restriction matching.",
+              "type": "number"
+            },
+            "include_hot": {
+              "default": false,
+              "description": "A boolean value which indicates the desire to include tolled HOV roads which require the driver to pay a toll if the occupant requirement isn't met.",
+              "type": "boolean"
+            },
+            "include_hov2": {
+              "default": false,
+              "description": "A boolean value which indicates the desire to include HOV roads with a 2-occupant requirement in the route when advantageous.",
+              "type": "boolean"
+            },
+            "include_hov3": {
+              "default": false,
+              "description": "A boolean value which indicates the desire to include HOV roads with a 3-occupant requirement in the route when advantageous.",
+              "type": "boolean"
+            },
+            "length": {
+              "default": 2.7,
+              "description": "Vehicle length in meters for access restriction matching.",
+              "type": "number"
+            },
+            "restriction_probability": {
+              "default": 100,
+              "description": "Percentage chance to honour probabilistic access restrictions.",
+              "maximum": 100,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "top_speed": {
+              "default": 140,
+              "description": "Top speed the vehicle can go in km/h. Also used to avoid roads with higher speeds than this value (see speed_penalty_factor for more details). `top_speed` must be between 10 and 252 km/h. The default value is 140 km/h for auto, taxi and bus.",
+              "maximum": 252,
+              "minimum": 10,
+              "type": "integer"
+            },
+            "use_distance": {
+              "default": 0,
+              "description": "A factor that allows controlling the contribution of distance and time to the route costs. The value is in range between 0 and 1, where 0 only takes time into account  and 1 only distance. A factor of 0.5 will weigh them roughly equally.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_highways": {
+              "default": 0.5,
+              "description": "This value indicates the willingness to take highways. This is a range of values between 0 and 1. Values near 0 attempt to avoid highways and values near 1 will  favor highways. Note that sometimes highways are required to complete a route so values of 0 are not guaranteed to avoid highways entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_tolls": {
+              "default": 0.5,
+              "description": "This value indicates the willingness to take roads with tolls. This is a range of values between 0 and 1. Values smaller than 0.5 attempt to  avoid tolls and values greater than 0.5 will slightly favor them. A value of 0.5 indicates no preference. Note that sometimes roads with tolls are required to complete a  route so values of 0 are not guaranteed to avoid them entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "weight": {
+              "default": 0.8,
+              "description": "Vehicle weight in metric tons for access restriction matching.",
+              "type": "number"
+            },
+            "width": {
+              "default": 1.9,
+              "description": "Vehicle width in meters for access restriction matching.",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "ValhallaBaseCostingOptions": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ValhallaHardExclusions"
+        },
+        {
+          "properties": {
+            "alley_penalty": {
+              "description": "A penalty that is applied when transitioning onto an alley. Default is 60 seconds for bicycle, 5 seconds otherwise.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "closure_factor": {
+              "default": 9,
+              "description": "A factor that penalizes the cost when traversing a closed edge (eg: if `search_filter.exclude_closures` is `false` for origin and/or destination location and the route starts/ends on closed edges). Its value can range from `1.0` - don't penalize closed edges, to `10.0` - apply high cost penalty  to closed edges. Default value is `9.0`. **Note:** This factor is applicable only for motorized modes of transport, i.e auto, motorcycle, motor_scooter, bus, truck & taxi.",
+              "maximum": 10,
+              "minimum": 1,
+              "type": "number"
+            },
+            "country_crossing_cost": {
+              "default": 600,
+              "description": "A cost applied when encountering an international border. This cost is added to the estimated and elapsed times.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "country_crossing_penalty": {
+              "default": 0,
+              "description": "A penalty applied for a country crossing. This penalty can be used to create paths that avoid spanning  country boundaries.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "destination_only_penalty": {
+              "default": 600,
+              "description": "A penalty applied when entering an road which is only allowed to enter if necessary to reach  the [destination](https://wiki.openstreetmap.org/wiki/Tag:vehicle%3Ddestination).",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "disable_hierarchy_pruning": {
+              "default": false,
+              "description": "Disable graph hierarchy culling; if the bee-line distance between waypoints exceeds  the config parameter value for service_limits.max_distance_disable_hierarchy_culling, the option is ignored",
+              "type": "boolean"
+            },
+            "ferry_cost": {
+              "default": 300,
+              "description": "A cost applied when entering a ferry. This cost is added to the estimated and elapsed times.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "fixed_speed": {
+              "default": 0,
+              "description": "Fixed speed the vehicle can go in km/h. Used to override the calculated speed. Can be useful if speed of vehicle is known. Value must be between 1 and 252. The default value is 0, which disables fixed speed and falls back to the standard calculated speed based on the road attribution.",
+              "maximum": 252,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "gate_cost": {
+              "default": 30,
+              "description": "A cost applied when a [gate](https://wiki.openstreetmap.org/wiki/Tag:barrier%3Dgate) with undefined or private access is encountered.  This cost is added to estimated and elapsed times.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "gate_penalty": {
+              "description": "A penalty applied when a [gate](https://wiki.openstreetmap.org/wiki/Tag:barrier%3Dgate) with no access information is on the road. Default is 300 for bicycle, 30 otherwise.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "ignore_access": {
+              "default": false,
+              "description": "Will ignore mode-specific access tags. Especially useful for matching GPS traces to the road  network regardless of restrictions",
+              "type": "boolean"
+            },
+            "ignore_closures": {
+              "default": false,
+              "description": "If set to `true`, ignores all closures, marked due to live traffic closures, during routing. **Note:**  This option cannot be set if `location.search_filter.exclude_closures` is also specified in the request  and will return an error if it is.",
+              "type": "boolean"
+            },
+            "ignore_oneways": {
+              "default": false,
+              "description": "If set to `true`, ignores one-way restrictions. Especially useful for matching GPS traces to the  road network ignoring uni-directional traffic rules. Not included in `ignore_restrictions` option.",
+              "type": "boolean"
+            },
+            "ignore_restrictions": {
+              "description": "If set to `true`, ignores any restrictions (e.g. turn/dimensional/conditional restrictions).  Especially useful for matching GPS traces to the road network regardless of restrictions.",
+              "type": "boolean"
+            },
+            "maneuver_penalty": {
+              "default": 5,
+              "description": "A penalty applied when transitioning between roads that do not have consistent naming — in other words, no road names in common.  This penalty can be used to create simpler routes that tend to have fewer maneuvers or narrative guidance instructions. The default maneuver penalty is five seconds.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "name": {
+              "description": "Required for recostings entries; must be unique.",
+              "type": "string"
+            },
+            "private_access_penalty": {
+              "description": "A penalty applied when a [gate](https://wiki.openstreetmap.org/wiki/Tag:barrier%3Dgate) or  [bollard](https://wiki.openstreetmap.org/wiki/Tag:barrier%3Dbollard) with `access=private` is encountered.  Default is 600 for pedestrian, 450 otherwise.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "rail_ferry_cost": {
+              "default": 300,
+              "description": "A cost applied when entering a rail ferry. This cost is added to the estimated and elapsed times.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "service_factor": {
+              "default": 1,
+              "description": "A factor that modifies (multiplies) the cost when generic service roads are encountered.",
+              "maximum": 100000,
+              "minimum": 0.1,
+              "type": "number"
+            },
+            "service_penalty": {
+              "description": "A penalty applied for transition to generic service road. The default penalty is 0 for trucks and pedestrian, 75 for auto/bus/taxi, 15 otherwise.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "shortest": {
+              "default": false,
+              "description": "Changes the metric to quasi-shortest, i.e. purely distance-based costing. Note, this will disable all other costings & penalties. Also note, `shortest` will not  disable hierarchy pruning, leading to potentially sub-optimal routes for some costing models.",
+              "type": "boolean"
+            },
+            "speed_penalty_factor": {
+              "default": 0.05,
+              "description": "Penalty factor applied for edges when edge speed is faster than top speed. The default value is 0.05. If you want to use `top_speed` without  penalizing roads where the edge speed is much lower than `top_speed`, set this value to 0.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "speed_types": {
+              "description": "Which speed sources to consider for computing edge cost. Defaults to all available types. Predicted, current and freeflow additionally require `date_time` to be set.  If the array is left empty, or none of these sources are available, Valhalla will fall back to the default speed.",
+              "items": {
+                "$ref": "#/$defs/ValhallaSpeedType"
+              },
+              "maxItems": 4,
+              "type": "array",
+              "uniqueItems": true
+            },
+            "toll_booth_cost": {
+              "default": 15,
+              "description": "A cost applied when a [toll booth](https://wiki.openstreetmap.org/wiki/Tag:barrier%3Dtoll_booth) is encountered.  This cost is added to the estimated and elapsed times.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "toll_booth_penalty": {
+              "default": 0,
+              "description": "A penalty applied to the cost when a [toll booth](https://wiki.openstreetmap.org/wiki/Tag:barrier%3Dtoll_booth) is encountered.  This penalty can be used to create paths that avoid toll roads.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_ferry": {
+              "default": 0.5,
+              "description": "This value indicates the willingness to take ferries. This is a range of values between 0 and 1. Values near  0 attempt to avoid ferries and values near 1 will favor ferries. Note that sometimes  ferries are required to complete a route so values of 0 are not guaranteed to avoid ferries entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_living_streets": {
+              "description": "This value indicates the willingness to take living streets. This is a range of values between 0 and 1. Values near 0 attempt to avoid living streets  and values near 1 will favor living streets. The default value is 0 for truck, 0.5 for bicycle, 0.6 for pedestrian, 0.1 otherwise. Note that sometimes living streets are required to complete a route so values of 0 are not guaranteed to avoid living streets entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_rail_ferry": {
+              "default": 0.4,
+              "description": "This value indicates the willingness to take rail ferries. This is a range of values between 0 and 1. Values near  0 attempt to avoid rail ferries and values near 1 will favor them. Note that sometimes  rail ferries may be required to complete a route so values of 0 are not guaranteed to avoid them entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_tracks": {
+              "description": "This value indicates the willingness to take track roads. This is a range of values between 0 and 1. Values near 0 attempt to avoid tracks and  values near 1 will favor tracks a little bit. The default value is 0 for auto and truck, 0.5 otherwise. Note that sometimes tracks  are required to complete a route so values of 0 are not guaranteed to avoid tracks entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      ],
+      "description": "Options shared by all costing models. Parsed in src/sif/dynamiccost.cc.",
+      "type": "object"
+    },
+    "ValhallaBaseRequest": {
+      "properties": {
+        "costing": {
+          "$ref": "#/$defs/ValhallaCostingType"
+        },
+        "costing_options": {
+          "$ref": "#/$defs/ValhallaCostingOptions"
+        },
+        "date_time": {
+          "$ref": "#/$defs/ValhallaDateTimeOptions"
+        },
+        "exclude_locations": {
+          "description": "A set of locations to exclude or avoid within a route.",
+          "items": {
+            "$ref": "#/$defs/ValhallaLocation"
+          },
+          "type": "array"
+        },
+        "exclude_polygons": {
+          "description": "Array of coordinate rings `[[lon,lat],…]` or a GeoJSON FeatureCollection. Roads intersecting these rings will be avoided during path finding.",
+          "oneOf": [
+            {
+              "description": "Array of closed coordinate rings. All edges intersecting any ring are excluded.",
+              "items": {
+                "items": {
+                  "items": {
+                    "type": "number"
+                  },
+                  "maxItems": 2,
+                  "minItems": 2,
+                  "type": "array"
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            {
+              "description": "GeoJSON FeatureCollection. Each Feature may carry a `properties.levels` array to restrict exclusion to specific building/indoor levels in pedestrian routing.",
+              "properties": {
+                "features": {
+                  "items": {
+                    "properties": {
+                      "geometry": {
+                        "description": "GeoJSON Polygon geometry (single-ring only)",
+                        "type": "object"
+                      },
+                      "properties": {
+                        "properties": {
+                          "levels": {
+                            "description": "Building/indoor levels to exclude within this polygon. When omitted, all edges intersecting the polygon are excluded.",
+                            "items": {
+                              "type": "integer"
+                            },
+                            "type": "array"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": {
+                        "enum": [
+                          "Feature"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "type": "array"
+                },
+                "type": {
+                  "enum": [
+                    "FeatureCollection"
+                  ],
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            }
+          ]
+        },
+        "format": {
+          "$ref": "#/$defs/ValhallaOutputFormat"
+        },
+        "id": {
+          "description": "Arbitrary request identifier echoed in the response.",
+          "type": "string"
+        },
+        "language": {
+          "default": "en-US",
+          "description": "BCP47 locale for narrative output. See locales/ for supported values.",
+          "type": "string"
+        },
+        "linear_cost_factors": {
+          "description": "Customized cost factors that influence path finding, specified as an array of JSON objects. Objects can be either a GeoJSON linestring feature and a  `\"factor\"` property or a plain object with a \"shape\" key, whose value needs to be an encoded polyline (with 6 digit precision), and a \"factor\" key whose value  needs to be float. Valhalla will perform an edge walk (see the map matching documentation for more info) to match the geometry onto edges and use those  factors in costing. Edges with factors larger than 1 will be increasingly avoided, while edges with factors smaller than 1 increasingly favored.",
+          "items": {
+            "$ref": "#/$defs/ValhallaLinearCostFactor"
+          },
+          "type": "array"
+        },
+        "units": {
+          "default": "km",
+          "enum": [
+            "km",
+            "miles",
+            "mi"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaBicycleCostingOptions": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ValhallaBaseCostingOptions"
+        },
+        {
+          "description": "Options for bicycle costing. Parsed in src/sif/bicyclecost.cc.",
+          "properties": {
+            "avoid_bad_surfaces": {
+              "default": 0.25,
+              "description": "This value is meant to represent how much a cyclist wants to avoid roads with poor surfaces relative to the bicycle type being used. This is a range of values  between 0 and 1. When the value is 0, there is no penalization of roads with different surface types; only bicycle speed on each surface is taken into account.  As the value approaches 1, roads with poor surfaces for the bike are penalized heavier so that they are only taken if they significantly improve travel time.  When the value is equal to 1, all bad surfaces are completely disallowed from routing, including start and end points.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "bicycle_type": {
+              "default": "hybrid",
+              "description": "The type of bicycle. Affects the cycling speed and surface factors.",
+              "enum": [
+                "road",
+                "hybrid",
+                "city",
+                "cross",
+                "mountain"
+              ],
+              "type": "string",
+              "x-enumDescriptions": {
+                "city": "A bicycle made mostly for city riding or casual riding on roads and paths with good surfaces. Sets cycling_speed to 18 km/h.",
+                "cross": "A cyclo-cross bicycle, which is similar to a road bicycle but with wider tires suitable to rougher surfaces. Sets cycling_speed to 20 km/h.",
+                "hybrid": "A bicycle made mostly for city riding or casual riding on roads and paths with good surfaces. Sets cycling_speed to 18 km/h.",
+                "mountain": "A mountain bicycle suitable for most surfaces but generally heavier and slower on paved surfaces. Sets cycling_speed to 16 km/h.",
+                "road": "A road-style bicycle with narrow tires that is generally lightweight and designed for speed on paved surfaces. Sets cycling_speed to 25 km/h."
+              }
+            },
+            "bss_rent_penalty": {
+              "default": 0,
+              "description": "This value is useful when `bikeshare` is chosen as travel mode. It is meant to describe the potential effort to return a rental bike.  This value won't be displayed and used only inside of the algorithm.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "bss_return_cost": {
+              "default": 120,
+              "description": "This value is useful when `bikeshare` is chosen as travel mode. It is meant to give the time will be used to return a rental bike. This value will be  displayed in the final directions and used to calculate the whole duration.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "cycling_speed": {
+              "description": "Cycling speed in km/h. Defaults depend on transport_type.",
+              "minimum": 5,
+              "type": "number"
+            },
+            "use_hills": {
+              "default": 0.25,
+              "description": "A cyclist's desire to tackle hills in their routes. This is a range of values from 0 to 1, where 0 attempts to avoid hills and steep grades even if it means a  longer (time and distance) path, while 1 indicates the rider does not fear hills and steeper grades. Based on the `use_hills` factor, penalties are applied to roads  based on elevation change and grade. These penalties help the path avoid hilly roads in favor of flatter roads or less steep grades where available. Note that it is  not always possible to find alternate paths to avoid hills (for example when route locations are in mountainous areas).",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_roads": {
+              "default": 0.25,
+              "description": "A cyclist's propensity to use roads alongside other vehicles. This is a range of values from 0 to 1, where 0 attempts to avoid roads and stay on cycleways and paths,  and 1 indicates the rider is more comfortable riding on roads. Based on the `use_roads` factor, roads with certain classifications and higher speeds are penalized in an attempt to avoid them when finding the best path.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "ValhallaCostingOptions": {
+      "description": "Costing options keyed by costing model name.",
+      "properties": {
+        "auto": {
+          "$ref": "#/$defs/ValhallaAutoCostingOptions"
+        },
+        "bicycle": {
+          "$ref": "#/$defs/ValhallaBicycleCostingOptions"
+        },
+        "bikeshare": {
+          "$ref": "#/$defs/ValhallaPedestrianCostingOptions"
+        },
+        "bus": {
+          "$ref": "#/$defs/ValhallaAutoCostingOptions"
+        },
+        "motor_scooter": {
+          "$ref": "#/$defs/ValhallaMotorScooterCostingOptions"
+        },
+        "motorcycle": {
+          "$ref": "#/$defs/ValhallaMotorcycleCostingOptions"
+        },
+        "pedestrian": {
+          "$ref": "#/$defs/ValhallaPedestrianCostingOptions"
+        },
+        "taxi": {
+          "$ref": "#/$defs/ValhallaAutoCostingOptions"
+        },
+        "truck": {
+          "$ref": "#/$defs/ValhallaTruckCostingOptions"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaCostingType": {
+      "description": "`multimodal` is not available. The street graph has no transit; use transit routing at `/api/v2/routing/otp/plan`.",
+      "enum": [
+        "auto",
+        "bicycle",
+        "pedestrian",
+        "truck",
+        "bus",
+        "taxi",
+        "motor_scooter",
+        "motorcycle",
+        "bikeshare",
+        "auto_pedestrian"
+      ],
+      "type": "string"
+    },
+    "ValhallaDateTimeOptions": {
+      "properties": {
+        "type": {
+          "description": "0=current, 1=depart_at, 2=arrive_by, 3=invariant",
+          "enum": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "type": "integer"
+        },
+        "value": {
+          "description": "ISO 8601 local datetime string in the format `YYYY-MM-DDTHH:MM`, e.g. `2016-07-03T08:06`. Required for types 1, 2, 3.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaDirectionsType": {
+      "default": "instructions",
+      "enum": [
+        "none",
+        "maneuvers",
+        "instructions"
+      ],
+      "type": "string",
+      "x-enumDescriptions": {
+        "instructions": "Maneuvers with narrative instructions (default).",
+        "maneuvers": "Maneuvers only, no narrative text.",
+        "none": "No maneuvers or instructions."
+      }
+    },
+    "ValhallaFactor": {
+      "description": "Cost multiplier applied to matched edges (min dependent on service configuration, default 1).",
+      "type": "number",
+      "x-rad-max": 20,
+      "x-rad-min": 0.1
+    },
+    "ValhallaGeoJsonFactorVariant": {
+      "properties": {
+        "geometry": {
+          "properties": {
+            "coordinates": {
+              "description": "Array of [lon, lat] positions.",
+              "items": {
+                "items": {
+                  "type": "number"
+                },
+                "maxItems": 2,
+                "minItems": 2,
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "type": {
+              "enum": [
+                "LineString"
+              ],
+              "type": "string"
+            }
+          },
+          "required": [
+            "type",
+            "coordinates"
+          ],
+          "type": "object"
+        },
+        "properties": {
+          "properties": {
+            "factor": {
+              "$ref": "#/$defs/ValhallaFactor"
+            }
+          },
+          "required": [
+            "factor"
+          ],
+          "type": "object"
+        },
+        "type": {
+          "enum": [
+            "Feature"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "geometry",
+        "properties"
+      ],
+      "type": "object"
+    },
+    "ValhallaHardExclusions": {
+      "description": "**EXPERIMENTAL** — Hard exclusion options available for all costing methods. These options are not available by default; the server config must have `service_limits.allow_hard_exclusions` set to true in order to allow them. If not allowed and any of the hard excludes is set to true, the server will return a warning and ignore the hard excludes.",
+      "properties": {
+        "exclude_bridges": {
+          "default": false,
+          "description": "This value indicates whether or not the path may include bridges. If `exclude_bridges` is set to true it is allowed to start and end with bridges, but is not allowed to have them in the middle of the route path, otherwise they are allowed. If set to true, it is highly plausible that no path will be found.",
+          "type": "boolean"
+        },
+        "exclude_ferries": {
+          "default": false,
+          "description": "This value indicates whether or not the path may include ferries. If `exclude_ferries` is set to true it is allowed to start and end with ferries, but is not allowed to have them in the middle of the route path, otherwise they are allowed. If set to true, it is highly plausible that no path will be found.",
+          "type": "boolean"
+        },
+        "exclude_highways": {
+          "default": false,
+          "description": "This value indicates whether or not the path may include highways. If `exclude_highways` is set to true it is allowed to start and end with highways, but is not allowed to have them in the middle of the route path, otherwise they are allowed. If set to true, it is highly plausible that no path will be found.",
+          "type": "boolean"
+        },
+        "exclude_tolls": {
+          "default": false,
+          "description": "This value indicates whether or not the path may include tolls. If `exclude_tolls` is set to true it is allowed to start and end with tolls, but is not allowed to have them in the middle of the route path, otherwise they are allowed. If set to true, it is highly plausible that no path will be found.",
+          "type": "boolean"
+        },
+        "exclude_tunnels": {
+          "default": false,
+          "description": "This value indicates whether or not the path may include tunnels. If `exclude_tunnels` is set to true it is allowed to start and end with tunnels, but is not allowed to have them in the middle of the route path, otherwise they are allowed. If set to true, it is highly plausible that no path will be found.",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaLinearCostFactor": {
+      "description": "Either an encoded-polyline form or a GeoJSON LineString feature. In case of passing GeoJSON, the factor must be passed as a feature property. Note that the geometry must align with shapes present in Valhalla's graph.",
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ValhallaShapeFactorVariant"
+        },
+        {
+          "$ref": "#/$defs/ValhallaGeoJsonFactorVariant"
+        }
+      ]
+    },
+    "ValhallaLocation": {
+      "properties": {
+        "date_time": {
+          "description": "Per-location ISO 8601 datetime override, in the format `YYYY-MM-DDTHH:MM`, e.g. `2016-07-03T08:06`.",
+          "type": "string"
+        },
+        "display_lat": {
+          "description": "Latitude of the map location in degrees. If provided the `lat` and `lon` parameters will be treated as the routing location and the  `display_lat` and `display_lon` will be used to determine the side of street. Both `display_lat` and `display_lon` must be provided and valid to achieve the desired effect.",
+          "maximum": 90,
+          "minimum": -90,
+          "type": "number"
+        },
+        "display_lon": {
+          "description": "Latitude of the map location in degrees. If provided the `lat` and `lon` parameters will be treated as the routing location and the  `display_lat` and `display_lon` will be used to determine the side of street. Both `display_lat` and `display_lon` must be provided and valid to achieve the desired effect.",
+          "maximum": 180,
+          "minimum": -180,
+          "type": "number"
+        },
+        "heading": {
+          "description": "Preferred approach heading in degrees.",
+          "maximum": 360,
+          "minimum": 0,
+          "type": "integer"
+        },
+        "heading_tolerance": {
+          "description": "How close in degrees a given street's angle must be in order for it to be considered as in the same direction of the `heading` parameter.  The default value is service configuration dependent (60 by default).",
+          "type": "integer",
+          "x-rad-default": 60,
+          "x-rad-max": 180,
+          "x-rad-min": 0
+        },
+        "lat": {
+          "maximum": 90,
+          "minimum": -90,
+          "type": "number"
+        },
+        "lon": {
+          "maximum": 180,
+          "minimum": -180,
+          "type": "number"
+        },
+        "minimum_reachability": {
+          "default": 50,
+          "description": "Minimum number of reachable edges for a snap candidate. The default and max values are service configuration dependent (50 and 100 by default, respectively).",
+          "minimum": 0,
+          "type": "integer",
+          "x-rad-max": 250
+        },
+        "name": {
+          "description": "Label echoed in the response.",
+          "type": "string"
+        },
+        "node_snap_tolerance": {
+          "description": "Snap-to-node distance tolerance in meters. The default value is service dependent (5 by default).",
+          "minimum": 0,
+          "type": "number",
+          "x-rad-default": 5,
+          "x-rad-max": 100
+        },
+        "preferred_layer": {
+          "description": "If set, edges whose layer does not match this value are discarded from candidate search. Note that this is a \"soft\" filter, meaning if no other candidates are found, Valhalla will fall back to including edges that did not match this filter.",
+          "type": "integer",
+          "x-rad-max": 5,
+          "x-rad-min": -1
+        },
+        "preferred_side": {
+          "default": "either",
+          "description": "Preferred side of road to snap to.",
+          "enum": [
+            "same",
+            "opposite",
+            "either"
+          ],
+          "type": "string"
+        },
+        "radius": {
+          "description": "Candidate search radius in meters: all viable edge candidates within the radius are correlated. If none are found, the best  one outside the radius is correlated. The default is service dependent, and defaults to 0 (only the closest edge is considered as candidate). The max value is service configuration dependent (200 by default).",
+          "minimum": 0,
+          "type": "integer",
+          "x-rad-default": 0,
+          "x-rad-max": 200
+        },
+        "rank_candidates": {
+          "default": true,
+          "description": "Rank snap candidates by distance to input.",
+          "type": "boolean"
+        },
+        "search_cutoff": {
+          "description": "Hard cutoff for candidate search in meters. Default is service configuration dependent (35000 by default).",
+          "minimum": 0,
+          "type": "integer",
+          "x-rad-default": 35000,
+          "x-rad-max": 100000,
+          "x-rad-min": 10000
+        },
+        "search_filter": {
+          "$ref": "#/$defs/ValhallaSearchFilter"
+        },
+        "street": {
+          "description": "Street address hint for snapping.",
+          "type": "string"
+        },
+        "street_side_cutoff": {
+          "$ref": "#/$defs/ValhallaRoadClass"
+        },
+        "street_side_max_distance": {
+          "description": "The max distance in meters that the input coordinates or display ll can be from the edge centerline for them to be used for determining the side of  street. Beyond this distance the side of street is set to none. The default value is service configuration dependent (1000 by default).",
+          "minimum": 0,
+          "type": "integer",
+          "x-rad-default": 1000,
+          "x-rad-max": 10000
+        },
+        "street_side_tolerance": {
+          "description": "If your input coordinate is less than this tolerance away from the edge centerline then we set your side of  street to none otherwise your side of street will be left or right depending on direction of travel. The default value is service configuration dependent (5 by default).",
+          "minimum": 0,
+          "type": "integer",
+          "x-rad-default": 5,
+          "x-rad-max": 50
+        },
+        "type": {
+          "default": "break",
+          "description": "First and last location are always forced to `break`.",
+          "enum": [
+            "break",
+            "through",
+            "via",
+            "break_through"
+          ],
+          "type": "string",
+          "x-enumDescriptions": {
+            "break": "Stop here; starts or ends a route leg. Allows U-turns.",
+            "break_through": "Like `break` but does not allow U-turns at the location.",
+            "through": "Pass through without stopping. No U-turn; keeps direction of travel.",
+            "via": "Waypoint with a maneuver instruction but no leg-break. Allows U-turns."
+          }
+        },
+        "waiting": {
+          "description": "Waiting time in seconds at this stop (break/break_through only, not origin/destination).",
+          "minimum": 0,
+          "type": "number",
+          "x-rad-max": 10000
+        }
+      },
+      "required": [
+        "lat",
+        "lon"
+      ],
+      "type": "object"
+    },
+    "ValhallaMotorScooterCostingOptions": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ValhallaBaseCostingOptions"
+        },
+        {
+          "description": "Options for motor_scooter costing. Parsed in src/sif/motorscootercost.cc.",
+          "properties": {
+            "top_speed": {
+              "default": 45,
+              "description": "Top speed the vehicle can go in km/h. Also used to avoid roads with higher speeds than this value. `top_speed` must be between 10 and 252 km/h. The default value is 45 km/h  for motor_scooter.",
+              "maximum": 252,
+              "minimum": 20,
+              "type": "integer"
+            },
+            "use_distance": {
+              "default": 0,
+              "description": "A factor that allows controlling the contribution of distance and time to the route costs. The value is in range between 0 and 1, where 0 only takes time into account  and 1 only distance. A factor of 0.5 will weigh them roughly equally.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_hills": {
+              "default": 0.5,
+              "description": "A rider's desire to use hills in their routes. This is a range of values from 0 to 1, where 0 attempts to avoid hills and steep grades even if it means a  longer (time and distance) path, while 1 indicates the rider does not fear hills and steeper grades. Based on the `use_hills` factor, penalties are applied to roads  based on elevation change and grade. These penalties help the path avoid hilly roads in favor of flatter roads or less steep grades where available. Note that it is  not always possible to find alternate paths to avoid hills (for example when route locations are in mountainous areas).",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_primary": {
+              "default": 0.5,
+              "description": "A rider's propensity to use primary roads. This is a range of values from 0 to 1, where 0 attempts to avoid primary roads, and 1 indicates the rider is more comfortable riding on primary roads. Based on the `use_primary` factor, roads with certain classifications and higher speeds are penalized in an attempt to avoid them when finding  the best path.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "ValhallaMotorcycleCostingOptions": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ValhallaBaseCostingOptions"
+        },
+        {
+          "description": "Options for motorcycle costing. Parsed in src/sif/motorcyclecost.cc.",
+          "properties": {
+            "top_speed": {
+              "default": 140,
+              "description": "Top speed the vehicle can go in km/h. Also used to avoid roads with higher speeds than this value. `top_speed` must be between 10 and 252 km/h. The default value is 140 km/h  for motorcycle.",
+              "maximum": 252,
+              "minimum": 10,
+              "type": "integer"
+            },
+            "use_distance": {
+              "default": 0,
+              "description": "A factor that allows controlling the contribution of distance and time to the route costs. The value is in range between 0 and 1, where 0 only takes time into account  and 1 only distance. A factor of 0.5 will weigh them roughly equally.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_highways": {
+              "default": 0.5,
+              "description": "This value indicates the willingness to take highways. This is a range of values between 0 and 1. Values near 0 attempt to avoid highways and values near 1 will favor highways. Note that sometimes highways are required to complete a route so values of 0 are not guaranteed to avoid highways entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_tolls": {
+              "default": 0.5,
+              "description": "This value indicates the willingness to take roads with tolls. This is a range of values between 0 and 1. Values smaller than 0.5 attempt to avoid tolls and values greater than 0.5 will slightly favor them. The default value is 0.5, indicating no preference. Note that sometimes roads with tolls are required to complete a route so values of 0 are not guaranteed to avoid them entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_trails": {
+              "default": 0,
+              "description": "A riders's desire for adventure in their routes.  This is a range of values from 0 to 1, where 0 will avoid trails, tracks, unclassified or bad surfaces and values towards 1 will  tend to avoid major roads and route on secondary roads.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "ValhallaOutputFormat": {
+      "default": "json",
+      "description": "Not all formats are supported by all endpoints, e.g. `geotiff` is isochrone-only.",
+      "enum": [
+        "json",
+        "gpx",
+        "osrm",
+        "pbf",
+        "geotiff",
+        "mvt"
+      ],
+      "type": "string"
+    },
+    "ValhallaPedestrianCostingOptions": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ValhallaBaseCostingOptions"
+        },
+        {
+          "description": "Options for pedestrian and bikeshare costing. Parsed in src/sif/pedestriancost.cc.",
+          "properties": {
+            "alley_factor": {
+              "default": 2,
+              "description": "A factor that modifies (multiplies) the cost when [alleys](https://wiki.openstreetmap.org/wiki/Tag:service%3Dalley) are encountered. Pedestrian routes generally want to avoid alleys or narrow service roads between buildings.",
+              "maximum": 100000,
+              "minimum": 0.1,
+              "type": "number"
+            },
+            "bss_rent_cost": {
+              "default": 120,
+              "description": "This value is useful when `bikeshare` is chosen as travel mode. It is meant to give the time will be used to rent a bike from a bike share station. This value will be displayed in the final directions and used to calculate the whole duration.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "bss_rent_penalty": {
+              "default": 0,
+              "description": "This value is useful when `bikeshare` is chosen as travel mode. It is meant to describe the potential effort to rent a bike from a bike share station. This value won't be displayed and used only inside of the algorithm.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "driveway_factor": {
+              "default": 5,
+              "description": "A factor that modifies (multiplies) the cost when encountering a [driveway](https://wiki.openstreetmap.org/wiki/Tag:service%3Ddriveway), which is often a private, service road. Pedestrian routes generally want to avoid driveways (private).",
+              "maximum": 100000,
+              "minimum": 0.1,
+              "type": "number"
+            },
+            "elevator_penalty": {
+              "default": 5,
+              "description": "A penalty in seconds added to each transition via an elevator node or onto an elevator edge. Higher values apply larger cost penalties to avoid elevators.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "max_distance": {
+              "description": "Sets the maximum total walking distance of a route in meters. Default 100000 (foot), 10000 (wheelchair).",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "max_hiking_difficulty": {
+              "default": 1,
+              "description": "This value indicates the maximum difficulty of hiking trails that is allowed. Values between 0 and 6 are allowed. The values correspond to *sac_scale* values within OpenStreetMap, see reference [here](https://wiki.openstreetmap.org/wiki/Key:sac_scale). The default value is 1 which means that well cleared trails that are mostly flat or slightly sloped are allowed. Higher difficulty trails can be allowed by specifying a higher value for max_hiking_difficulty.",
+              "maximum": 6,
+              "minimum": 0,
+              "type": "integer"
+            },
+            "mode_factor": {
+              "default": 1.5,
+              "description": "A factor which the cost of a pedestrian edge will be multiplied with on multimodal request, e.g. `bss` or `multimodal/transit`. Default is a factor of 1.5, i.e. avoiding walking.",
+              "maximum": 100000,
+              "minimum": 0.1,
+              "type": "number"
+            },
+            "multimodal_start_end_max_distance": {
+              "default": 2415,
+              "description": "(**Note**: renamed from `transit_start_end_max_distance`) A pedestrian option that can be added to the request to extend the defaults (2145 meters or approximately 1.5 miles). This is the maximum walking distance at the beginning or end of a route.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "sidewalk_factor": {
+              "default": 1,
+              "description": "A factor that modifies the cost when encountering roads with dedicated sidewalks. Pedestrian routes generally attempt to favor using [sidewalks](https://wiki.openstreetmap.org/wiki/Key:sidewalk).",
+              "maximum": 100000,
+              "minimum": 0.1,
+              "type": "number"
+            },
+            "step_penalty": {
+              "description": "A penalty in seconds added to each transition onto a path with [steps or stairs](https://wiki.openstreetmap.org/wiki/Tag:highway%3Dsteps). Higher values apply larger cost penalties to avoid paths that contain flights of steps. The default depends on the `type` parameter (600 for wheelchair, 30 otherwise).",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "transit_transfer_max_distance": {
+              "default": 805,
+              "description": "A pedestrian option that can be added to the request to extend the defaults (800 meters or 0.5 miles). This is the maximum walking distance between transfers.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "type": {
+              "default": "foot",
+              "description": "These options are mutually exclusive. To combine them, use `blind` and pass the options adjusted for `wheelchair` users manually.",
+              "enum": [
+                "foot",
+                "blind",
+                "wheelchair"
+              ],
+              "type": "string",
+              "x-enumDescriptions": {
+                "blind": "Enables additional route instructions, especially useful for blind users: announcing crossed streets, stairs, bridges, tunnels, gates and bollards that need to be passed on route; information about traffic signals on crosswalks; route numbers are not announced for named routes.\n",
+                "foot": "Default routing for pedestrians.",
+                "wheelchair": "Changes the defaults for `max_distance`, `walking_speed`, and `step_penalty` to be better aligned to the needs of wheelchair users.\n"
+              }
+            },
+            "use_hills": {
+              "default": 0.5,
+              "description": "This is a range of values from 0 to 1, where 0 attempts to avoid hills and steep grades even if it means a longer (time and distance) path, while 1 indicates the pedestrian does not fear hills and steeper grades. Based on the `use_hills` factor, penalties are applied to roads based on elevation change and grade. These penalties help the path avoid hilly roads in favor of flatter roads or less steep grades where available. Note that it is not always possible to find alternate paths to avoid hills (for example when route locations are in mountainous areas).",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_lit": {
+              "default": 0,
+              "description": "This value is a range of values from 0 to 1, where 0 indicates indifference towards lit streets, and 1 indicates that unlit streets should be avoided. Note that even with values near 1, there is no guarantee the returned route will include lit segments.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "walking_speed": {
+              "default": 5.1,
+              "description": "Walking speed in km/h. Note that for transport type wheelchair, the default is set to 4.",
+              "maximum": 25,
+              "minimum": 0.5,
+              "type": "number"
+            },
+            "walkway_factor": {
+              "default": 1,
+              "description": "A factor that modifies the cost when encountering roads classified as `footway` (no motorized vehicles allowed), which may be designated footpaths or designated sidewalks along residential roads. Pedestrian routes generally attempt to favor using these [walkways and sidewalks](https://wiki.openstreetmap.org/wiki/Sidewalks).",
+              "maximum": 100000,
+              "minimum": 0.1,
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "ValhallaRoadClass": {
+      "enum": [
+        "motorway",
+        "trunk",
+        "primary",
+        "secondary",
+        "tertiary",
+        "unclassified",
+        "residential",
+        "service_other"
+      ],
+      "type": "string"
+    },
+    "ValhallaSearchFilter": {
+      "description": "Optional filters to exclude candidate edges based on their attribution.",
+      "properties": {
+        "exclude_bridge": {
+          "default": false,
+          "description": "Whether to exclude roads marked as bridges.",
+          "type": "boolean"
+        },
+        "exclude_closures": {
+          "default": true,
+          "description": "When false, closed roads are allowed for this location.",
+          "type": "boolean"
+        },
+        "exclude_ferry": {
+          "default": false,
+          "description": "Whether to exclude ferry routes.",
+          "type": "boolean"
+        },
+        "exclude_ramp": {
+          "default": false,
+          "description": "Whether to exclude roads marked as ramps.",
+          "type": "boolean"
+        },
+        "exclude_toll": {
+          "default": false,
+          "description": "Whether to exclude roads marked as toll roads.",
+          "type": "boolean"
+        },
+        "exclude_tunnel": {
+          "default": false,
+          "description": "Whether to exclude roads marked as tunnels.",
+          "type": "boolean"
+        },
+        "level": {
+          "description": "If specified, will only consider edges that are on or traverse the passed floor level. Useful for indoor routing. It will set `search_cutoff` to a default value of 300 meters if no cutoff value is passed. Additionally, if a `search_cutoff` is passed, it will be clamped to 1000 meters.",
+          "type": "number"
+        },
+        "max_road_class": {
+          "$ref": "#/$defs/ValhallaRoadClass"
+        },
+        "min_road_class": {
+          "$ref": "#/$defs/ValhallaRoadClass"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaShapeFactorVariant": {
+      "properties": {
+        "factor": {
+          "$ref": "#/$defs/ValhallaFactor"
+        },
+        "shape": {
+          "description": "Polyline6-encoded shape. Shape may only cover edges subject to `service_limits.max_linear_cost_edges` (set in service config; 50000 by default).",
+          "type": "string"
+        }
+      },
+      "required": [
+        "shape",
+        "factor"
+      ],
+      "type": "object"
+    },
+    "ValhallaShapeFormat": {
+      "default": "polyline6",
+      "description": "Not all formats are supported by all endpoints, e.g. `no_shape` is not valid for isochrone.",
+      "enum": [
+        "polyline6",
+        "polyline5",
+        "geojson",
+        "no_shape"
+      ],
+      "type": "string"
+    },
+    "ValhallaSpeedType": {
+      "description": "A speed source that may be used when costing edges.",
+      "enum": [
+        "current",
+        "freeflow",
+        "constrained",
+        "predicted"
+      ],
+      "type": "string",
+      "x-enumDescriptions": {
+        "constrained": "Daytime (7am–7pm) average speed stored on the edge",
+        "current": "The current live traffic speed",
+        "freeflow": "Nighttime (7pm–7am) average speed stored on the edge",
+        "predicted": "Historical per-edge speed profiles (5-min buckets over a week)"
+      }
+    },
+    "ValhallaTruckCostingOptions": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/ValhallaBaseCostingOptions"
+        },
+        {
+          "description": "Options for truck costing. Parsed in src/sif/truckcost.cc. Dimension defaults differ from base.",
+          "properties": {
+            "axle_count": {
+              "default": 5,
+              "description": "The axle count of the truck.",
+              "maximum": 20,
+              "minimum": 2,
+              "type": "integer"
+            },
+            "axle_load": {
+              "default": 9.07,
+              "description": "Per-axle load in metric tons (default 20,000 lbs / ~9.07 t).",
+              "maximum": 40,
+              "minimum": 0,
+              "type": "number"
+            },
+            "hazmat": {
+              "default": false,
+              "description": "A value indicating if the truck is carrying hazardous materials.",
+              "type": "boolean"
+            },
+            "height": {
+              "default": 4.11,
+              "description": "Vehicle height in meters for access restriction matching.",
+              "type": "number"
+            },
+            "hgv_no_access_penalty": {
+              "default": 43200,
+              "description": "A penalty applied to roads with no HGV/truck access. If set to a value less than 43200 seconds, HGV will be allowed on these roads and the penalty applies. Default  43200, i.e. trucks are not allowed.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "length": {
+              "default": 21.64,
+              "description": "Vehicle length in meters for access restriction matching.",
+              "type": "number"
+            },
+            "low_class_factor": {
+              "default": 1.5,
+              "description": "A factor which is applied to residential or service roads.",
+              "maximum": 100000,
+              "minimum": 0.1,
+              "type": "number"
+            },
+            "low_class_penalty": {
+              "default": 30,
+              "description": "A penalty in seconds which is applied when transitioning down onto residential or service roads.",
+              "maximum": 43200,
+              "minimum": 0,
+              "type": "number"
+            },
+            "top_speed": {
+              "default": 120,
+              "description": "Top speed the vehicle can go in km/h. Also used to avoid roads with higher speeds than this value. `top_speed` must be between 10 and 252 km/h. The default value is 120 km/h  for truck.",
+              "maximum": 252,
+              "minimum": 10,
+              "type": "number"
+            },
+            "use_distance": {
+              "default": 0,
+              "description": "A factor that allows controlling the contribution of distance and time to the route costs. The value is in range between 0 and 1, where 0 only takes time into account  and 1 only distance. A factor of 0.5 will weigh them roughly equally.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_highways": {
+              "default": 0.5,
+              "description": "This value indicates the willingness to take highways. This is a range of values between 0 and 1. Values near 0 attempt to avoid highways and values near 1 will favor highways. Note that sometimes highways are required to complete a route so values of 0 are not guaranteed to avoid highways entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_tolls": {
+              "default": 0.5,
+              "description": "This value indicates the willingness to take roads with tolls. This is a range of values between 0 and 1. Values smaller than 0.5 attempt to avoid tolls and values greater than 0.5 will slightly favor them. The default value is 0.5, indicating no preference. Note that sometimes roads with tolls are required to complete a route so values of 0 are not guaranteed to avoid them entirely.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "use_truck_route": {
+              "default": 0,
+              "description": "This value is a range of values from 0 to 1, where 0 indicates a light preference for streets marked as truck routes,  and 1 indicates that streets not marked as truck routes should be avoided. This information is derived from  the `hgv=designated` tag. Note that even with values near 1, there is no guarantee the returned route will include  streets marked as truck routes.",
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            "weight": {
+              "default": 21.77,
+              "description": "Vehicle weight in metric tons for access restriction matching.",
+              "type": "number"
+            },
+            "width": {
+              "default": 2.6,
+              "description": "Vehicle width in meters for access restriction matching.",
+              "type": "number"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    }
+  }
+}

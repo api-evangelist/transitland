@@ -1,0 +1,983 @@
+openapi: 3.2.0
+info:
+  title: Transitland Feed Versions API
+  version: 2.0.0
+  contact:
+    email: info@interline.io
+  description: 'Operations tagged Feed Versions across 2 of this provider''s published API definitions: transitland-rest-openapi.json, transitland-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: Transitland REST API
+  url: https://transit.land/api/v2/rest
+tags:
+- name: Feed Versions
+paths:
+  /feed_versions:
+    get:
+      parameters:
+      - description: Feed version lookup key; can be an integer ID or a SHA1 value
+        in: query
+        name: feed_version_key
+        schema:
+          type: string
+      - description: Feed lookup key; can be an integer ID or Onestop ID
+        in: query
+        name: feed_key
+        schema:
+          type: string
+      - description: Feed version SHA1
+        in: query
+        name: sha1
+        schema:
+          type: string
+      - description: Feed version SHA1 of the top-level .txt files (sha1_dir)
+        in: query
+        name: sha1_dir
+        schema:
+          type: string
+      - description: Feed OnestopID
+        in: query
+        name: feed_onestop_id
+        schema:
+          type: string
+      - description: Filter for feed versions fetched earlier than given date time in UTC
+        in: query
+        name: fetched_before
+        schema:
+          format: datetime
+          type: string
+      - description: Filter for feed versions fetched since given date time in UTC
+        in: query
+        name: fetched_after
+        schema:
+          format: datetime
+          type: string
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/afterParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/formatParam'
+      - $ref: '#/components/parameters/radiusParam'
+        x-description: Search for feed versions geographically; radius is in meters, requires lon and lat
+      - $ref: '#/components/parameters/lonParam'
+      - $ref: '#/components/parameters/latParam'
+      - $ref: '#/components/parameters/bboxParam'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  feed_versions:
+                    description: List or search for FeedVersions (specific archived import of a Feed)
+                    items:
+                      properties:
+                        earliest_calendar_date:
+                          description: The earliest date with scheduled service
+                          example: '2020-01-01'
+                          format: date
+                          title: earliest_calendar_date
+                          type: string
+                          x-order: 12
+                        feed:
+                          description: Feed associated with this feed version
+                          properties:
+                            name:
+                              description: A common name for this feed; alternatively use `associated_operators[].name`
+                              title: name
+                              type:
+                              - string
+                              - 'null'
+                              x-order: 21
+                            onestop_id:
+                              description: 'Onestop ID for this feed.
+
+                                Format: `f-geohash-name`.
+
+                                Example: `f-9q9-bart`.'
+                              title: onestop_id
+                              type: string
+                              x-order: 19
+                            spec:
+                              description: 'Type of feed: `GTFS`, `GTFS_RT`, `GBFS`, or `MDS`'
+                              enum:
+                              - GTFS
+                              - GTFS_RT
+                              - GBFS
+                              - MDS
+                              - null
+                              title: spec
+                              type:
+                              - string
+                              - 'null'
+                              x-graphql-type: FeedSpecTypes
+                              x-order: 23
+                          title: feed
+                          type: object
+                          x-graphql-type: Feed
+                          x-order: 24
+                        feed_infos:
+                          description: Records from this feed version's `feed_info.txt`
+                          items:
+                            properties:
+                              default_lang:
+                                description: GTFS `feed_info.default_lang`
+                                title: default_lang
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 61
+                              feed_contact_email:
+                                description: GTFS `feed_info.feed_contact_email`
+                                format: email
+                                title: feed_contact_email
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 63
+                              feed_contact_url:
+                                description: GTFS `feed_info.feed_contact_url`
+                                title: feed_contact_url
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 65
+                              feed_end_date:
+                                description: GTFS `feed_info.feed_end_date`
+                                example: '2019-11-15'
+                                format: date
+                                title: feed_end_date
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 67
+                              feed_lang:
+                                description: GTFS `feed_info.feed_lang`
+                                title: feed_lang
+                                type: string
+                                x-order: 69
+                              feed_publisher_name:
+                                description: GTFS `feed_info.feed_publisher_name`
+                                title: feed_publisher_name
+                                type: string
+                                x-order: 71
+                              feed_publisher_url:
+                                description: GTFS `feed_info.feed_publisher_url`
+                                title: feed_publisher_url
+                                type: string
+                                x-order: 75
+                              feed_start_date:
+                                description: GTFS `feed_info.feed_start_date`
+                                example: '2019-11-15'
+                                format: date
+                                title: feed_start_date
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 73
+                            type: object
+                            x-graphql-type: FeedInfo
+                          title: feed_infos
+                          type: array
+                          x-order: 76
+                        feed_version_gtfs_import:
+                          description: Database import status
+                          properties:
+                            exception_log:
+                              description: Error log accumulated during import; empty on success
+                              title: exception_log
+                              type: string
+                              x-order: 83
+                            in_progress:
+                              description: True if the import is currently running
+                              title: in_progress
+                              type: boolean
+                              x-order: 79
+                            interpolated_stop_time_count:
+                              description: Number of stop_times whose arrival/departure times were filled in by interpolation during import
+                              title: interpolated_stop_time_count
+                              type:
+                              - integer
+                              - 'null'
+                              x-order: 93
+                            skip_entity_error_count:
+                              description: Counts of entities skipped due to errors, keyed by file name
+                              title: skip_entity_error_count
+                              x-order: 87
+                            skip_entity_filter_count:
+                              description: Counts of entities skipped due to import filters, keyed by file name
+                              title: skip_entity_filter_count
+                              x-order: 89
+                            skip_entity_marked_count:
+                              description: Counts of entities skipped by the marker filter, keyed by file name
+                              title: skip_entity_marked_count
+                              x-order: 91
+                            success:
+                              description: True if the import completed successfully
+                              title: success
+                              type: boolean
+                              x-order: 81
+                            warning_count:
+                              description: Counts of warnings raised during import, keyed by file name
+                              title: warning_count
+                              x-order: 85
+                          title: feed_version_gtfs_import
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedVersionGtfsImport
+                          x-order: 94
+                        fetched_at:
+                          description: Time when the file was fetched from the URL
+                          example: '2019-11-15T00:45:55.409906'
+                          format: datetime
+                          title: fetched_at
+                          type: string
+                          x-order: 8
+                        files:
+                          description: Metadata for each file in the GTFS archive
+                          items:
+                            properties:
+                              csv_like:
+                                description: True if the file is parseable as CSV
+                                title: csv_like
+                                type: boolean
+                                x-order: 35
+                              header:
+                                description: Comma-joined column header row of the file (CSV files only)
+                                title: header
+                                type: string
+                                x-order: 33
+                              name:
+                                description: GTFS file name (e.g. `stops.txt`)
+                                title: name
+                                type: string
+                                x-order: 27
+                              rows:
+                                description: Number of data rows in the file (CSV files only)
+                                title: rows
+                                type: integer
+                                x-order: 29
+                              sha1:
+                                description: SHA1 hash of the file
+                                title: sha1
+                                type: string
+                                x-order: 31
+                              size:
+                                description: File size, in bytes
+                                title: size
+                                type: integer
+                                x-order: 37
+                            type: object
+                            x-graphql-type: FeedVersionFileInfo
+                          title: files
+                          type: array
+                          x-order: 38
+                        geometry:
+                          description: Convex hull of all stop coordinates in this feed version
+                          title: geometry
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: Polygon
+                          x-order: 16
+                        id:
+                          description: Internal integer ID
+                          title: id
+                          type: integer
+                          x-order: 2
+                        latest_calendar_date:
+                          description: The latest date with scheduled service
+                          example: '2020-12-31'
+                          format: date
+                          title: latest_calendar_date
+                          type: string
+                          x-order: 14
+                        service_levels:
+                          description: Service levels (in seconds per day) for this feed version
+                          items:
+                            properties:
+                              end_date:
+                                description: End date of this week
+                                example: '2019-11-15'
+                                format: date
+                                title: end_date
+                                type: string
+                                x-order: 43
+                              friday:
+                                description: Seconds of service scheduled on Friday
+                                title: friday
+                                type: integer
+                                x-order: 53
+                              monday:
+                                description: Seconds of service scheduled on Monday
+                                title: monday
+                                type: integer
+                                x-order: 45
+                              saturday:
+                                description: Seconds of service scheduled on Saturday
+                                title: saturday
+                                type: integer
+                                x-order: 55
+                              start_date:
+                                description: Start date of this week
+                                example: '2019-11-15'
+                                format: date
+                                title: start_date
+                                type: string
+                                x-order: 41
+                              sunday:
+                                description: Seconds of service scheduled on Sunday
+                                title: sunday
+                                type: integer
+                                x-order: 57
+                              thursday:
+                                description: Seconds of service scheduled on Thursday
+                                title: thursday
+                                type: integer
+                                x-order: 51
+                              tuesday:
+                                description: Seconds of service scheduled on Tuesday
+                                title: tuesday
+                                type: integer
+                                x-order: 47
+                              wednesday:
+                                description: Seconds of service scheduled on Wednesday
+                                title: wednesday
+                                type: integer
+                                x-order: 49
+                            type: object
+                            x-graphql-type: FeedVersionServiceLevel
+                          title: service_levels
+                          type: array
+                          x-order: 58
+                        sha1:
+                          description: SHA1 hash of the zip file
+                          example: ab5bdc8b6cedd06792d42186a9b542504c5eef9a
+                          title: sha1
+                          type: string
+                          x-order: 4
+                        sha1_dir:
+                          description: SHA1 hash of the top-level .txt files, concatenated in filename order; stable across re-zipping, but other files such as locations.geojson are not included
+                          example: c1026b895dbe7476c0a6dcc1b82c909bfa952c63
+                          title: sha1_dir
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 6
+                        url:
+                          description: URL used to fetch the file
+                          title: url
+                          type: string
+                          x-order: 10
+                      type: object
+                      x-graphql-type: FeedVersion
+                    title: feed_versions
+                    type: array
+                    x-order: 95
+                title: data
+          description: ok
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Bad request - invalid parameters
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Internal server error
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Unexpected error
+      summary: Search for feed versions
+      x-alternates:
+      - method: GET
+        path: /feed_versions.{format}
+        summary: Request feed versions in specified format
+      - method: GET
+        path: /feed_versions/{feed_version_key}
+        summary: Request a feed version by ID or SHA1
+      - method: GET
+        path: /feed_versions/{feed_version_key}.{format}
+        summary: Request a feed version by ID or SHA1 in specified format
+      - method: GET
+        path: /feeds/{feed_key}/feed_versions
+        summary: Request feed versions by feed ID or Onestop ID
+      tags:
+      - Feed Versions
+      operationId: getFeedVersions
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+  /feed_versions/export:
+    post:
+      description: Export one or more feed versions as a GTFS zip file with optional transformations (ID prefixing, timezone normalization, shape simplification, etc.). Feed versions must be successfully imported before they can be exported. Available only using Transitland professional or enterprise plan API keys.
+      requestBody:
+        content:
+          application/json:
+            example:
+              feed_version_keys:
+              - dd7aca4a8e4c90908fd3603c097fabee75fea907
+              - d2813c293bcfd7a97dde599527ae6c62c98e66c6
+              format: gtfs_zip
+              transforms:
+                normalize_timezones: true
+                prefix: agency1_
+                prefix_files:
+                - routes.txt
+                - trips.txt
+                set_values:
+                  agency.txt.*.agency_url: https://example.com
+                simplify_shapes: 10
+                use_basic_route_types: true
+            schema:
+              properties:
+                feed_version_keys:
+                  description: Array of feed version IDs or SHA1 hashes to export
+                  items:
+                    type: string
+                  type: array
+                format:
+                  default: gtfs_zip
+                  description: 'Output format (default: gtfs_zip)'
+                  enum:
+                  - gtfs_zip
+                  type: string
+                transforms:
+                  description: Optional transformations to apply
+                  properties:
+                    normalize_timezones:
+                      description: Normalize timezone names (e.g., US/Pacific -> America/Los_Angeles)
+                      type: boolean
+                    prefix:
+                      description: Prefix to add to entity IDs for namespacing (e.g., 'bart_' prefixes all IDs)
+                      type: string
+                    prefix_files:
+                      description: Specific files to apply prefix to (e.g., ['routes.txt', 'trips.txt']). If omitted, prefix is applied to all entity types. Useful when merging feeds with shared stops or zones.
+                      items:
+                        enum:
+                        - agency.txt
+                        - routes.txt
+                        - trips.txt
+                        - stops.txt
+                        - shapes.txt
+                        - calendar.txt
+                        - fare_attributes.txt
+                        - fare_rules.txt
+                        - levels.txt
+                        - pathways.txt
+                        type: string
+                      type: array
+                    set_values:
+                      additionalProperties:
+                        type: string
+                      description: 'Override specific entity field values. Format: ''filename.entity_id.field'' = ''value'' (e.g., ''agency.txt.BART.agency_url'' = ''https://new-url.com''). Use ''*'' as entity_id to apply to all entities in a file.'
+                      type: object
+                    simplify_shapes:
+                      description: Tolerance value for shape simplification (in meters)
+                      type: number
+                    standardized_sort:
+                      description: Sort CSV rows before zipping. 'asc' or 'desc'; omit for no sort (default preserves copier order, modulo parent-before-child reordering). Empty cells in numeric/date columns rank as the greatest value (NULLS LAST in asc, NULLS FIRST in desc).
+                      enum:
+                      - asc
+                      - desc
+                      type: string
+                    standardized_sort_columns:
+                      description: Optional specific columns to sort by. If empty, defaults are used based on file type.
+                      items:
+                        type: string
+                      type: array
+                    use_basic_route_types:
+                      description: Convert extended route types to basic GTFS route types
+                      type: boolean
+                  type: object
+              required:
+              - feed_version_keys
+              type: object
+        description: Export request with feed version keys and optional transformations
+        required: true
+      responses:
+        '200':
+          content:
+            application/zip:
+              schema:
+                format: binary
+                type: string
+          description: Successful export - returns GTFS zip file
+        '400':
+          description: Bad request - invalid parameters or feed version not imported
+        '403':
+          description: Forbidden - feed version does not allow redistribution
+        '404':
+          description: Not found - no feed versions found
+      summary: Export feed versions with transformations
+      x-required-role: tl_export_feed_versions
+      tags:
+      - Feed Versions
+      operationId: postFeedVersionsExport
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+  /feed_versions/{feed_version_key}:
+    get:
+      parameters:
+      - description: Feed version lookup key; can be an integer ID or a SHA1 value
+        in: path
+        name: feed_version_key
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/formatParam'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  feed_versions:
+                    description: List or search for FeedVersions (specific archived import of a Feed)
+                    items:
+                      properties:
+                        earliest_calendar_date:
+                          description: The earliest date with scheduled service
+                          example: '2020-01-01'
+                          format: date
+                          title: earliest_calendar_date
+                          type: string
+                          x-order: 12
+                        feed:
+                          description: Feed associated with this feed version
+                          properties:
+                            name:
+                              description: A common name for this feed; alternatively use `associated_operators[].name`
+                              title: name
+                              type:
+                              - string
+                              - 'null'
+                              x-order: 21
+                            onestop_id:
+                              description: 'Onestop ID for this feed.
+
+                                Format: `f-geohash-name`.
+
+                                Example: `f-9q9-bart`.'
+                              title: onestop_id
+                              type: string
+                              x-order: 19
+                            spec:
+                              description: 'Type of feed: `GTFS`, `GTFS_RT`, `GBFS`, or `MDS`'
+                              enum:
+                              - GTFS
+                              - GTFS_RT
+                              - GBFS
+                              - MDS
+                              - null
+                              title: spec
+                              type:
+                              - string
+                              - 'null'
+                              x-graphql-type: FeedSpecTypes
+                              x-order: 23
+                          title: feed
+                          type: object
+                          x-graphql-type: Feed
+                          x-order: 24
+                        feed_infos:
+                          description: Records from this feed version's `feed_info.txt`
+                          items:
+                            properties:
+                              default_lang:
+                                description: GTFS `feed_info.default_lang`
+                                title: default_lang
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 61
+                              feed_contact_email:
+                                description: GTFS `feed_info.feed_contact_email`
+                                format: email
+                                title: feed_contact_email
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 63
+                              feed_contact_url:
+                                description: GTFS `feed_info.feed_contact_url`
+                                title: feed_contact_url
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 65
+                              feed_end_date:
+                                description: GTFS `feed_info.feed_end_date`
+                                example: '2019-11-15'
+                                format: date
+                                title: feed_end_date
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 67
+                              feed_lang:
+                                description: GTFS `feed_info.feed_lang`
+                                title: feed_lang
+                                type: string
+                                x-order: 69
+                              feed_publisher_name:
+                                description: GTFS `feed_info.feed_publisher_name`
+                                title: feed_publisher_name
+                                type: string
+                                x-order: 71
+                              feed_publisher_url:
+                                description: GTFS `feed_info.feed_publisher_url`
+                                title: feed_publisher_url
+                                type: string
+                                x-order: 75
+                              feed_start_date:
+                                description: GTFS `feed_info.feed_start_date`
+                                example: '2019-11-15'
+                                format: date
+                                title: feed_start_date
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 73
+                            type: object
+                            x-graphql-type: FeedInfo
+                          title: feed_infos
+                          type: array
+                          x-order: 76
+                        feed_version_gtfs_import:
+                          description: Database import status
+                          properties:
+                            exception_log:
+                              description: Error log accumulated during import; empty on success
+                              title: exception_log
+                              type: string
+                              x-order: 83
+                            in_progress:
+                              description: True if the import is currently running
+                              title: in_progress
+                              type: boolean
+                              x-order: 79
+                            interpolated_stop_time_count:
+                              description: Number of stop_times whose arrival/departure times were filled in by interpolation during import
+                              title: interpolated_stop_time_count
+                              type:
+                              - integer
+                              - 'null'
+                              x-order: 93
+                            skip_entity_error_count:
+                              description: Counts of entities skipped due to errors, keyed by file name
+                              title: skip_entity_error_count
+                              x-order: 87
+                            skip_entity_filter_count:
+                              description: Counts of entities skipped due to import filters, keyed by file name
+                              title: skip_entity_filter_count
+                              x-order: 89
+                            skip_entity_marked_count:
+                              description: Counts of entities skipped by the marker filter, keyed by file name
+                              title: skip_entity_marked_count
+                              x-order: 91
+                            success:
+                              description: True if the import completed successfully
+                              title: success
+                              type: boolean
+                              x-order: 81
+                            warning_count:
+                              description: Counts of warnings raised during import, keyed by file name
+                              title: warning_count
+                              x-order: 85
+                          title: feed_version_gtfs_import
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedVersionGtfsImport
+                          x-order: 94
+                        fetched_at:
+                          description: Time when the file was fetched from the URL
+                          example: '2019-11-15T00:45:55.409906'
+                          format: datetime
+                          title: fetched_at
+                          type: string
+                          x-order: 8
+                        files:
+                          description: Metadata for each file in the GTFS archive
+                          items:
+                            properties:
+                              csv_like:
+                                description: True if the file is parseable as CSV
+                                title: csv_like
+                                type: boolean
+                                x-order: 35
+                              header:
+                                description: Comma-joined column header row of the file (CSV files only)
+                                title: header
+                                type: string
+                                x-order: 33
+                              name:
+                                description: GTFS file name (e.g. `stops.txt`)
+                                title: name
+                                type: string
+                                x-order: 27
+                              rows:
+                                description: Number of data rows in the file (CSV files only)
+                                title: rows
+                                type: integer
+                                x-order: 29
+                              sha1:
+                                description: SHA1 hash of the file
+                                title: sha1
+                                type: string
+                                x-order: 31
+                              size:
+                                description: File size, in bytes
+                                title: size
+                                type: integer
+                                x-order: 37
+                            type: object
+                            x-graphql-type: FeedVersionFileInfo
+                          title: files
+                          type: array
+                          x-order: 38
+                        geometry:
+                          description: Convex hull of all stop coordinates in this feed version
+                          title: geometry
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: Polygon
+                          x-order: 16
+                        id:
+                          description: Internal integer ID
+                          title: id
+                          type: integer
+                          x-order: 2
+                        latest_calendar_date:
+                          description: The latest date with scheduled service
+                          example: '2020-12-31'
+                          format: date
+                          title: latest_calendar_date
+                          type: string
+                          x-order: 14
+                        service_levels:
+                          description: Service levels (in seconds per day) for this feed version
+                          items:
+                            properties:
+                              end_date:
+                                description: End date of this week
+                                example: '2019-11-15'
+                                format: date
+                                title: end_date
+                                type: string
+                                x-order: 43
+                              friday:
+                                description: Seconds of service scheduled on Friday
+                                title: friday
+                                type: integer
+                                x-order: 53
+                              monday:
+                                description: Seconds of service scheduled on Monday
+                                title: monday
+                                type: integer
+                                x-order: 45
+                              saturday:
+                                description: Seconds of service scheduled on Saturday
+                                title: saturday
+                                type: integer
+                                x-order: 55
+                              start_date:
+                                description: Start date of this week
+                                example: '2019-11-15'
+                                format: date
+                                title: start_date
+                                type: string
+                                x-order: 41
+                              sunday:
+                                description: Seconds of service scheduled on Sunday
+                                title: sunday
+                                type: integer
+                                x-order: 57
+                              thursday:
+                                description: Seconds of service scheduled on Thursday
+                                title: thursday
+                                type: integer
+                                x-order: 51
+                              tuesday:
+                                description: Seconds of service scheduled on Tuesday
+                                title: tuesday
+                                type: integer
+                                x-order: 47
+                              wednesday:
+                                description: Seconds of service scheduled on Wednesday
+                                title: wednesday
+                                type: integer
+                                x-order: 49
+                            type: object
+                            x-graphql-type: FeedVersionServiceLevel
+                          title: service_levels
+                          type: array
+                          x-order: 58
+                        sha1:
+                          description: SHA1 hash of the zip file
+                          example: ab5bdc8b6cedd06792d42186a9b542504c5eef9a
+                          title: sha1
+                          type: string
+                          x-order: 4
+                        sha1_dir:
+                          description: SHA1 hash of the top-level .txt files, concatenated in filename order; stable across re-zipping, but other files such as locations.geojson are not included
+                          example: c1026b895dbe7476c0a6dcc1b82c909bfa952c63
+                          title: sha1_dir
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 6
+                        url:
+                          description: URL used to fetch the file
+                          title: url
+                          type: string
+                          x-order: 10
+                      type: object
+                      x-graphql-type: FeedVersion
+                    title: feed_versions
+                    type: array
+                    x-order: 95
+                title: data
+          description: ok
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Bad request - invalid parameters
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Internal server error
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Unexpected error
+      summary: Feed Versions
+      tags:
+      - Feed Versions
+      operationId: getFeedVersionsByFeedVersionKey
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+  /feed_versions/{feed_version_key}/download:
+    get:
+      description: Download this feed version GTFS zip for this feed, if redistribution is allowed by the source feed's license. Available only using Transitland professional or enterprise plan API keys.
+      parameters:
+      - description: Feed version lookup key; can be an integer ID or a SHA1 value
+        in: path
+        name: feed_version_key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: Success
+        '401':
+          description: Not authorized - feed redistribution not allowed
+        '404':
+          description: Not found - feed not found
+        '429':
+          description: Too many requests - feed version download quota exceeded
+      summary: Download feed version
+      x-required-role: tl_download_fv_historic
+      tags:
+      - Feed Versions
+      operationId: getFeedVersionsByFeedVersionKeyDownload
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+components:
+  parameters:
+    formatParam:
+      description: Response format
+      in: query
+      name: format
+      schema:
+        enum:
+        - json
+        - geojson
+        - geojsonl
+        type: string
+    bboxParam:
+      description: Geographic search using a bounding box, with coordinates in (min_lon, min_lat, max_lon, max_lat) order as a comma separated string
+      in: query
+      name: bbox
+      schema:
+        type: string
+    idParam:
+      description: Search for a specific internal ID
+      in: query
+      name: id
+      schema:
+        format: int32
+        type: integer
+    lonParam:
+      description: Longitude
+      in: query
+      name: lon
+      schema:
+        type: number
+    latParam:
+      description: Latitude
+      in: query
+      name: lat
+      schema:
+        type: number
+    radiusParam:
+      description: Search radius (meters); requires lat and lon
+      in: query
+      name: radius
+      schema:
+        type: number
+    afterParam:
+      description: Pagination cursor value. This should be treated as an opaque value created by the server and returned as the link to the next result page, which may be empty. For historical reasons, this is based on the integer record ID values, but that should not be assumed to be the case in the future.
+      in: query
+      name: after
+      schema:
+        format: int32
+        type: integer
+    limitParam:
+      description: Maximum number of records to return
+      in: query
+      name: limit
+      schema:
+        format: int32
+        type: integer
+x-refined-from:
+- transitland-rest-openapi.json
+- transitland-rest-openapi.yml

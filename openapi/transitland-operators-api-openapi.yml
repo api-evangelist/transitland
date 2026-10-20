@@ -1,0 +1,1252 @@
+openapi: 3.2.0
+info:
+  title: Transitland Operators API
+  version: 2.0.0
+  contact:
+    email: info@interline.io
+  description: 'Operations tagged Operators across 2 of this provider''s published API definitions: transitland-rest-openapi.json, transitland-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: Transitland REST API
+  url: https://transit.land/api/v2/rest
+tags:
+- name: Operators
+paths:
+  /operators:
+    get:
+      parameters:
+      - description: Search for operators with a tag. Combine with tag_value also query for the value of the tag.
+        in: query
+        name: tag_key
+        schema:
+          type: string
+      - description: Search for feeds tagged with a given value. Must be combined with tag_key.
+        in: query
+        name: tag_value
+        schema:
+          type: string
+      - $ref: '#/components/parameters/onestopParam'
+      - $ref: '#/components/parameters/feedParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/includeAlertsParam'
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/afterParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/adm0NameParam'
+      - $ref: '#/components/parameters/adm0IsoParam'
+      - $ref: '#/components/parameters/adm1NameParam'
+      - $ref: '#/components/parameters/adm1IsoParam'
+      - $ref: '#/components/parameters/cityNameParam'
+      - $ref: '#/components/parameters/radiusParam'
+        x-description: Search for operators geographically, based on stops at this location; radius is in meters, requires lon and lat
+      - $ref: '#/components/parameters/lonParam'
+      - $ref: '#/components/parameters/latParam'
+      - $ref: '#/components/parameters/bboxParam'
+      - $ref: '#/components/parameters/licenseCommercialUseAllowedParam'
+      - $ref: '#/components/parameters/licenseShareAlikeOptionalParam'
+      - $ref: '#/components/parameters/licenseCreateDerivedProductParam'
+      - $ref: '#/components/parameters/licenseRedistributionAllowedParam'
+      - $ref: '#/components/parameters/licenseUseWithoutAttributionParam'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  operators:
+                    description: List or search for Operators (higher-level groupings of agencies)
+                    items:
+                      properties:
+                        agencies:
+                          description: Agencies for this operator from active feed versions
+                          items:
+                            properties:
+                              agency_id:
+                                description: GTFS `agency.agency_id`
+                                title: agency_id
+                                type: string
+                                x-order: 27
+                              agency_name:
+                                description: GTFS `agency.agency_name`
+                                title: agency_name
+                                type: string
+                                x-order: 29
+                              alerts:
+                                description: 'GTFS-RT service alerts on this agency as a whole, not those narrowed to a route, stop or trip; pass `active: true` to return only currently active alerts, and `include_modes: true` to also return alerts on a mode the agency runs, such as all of its subway service'
+                                items:
+                                  properties:
+                                    active_period:
+                                      description: Time ranges during which this alert is active. See https://gtfs.org/realtime/reference/#message-timerange
+                                      items:
+                                        properties:
+                                          end:
+                                            description: End of the range, in Unix epoch seconds
+                                            title: end
+                                            type:
+                                            - integer
+                                            - 'null'
+                                            x-order: 82
+                                          start:
+                                            description: Start of the range, in Unix epoch seconds
+                                            title: start
+                                            type:
+                                            - integer
+                                            - 'null'
+                                            x-order: 80
+                                        type: object
+                                        x-graphql-type: RTTimeRange
+                                      title: active_period
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 83
+                                    cause:
+                                      description: GTFS-RT Alert [cause](https://gtfs.org/realtime/reference/#enum-cause)
+                                      externalDocs:
+                                        description: cause
+                                        url: https://gtfs.org/realtime/reference/#enum-cause
+                                      title: cause
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 43
+                                    description_text:
+                                      description: GTFS-RT Alert description text
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 62
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 64
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: description_text
+                                      type: array
+                                      x-order: 65
+                                    effect:
+                                      description: GTFS-RT Alert [effect](https://gtfs.org/realtime/reference/#enum-effect)
+                                      externalDocs:
+                                        description: effect
+                                        url: https://gtfs.org/realtime/reference/#enum-effect
+                                      title: effect
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 45
+                                    entity_id:
+                                      description: Id of the GTFS-RT FeedEntity that carried this alert, as published by its realtime feed. This is the realtime message's own entity id, not a GTFS static id like those in `informed_entity`. It should be unique within one realtime feed but not across feeds, so identify an alert by `rt_feed_onestop_id` and `entity_id` together, for example to merge the copies of an alert reached through a stop, its routes and their agency. Producers are not required to keep it the same between fetches
+                                      title: entity_id
+                                      type: string
+                                      x-order: 39
+                                    header_text:
+                                      description: GTFS-RT Alert header text
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 56
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 58
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: header_text
+                                      type: array
+                                      x-order: 59
+                                    informed_entity:
+                                      description: Entities this alert applies to, as published. See https://gtfs.org/realtime/reference/#message-entityselector
+                                      items:
+                                        properties:
+                                          agency_id:
+                                            description: GTFS `agency_id`
+                                            title: agency_id
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 86
+                                          direction_id:
+                                            description: GTFS direction_id (0 or 1); given together with `route_id`
+                                            title: direction_id
+                                            type:
+                                            - integer
+                                            - 'null'
+                                            x-order: 92
+                                          route_id:
+                                            description: GTFS `route_id`
+                                            title: route_id
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 88
+                                          route_type:
+                                            description: GTFS `route_type`
+                                            title: route_type
+                                            type:
+                                            - integer
+                                            - 'null'
+                                            x-order: 90
+                                          stop_id:
+                                            description: GTFS `stop_id`
+                                            title: stop_id
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 94
+                                          trip:
+                                            description: The trip this applies to
+                                            properties:
+                                              direction_id:
+                                                description: GTFS direction_id (0 or 1)
+                                                title: direction_id
+                                                type:
+                                                - integer
+                                                - 'null'
+                                                x-order: 101
+                                              route_id:
+                                                description: GTFS `route_id` of the trip's route
+                                                title: route_id
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 99
+                                              schedule_relationship:
+                                                description: GTFS-RT schedule_relationship value as a string. See https://gtfs.org/realtime/reference/#enum-schedulerelationship-1
+                                                title: schedule_relationship
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 107
+                                              start_date:
+                                                description: Service date on which this trip runs (local time)
+                                                example: '2019-11-15'
+                                                format: date
+                                                title: start_date
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 105
+                                              start_time:
+                                                description: Scheduled start time of the trip in local time `HH:MM:SS`
+                                                example: '15:21:04'
+                                                format: hms
+                                                title: start_time
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 103
+                                              trip_id:
+                                                description: GTFS `trip_id` identifying the trip
+                                                title: trip_id
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 97
+                                            title: trip
+                                            type:
+                                            - object
+                                            - 'null'
+                                            x-graphql-type: RTTripDescriptor
+                                            x-order: 108
+                                        type: object
+                                        x-graphql-type: RTEntitySelector
+                                      title: informed_entity
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 109
+                                    rt_feed_onestop_id:
+                                      description: Onestop ID of the feed whose GTFS-RT data this alert came from. A feed may carry both static and realtime URLs, so this can be the same feed as a `feed_onestop_id` elsewhere in the schema
+                                      title: rt_feed_onestop_id
+                                      type: string
+                                      x-order: 41
+                                    severity_level:
+                                      description: 'Alert severity: `UNKNOWN_SEVERITY`, `INFO`, `WARNING`, or `SEVERE`'
+                                      title: severity_level
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 47
+                                    tts_description_text:
+                                      description: Description text optimized for text-to-speech (TTS) systems
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 74
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 76
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: tts_description_text
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 77
+                                    tts_header_text:
+                                      description: Header text optimized for text-to-speech (TTS) systems
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 68
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 70
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: tts_header_text
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 71
+                                    url:
+                                      description: URL for more information
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 50
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 52
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: url
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 53
+                                  type: object
+                                  x-graphql-type: Alert
+                                title: alerts
+                                type:
+                                - array
+                                - 'null'
+                                x-order: 110
+                              geometry:
+                                description: Convex hull of all stops served by this agency
+                                title: geometry
+                                type:
+                                - object
+                                - 'null'
+                                x-graphql-type: Polygon
+                                x-order: 31
+                              id:
+                                description: Internal integer ID
+                                title: id
+                                type: integer
+                                x-order: 25
+                              places:
+                                description: Administrative places (city, state, country) matched to this agency by overlap with stop locations, ranked by association strength
+                                items:
+                                  properties:
+                                    adm0_name:
+                                      description: Best-matched country name
+                                      title: adm0_name
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 115
+                                    adm1_name:
+                                      description: Best-matched state or province name
+                                      title: adm1_name
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 117
+                                    city_name:
+                                      description: Best-matched city name
+                                      title: city_name
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 113
+                                  type: object
+                                  x-graphql-type: AgencyPlace
+                                title: places
+                                type:
+                                - array
+                                - 'null'
+                                x-order: 118
+                              route_types:
+                                description: The distinct raw GTFS route types of this agency's routes, in ascending order
+                                items:
+                                  type: integer
+                                title: route_types
+                                type: array
+                                x-order: 33
+                              route_types_basic:
+                                description: 'The distinct basic GTFS route types of this agency''s routes, in ascending order: each extended route type is replaced by the basic type it is a kind of, so an agency running both 700 and 702 reports 3 once'
+                                items:
+                                  type: integer
+                                title: route_types_basic
+                                type: array
+                                x-order: 35
+                            type: object
+                            x-graphql-type: Agency
+                          title: agencies
+                          type:
+                          - array
+                          - 'null'
+                          x-order: 119
+                        feeds:
+                          description: Feeds associated with this operator
+                          items:
+                            properties:
+                              id:
+                                description: Internal integer ID
+                                title: id
+                                type: integer
+                                x-order: 15
+                              name:
+                                description: A common name for this feed; alternatively use `associated_operators[].name`
+                                title: name
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 19
+                              onestop_id:
+                                description: 'Onestop ID for this feed.
+
+                                  Format: `f-geohash-name`.
+
+                                  Example: `f-9q9-bart`.'
+                                title: onestop_id
+                                type: string
+                                x-order: 17
+                              spec:
+                                description: 'Type of feed: `GTFS`, `GTFS_RT`, `GBFS`, or `MDS`'
+                                enum:
+                                - GTFS
+                                - GTFS_RT
+                                - GBFS
+                                - MDS
+                                - null
+                                title: spec
+                                type:
+                                - string
+                                - 'null'
+                                x-graphql-type: FeedSpecTypes
+                                x-order: 21
+                            type: object
+                            x-graphql-type: Feed
+                          title: feeds
+                          type:
+                          - array
+                          - 'null'
+                          x-order: 22
+                        id:
+                          description: Internal integer ID
+                          title: id
+                          type: integer
+                          x-order: 2
+                        name:
+                          description: Operator name
+                          title: name
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 6
+                        onestop_id:
+                          description: 'Onestop ID for this operator.
+
+                            Format: `o-geohash-name`.
+
+                            Example: `o-dr5r-nyct`.'
+                          title: onestop_id
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 4
+                        short_name:
+                          description: Operator short name
+                          title: short_name
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 8
+                        tags:
+                          description: Atlas tags providing additional metadata for this operator
+                          title: tags
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: Tags
+                          x-order: 12
+                        website:
+                          description: Operator website
+                          title: website
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 10
+                      type: object
+                      x-graphql-type: Operator
+                    title: operators
+                    type: array
+                    x-order: 120
+                title: data
+          description: ok
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Bad request - invalid parameters
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Internal server error
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Unexpected error
+      summary: Search for operators
+      x-alternates:
+      - method: GET
+        path: /operators.{format}
+        summary: Request operators in specified format
+      - method: GET
+        path: /operators/{operator_key}
+        summary: Request an operator by ID or Onestop ID
+      - method: GET
+        path: /operators/{operator_key}.{format}
+        summary: Request an operator by ID or Onestop ID in specified format
+      tags:
+      - Operators
+      operationId: getOperators
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+  /operators/{operator_key}:
+    get:
+      parameters:
+      - description: Operator lookup key; can be a Onestop ID or an internal database integer ID
+        in: path
+        name: operator_key
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/includeAlertsParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/formatParam'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  operators:
+                    description: List or search for Operators (higher-level groupings of agencies)
+                    items:
+                      properties:
+                        agencies:
+                          description: Agencies for this operator from active feed versions
+                          items:
+                            properties:
+                              agency_id:
+                                description: GTFS `agency.agency_id`
+                                title: agency_id
+                                type: string
+                                x-order: 27
+                              agency_name:
+                                description: GTFS `agency.agency_name`
+                                title: agency_name
+                                type: string
+                                x-order: 29
+                              alerts:
+                                description: 'GTFS-RT service alerts on this agency as a whole, not those narrowed to a route, stop or trip; pass `active: true` to return only currently active alerts, and `include_modes: true` to also return alerts on a mode the agency runs, such as all of its subway service'
+                                items:
+                                  properties:
+                                    active_period:
+                                      description: Time ranges during which this alert is active. See https://gtfs.org/realtime/reference/#message-timerange
+                                      items:
+                                        properties:
+                                          end:
+                                            description: End of the range, in Unix epoch seconds
+                                            title: end
+                                            type:
+                                            - integer
+                                            - 'null'
+                                            x-order: 82
+                                          start:
+                                            description: Start of the range, in Unix epoch seconds
+                                            title: start
+                                            type:
+                                            - integer
+                                            - 'null'
+                                            x-order: 80
+                                        type: object
+                                        x-graphql-type: RTTimeRange
+                                      title: active_period
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 83
+                                    cause:
+                                      description: GTFS-RT Alert [cause](https://gtfs.org/realtime/reference/#enum-cause)
+                                      externalDocs:
+                                        description: cause
+                                        url: https://gtfs.org/realtime/reference/#enum-cause
+                                      title: cause
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 43
+                                    description_text:
+                                      description: GTFS-RT Alert description text
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 62
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 64
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: description_text
+                                      type: array
+                                      x-order: 65
+                                    effect:
+                                      description: GTFS-RT Alert [effect](https://gtfs.org/realtime/reference/#enum-effect)
+                                      externalDocs:
+                                        description: effect
+                                        url: https://gtfs.org/realtime/reference/#enum-effect
+                                      title: effect
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 45
+                                    entity_id:
+                                      description: Id of the GTFS-RT FeedEntity that carried this alert, as published by its realtime feed. This is the realtime message's own entity id, not a GTFS static id like those in `informed_entity`. It should be unique within one realtime feed but not across feeds, so identify an alert by `rt_feed_onestop_id` and `entity_id` together, for example to merge the copies of an alert reached through a stop, its routes and their agency. Producers are not required to keep it the same between fetches
+                                      title: entity_id
+                                      type: string
+                                      x-order: 39
+                                    header_text:
+                                      description: GTFS-RT Alert header text
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 56
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 58
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: header_text
+                                      type: array
+                                      x-order: 59
+                                    informed_entity:
+                                      description: Entities this alert applies to, as published. See https://gtfs.org/realtime/reference/#message-entityselector
+                                      items:
+                                        properties:
+                                          agency_id:
+                                            description: GTFS `agency_id`
+                                            title: agency_id
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 86
+                                          direction_id:
+                                            description: GTFS direction_id (0 or 1); given together with `route_id`
+                                            title: direction_id
+                                            type:
+                                            - integer
+                                            - 'null'
+                                            x-order: 92
+                                          route_id:
+                                            description: GTFS `route_id`
+                                            title: route_id
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 88
+                                          route_type:
+                                            description: GTFS `route_type`
+                                            title: route_type
+                                            type:
+                                            - integer
+                                            - 'null'
+                                            x-order: 90
+                                          stop_id:
+                                            description: GTFS `stop_id`
+                                            title: stop_id
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 94
+                                          trip:
+                                            description: The trip this applies to
+                                            properties:
+                                              direction_id:
+                                                description: GTFS direction_id (0 or 1)
+                                                title: direction_id
+                                                type:
+                                                - integer
+                                                - 'null'
+                                                x-order: 101
+                                              route_id:
+                                                description: GTFS `route_id` of the trip's route
+                                                title: route_id
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 99
+                                              schedule_relationship:
+                                                description: GTFS-RT schedule_relationship value as a string. See https://gtfs.org/realtime/reference/#enum-schedulerelationship-1
+                                                title: schedule_relationship
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 107
+                                              start_date:
+                                                description: Service date on which this trip runs (local time)
+                                                example: '2019-11-15'
+                                                format: date
+                                                title: start_date
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 105
+                                              start_time:
+                                                description: Scheduled start time of the trip in local time `HH:MM:SS`
+                                                example: '15:21:04'
+                                                format: hms
+                                                title: start_time
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 103
+                                              trip_id:
+                                                description: GTFS `trip_id` identifying the trip
+                                                title: trip_id
+                                                type:
+                                                - string
+                                                - 'null'
+                                                x-order: 97
+                                            title: trip
+                                            type:
+                                            - object
+                                            - 'null'
+                                            x-graphql-type: RTTripDescriptor
+                                            x-order: 108
+                                        type: object
+                                        x-graphql-type: RTEntitySelector
+                                      title: informed_entity
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 109
+                                    rt_feed_onestop_id:
+                                      description: Onestop ID of the feed whose GTFS-RT data this alert came from. A feed may carry both static and realtime URLs, so this can be the same feed as a `feed_onestop_id` elsewhere in the schema
+                                      title: rt_feed_onestop_id
+                                      type: string
+                                      x-order: 41
+                                    severity_level:
+                                      description: 'Alert severity: `UNKNOWN_SEVERITY`, `INFO`, `WARNING`, or `SEVERE`'
+                                      title: severity_level
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 47
+                                    tts_description_text:
+                                      description: Description text optimized for text-to-speech (TTS) systems
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 74
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 76
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: tts_description_text
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 77
+                                    tts_header_text:
+                                      description: Header text optimized for text-to-speech (TTS) systems
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 68
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 70
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: tts_header_text
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 71
+                                    url:
+                                      description: URL for more information
+                                      items:
+                                        properties:
+                                          language:
+                                            description: BCP 47 language tag for this translation
+                                            title: language
+                                            type:
+                                            - string
+                                            - 'null'
+                                            x-order: 50
+                                          text:
+                                            description: Translated text
+                                            title: text
+                                            type: string
+                                            x-order: 52
+                                        type: object
+                                        x-graphql-type: RTTranslation
+                                      title: url
+                                      type:
+                                      - array
+                                      - 'null'
+                                      x-order: 53
+                                  type: object
+                                  x-graphql-type: Alert
+                                title: alerts
+                                type:
+                                - array
+                                - 'null'
+                                x-order: 110
+                              geometry:
+                                description: Convex hull of all stops served by this agency
+                                title: geometry
+                                type:
+                                - object
+                                - 'null'
+                                x-graphql-type: Polygon
+                                x-order: 31
+                              id:
+                                description: Internal integer ID
+                                title: id
+                                type: integer
+                                x-order: 25
+                              places:
+                                description: Administrative places (city, state, country) matched to this agency by overlap with stop locations, ranked by association strength
+                                items:
+                                  properties:
+                                    adm0_name:
+                                      description: Best-matched country name
+                                      title: adm0_name
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 115
+                                    adm1_name:
+                                      description: Best-matched state or province name
+                                      title: adm1_name
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 117
+                                    city_name:
+                                      description: Best-matched city name
+                                      title: city_name
+                                      type:
+                                      - string
+                                      - 'null'
+                                      x-order: 113
+                                  type: object
+                                  x-graphql-type: AgencyPlace
+                                title: places
+                                type:
+                                - array
+                                - 'null'
+                                x-order: 118
+                              route_types:
+                                description: The distinct raw GTFS route types of this agency's routes, in ascending order
+                                items:
+                                  type: integer
+                                title: route_types
+                                type: array
+                                x-order: 33
+                              route_types_basic:
+                                description: 'The distinct basic GTFS route types of this agency''s routes, in ascending order: each extended route type is replaced by the basic type it is a kind of, so an agency running both 700 and 702 reports 3 once'
+                                items:
+                                  type: integer
+                                title: route_types_basic
+                                type: array
+                                x-order: 35
+                            type: object
+                            x-graphql-type: Agency
+                          title: agencies
+                          type:
+                          - array
+                          - 'null'
+                          x-order: 119
+                        feeds:
+                          description: Feeds associated with this operator
+                          items:
+                            properties:
+                              id:
+                                description: Internal integer ID
+                                title: id
+                                type: integer
+                                x-order: 15
+                              name:
+                                description: A common name for this feed; alternatively use `associated_operators[].name`
+                                title: name
+                                type:
+                                - string
+                                - 'null'
+                                x-order: 19
+                              onestop_id:
+                                description: 'Onestop ID for this feed.
+
+                                  Format: `f-geohash-name`.
+
+                                  Example: `f-9q9-bart`.'
+                                title: onestop_id
+                                type: string
+                                x-order: 17
+                              spec:
+                                description: 'Type of feed: `GTFS`, `GTFS_RT`, `GBFS`, or `MDS`'
+                                enum:
+                                - GTFS
+                                - GTFS_RT
+                                - GBFS
+                                - MDS
+                                - null
+                                title: spec
+                                type:
+                                - string
+                                - 'null'
+                                x-graphql-type: FeedSpecTypes
+                                x-order: 21
+                            type: object
+                            x-graphql-type: Feed
+                          title: feeds
+                          type:
+                          - array
+                          - 'null'
+                          x-order: 22
+                        id:
+                          description: Internal integer ID
+                          title: id
+                          type: integer
+                          x-order: 2
+                        name:
+                          description: Operator name
+                          title: name
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 6
+                        onestop_id:
+                          description: 'Onestop ID for this operator.
+
+                            Format: `o-geohash-name`.
+
+                            Example: `o-dr5r-nyct`.'
+                          title: onestop_id
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 4
+                        short_name:
+                          description: Operator short name
+                          title: short_name
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 8
+                        tags:
+                          description: Atlas tags providing additional metadata for this operator
+                          title: tags
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: Tags
+                          x-order: 12
+                        website:
+                          description: Operator website
+                          title: website
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 10
+                      type: object
+                      x-graphql-type: Operator
+                    title: operators
+                    type: array
+                    x-order: 120
+                title: data
+          description: ok
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Bad request - invalid parameters
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Internal server error
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Unexpected error
+      summary: Operators
+      tags:
+      - Operators
+      operationId: getOperatorsByOperatorKey
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+components:
+  parameters:
+    formatParam:
+      description: Response format
+      in: query
+      name: format
+      schema:
+        enum:
+        - json
+        - geojson
+        - geojsonl
+        type: string
+    searchParam:
+      description: Full text search
+      in: query
+      name: search
+      schema:
+        type: string
+    feedParam:
+      description: Search for records in this feed
+      in: query
+      name: feed_onestop_id
+      schema:
+        type: string
+    afterParam:
+      description: Pagination cursor value. This should be treated as an opaque value created by the server and returned as the link to the next result page, which may be empty. For historical reasons, this is based on the integer record ID values, but that should not be assumed to be the case in the future.
+      in: query
+      name: after
+      schema:
+        format: int32
+        type: integer
+    bboxParam:
+      description: Geographic search using a bounding box, with coordinates in (min_lon, min_lat, max_lon, max_lat) order as a comma separated string
+      in: query
+      name: bbox
+      schema:
+        type: string
+    adm0IsoParam:
+      description: Search by country 2 letter ISO 3166 code
+      in: query
+      name: adm0_iso
+      schema:
+        type: string
+    idParam:
+      description: Search for a specific internal ID
+      in: query
+      name: id
+      schema:
+        format: int32
+        type: integer
+    includeAlertsParam:
+      description: Include alerts from GTFS Realtime feeds
+      in: query
+      name: include_alerts
+      schema:
+        enum:
+        - 'true'
+        - 'false'
+        type: string
+    latParam:
+      description: Latitude
+      in: query
+      name: lat
+      schema:
+        type: number
+    licenseCommercialUseAllowedParam:
+      description: Filter entities by feed license 'commercial_use_allowed' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_commercial_use_allowed
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    onestopParam:
+      description: Search for a specific Onestop ID
+      in: query
+      name: onestop_id
+      schema:
+        type: string
+    licenseRedistributionAllowedParam:
+      description: Filter entities by feed license 'redistribution_allowed' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_redistribution_allowed
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    radiusParam:
+      description: Search radius (meters); requires lat and lon
+      in: query
+      name: radius
+      schema:
+        type: number
+    adm1IsoParam:
+      description: Search by state/province/division ISO 3166-2 code
+      in: query
+      name: adm1_iso
+      schema:
+        type: string
+    licenseShareAlikeOptionalParam:
+      description: Filter entities by feed license 'share_alike_optional' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_share_alike_optional
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    licenseCreateDerivedProductParam:
+      description: Filter entities by feed license 'create_derived_product' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_create_derived_product
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    adm1NameParam:
+      description: Search by state/province/division name
+      in: query
+      name: adm1_name
+      schema:
+        type: string
+    lonParam:
+      description: Longitude
+      in: query
+      name: lon
+      schema:
+        type: number
+    cityNameParam:
+      description: Search by city name
+      in: query
+      name: city_name
+      schema:
+        type: string
+    adm0NameParam:
+      description: Search by country name
+      in: query
+      name: adm0_name
+      schema:
+        type: string
+    limitParam:
+      description: Maximum number of records to return
+      in: query
+      name: limit
+      schema:
+        format: int32
+        type: integer
+    licenseUseWithoutAttributionParam:
+      description: Filter entities by feed license 'use_without_attribution' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_use_without_attribution
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+x-refined-from:
+- transitland-rest-openapi.json
+- transitland-rest-openapi.yml

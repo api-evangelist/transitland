@@ -1,0 +1,119 @@
+generated: '2026-10-20'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 8
+  own: 4
+  other_domain: 3
+  platform: 1
+  roles:
+  - api
+  - identity
+  - other
+  - source
+  - status
+  - website
+hosts:
+- host: api.transit.land
+  found_by:
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: transit.land
+  role: api
+  relation: own
+- host: app.interline.io
+  found_by:
+  - pointer
+  types:
+  - SignUp
+  serves: []
+  registrable_domain: interline.io
+  role: identity
+  relation: other-domain
+- host: contentsignals.org
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: contentsignals.org
+  role: other
+  relation: other-domain
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - PublicAPIsListing
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: status.transit.land
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types:
+  - StatusPage
+  serves: []
+  registrable_domain: transit.land
+  role: status
+  relation: own
+- host: transit.land
+  found_by:
+  - apis[]
+  - probed
+  - site-links
+  - spec-found
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types: []
+  serves:
+  - api
+  - spec
+  - api-gateway
+  vendor: kong
+  registrable_domain: transit.land
+  role: other
+  relation: own
+- host: www.rfc-editor.org
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: rfc-editor.org
+  role: other
+  relation: other-domain
+- host: www.transit.land
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - docs-index
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Newsroom
+  - APIReference
+  - Website
+  - Documentation
+  - Pricing
+  - TermsOfService
+  serves:
+  - docs
+  - cdn
+  vendor: cloudflare
+  registrable_domain: transit.land
+  role: website
+  relation: own

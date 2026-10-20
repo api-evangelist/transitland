@@ -1,0 +1,28 @@
+generated: '2026-10-19'
+method: derived
+source: openapi/transitland-routing-openapi.yml
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - header
+  - query
+schemes:
+- name: apikeyHeader
+  type: apiKey
+  in: header
+  parameter: apikey
+  description: API key sent as a request header. Preferred, since query strings are logged by
+    intermediaries. `apikey`, `api_key`, `api_token`, and `access_token` are accepted equivalently,
+    and headers may be spelled with a dash or an underscore.
+  sources:
+  - openapi/transitland-routing-openapi.yml
+- name: apikeyQuery
+  type: apiKey
+  in: query
+  parameter: apikey
+  description: API key sent as a query parameter, for callers that cannot set headers. `apikey`,
+    `api_key`, `api_token`, and `access_token` are accepted equivalently, and headers may be
+    spelled with a dash or an underscore.
+  sources:
+  - openapi/transitland-routing-openapi.yml

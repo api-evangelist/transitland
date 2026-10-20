@@ -1,0 +1,15 @@
+name: TransitLand conventions
+generated: '2026-10-19'
+method: searched
+source: https://www.transit.land/documentation/plans-and-billing
+auth:
+  style: API key in the `apikey` header (preferred) or `apikey` query parameter; `api_key`, `api_token` and `access_token` accepted equivalently (routing OpenAPI securitySchemes).
+idempotency:
+  coverage: na
+  note: The surface is read/compute only; REST is GET plus one query POST, routing POSTs compute itineraries/matrices and change no state.
+reversibility:
+  coverage: na
+  note: No write surface; nothing to reverse.
+quotas:
+  note: Monthly per-plan quotas; a request past a quota is refused until the quota resets the next month.
+see_also: [errors/transitland-problem-types.yml, rate-limits/transitland-rate-limits.yml, authentication/transitland-authentication.yml]

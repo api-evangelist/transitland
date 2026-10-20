@@ -1,0 +1,7 @@
+name: TransitLand lifecycle
+generated: '2026-10-19'
+method: searched
+source: https://www.transit.land/llms.txt
+versioning: URL-path major version (/api/v2/); REST OpenAPI info.version 2.0.0, routing 1.0.0.
+deprecation: No deprecation policy published.
+status_page: https://status.transit.land/

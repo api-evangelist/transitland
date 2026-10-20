@@ -1,0 +1,916 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/transitland/main/json-schema/transitland-valhalla-trace-attributes-response-schema.json",
+  "title": "ValhallaTraceAttributesResponse",
+  "description": "Attributes of the road network along a matched trace.",
+  "x-generated": "2026-10-19",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/transitland-routing-openapi.yml#/components/schemas/ValhallaTraceAttributesResponse",
+  "properties": {
+    "admins": {
+      "description": "Countries and states the matched path passes through. Each field is absent when unknown.",
+      "items": {
+        "$ref": "#/$defs/ValhallaAdmin"
+      },
+      "type": "array"
+    },
+    "alternate_paths": {
+      "description": "Other plausible matches. Always present, and empty when the trace matched one way only. Each holds the same path fields as the response itself: `osm_changeset`, `shape`, `confidence_score`, `raw_score`, `admins`, `edges`, `elevation_interval`, `elevation`, `matched_points`, and `shape_attributes`.",
+      "items": {
+        "$ref": "#/$defs/ValhallaTraceAttributesPath"
+      },
+      "type": "array"
+    },
+    "confidence_score": {
+      "description": "How confident the matcher is, from 0 to 1.",
+      "type": "number"
+    },
+    "edges": {
+      "description": "Edges the trace was matched onto, in order.",
+      "items": {
+        "$ref": "#/$defs/ValhallaTraceEdge"
+      },
+      "type": "array"
+    },
+    "elevation": {
+      "description": "Elevation along the path, sampled every `elevation_interval`. Present with `elevation_interval`.",
+      "items": {
+        "type": "number"
+      },
+      "type": "array",
+      "x-requested-by": "elevation_interval"
+    },
+    "elevation_interval": {
+      "description": "Spacing of the `elevation` samples, in meters, or feet when `units` is `miles`. Present when the request sets `elevation_interval`.",
+      "type": "number",
+      "x-requested-by": "elevation_interval"
+    },
+    "id": {
+      "description": "The request's `id`, echoed back. Absent when the request has none.",
+      "type": "string",
+      "x-requested-by": "id"
+    },
+    "matched_points": {
+      "description": "One entry per input point, describing how it was matched.",
+      "items": {
+        "$ref": "#/$defs/ValhallaMatchedPoint"
+      },
+      "type": "array"
+    },
+    "osm_changeset": {
+      "description": "OpenStreetMap changeset the tiles were built from.",
+      "format": "int64",
+      "type": "integer"
+    },
+    "raw_score": {
+      "description": "Unnormalized matching score. Lower is a closer match.",
+      "type": "number"
+    },
+    "shape": {
+      "description": "The matched path, as an encoded polyline.",
+      "type": "string"
+    },
+    "shape_attributes": {
+      "$ref": "#/$defs/ValhallaShapeAttributes"
+    },
+    "units": {
+      "description": "Units the lengths, speeds, and elevations are expressed in.",
+      "enum": [
+        "kilometers",
+        "miles"
+      ],
+      "type": "string"
+    },
+    "warnings": {
+      "description": "Non-fatal notes about the request. Absent when there are none.",
+      "items": {
+        "$ref": "#/$defs/ValhallaTripWarning"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "ValhallaAdmin": {
+      "description": "A country and, where known, the state or province within it.",
+      "properties": {
+        "country_code": {
+          "description": "ISO 3166-1 alpha-2 country code.",
+          "type": "string"
+        },
+        "country_text": {
+          "description": "Country name.",
+          "type": "string"
+        },
+        "state_code": {
+          "description": "ISO 3166-2 subdivision code, without the country prefix.",
+          "type": "string"
+        },
+        "state_text": {
+          "description": "State or province name.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaEdgeSurface": {
+      "description": "Road surface, from smoothest to roughest.",
+      "enum": [
+        "paved_smooth",
+        "paved",
+        "paved_rough",
+        "compacted",
+        "dirt",
+        "gravel",
+        "path",
+        "impassable"
+      ],
+      "type": "string"
+    },
+    "ValhallaEdgeUse": {
+      "description": "What the edge is used for.",
+      "enum": [
+        "road",
+        "ramp",
+        "turn_channel",
+        "track",
+        "driveway",
+        "alley",
+        "parking_aisle",
+        "emergency_access",
+        "drive_through",
+        "culdesac",
+        "living_street",
+        "service_road",
+        "cycleway",
+        "mountain_bike",
+        "sidewalk",
+        "footway",
+        "elevator",
+        "steps",
+        "escalator",
+        "path",
+        "pedestrian",
+        "platform",
+        "bridleway",
+        "pedestrian_crossing",
+        "rest_area",
+        "service_area",
+        "other",
+        "rail-ferry",
+        "ferry",
+        "rail",
+        "bus",
+        "egress_connection",
+        "platform_connection",
+        "transit_connection",
+        "construction"
+      ],
+      "type": "string"
+    },
+    "ValhallaMatchedPoint": {
+      "description": "How one input point was matched to the network.",
+      "properties": {
+        "begin_route_discontinuity": {
+          "description": "Whether the path breaks before this point, as when the trace jumps. Present only when true.",
+          "type": "boolean"
+        },
+        "distance_along_edge": {
+          "description": "How far along that edge the point falls, from 0 to 1. Absent for unmatched points.",
+          "type": "number"
+        },
+        "distance_from_trace_point": {
+          "description": "Distance in meters from the input point to the matched point. Absent for unmatched points.",
+          "type": "number"
+        },
+        "edge_index": {
+          "description": "Index into `edges` of the edge this point matched. Absent for unmatched points.",
+          "type": "integer"
+        },
+        "end_route_discontinuity": {
+          "description": "Whether the path breaks after this point. Present only when true.",
+          "type": "boolean"
+        },
+        "lat": {
+          "description": "Latitude of the matched point.",
+          "format": "double",
+          "maximum": 90,
+          "minimum": -90,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude of the matched point.",
+          "format": "double",
+          "maximum": 180,
+          "minimum": -180,
+          "type": "number"
+        },
+        "type": {
+          "description": "Whether the point was matched, interpolated between matches, or left unmatched.",
+          "enum": [
+            "matched",
+            "interpolated",
+            "unmatched"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaNodeType": {
+      "description": "What the node is.",
+      "enum": [
+        "street_intersection",
+        "gate",
+        "bollard",
+        "toll_booth",
+        "transit_egress",
+        "transit_station",
+        "multi_use_transit_platform",
+        "bike_share",
+        "parking",
+        "motor_way_junction",
+        "border_control",
+        "toll_gantry",
+        "sump_buster",
+        "building_entrance",
+        "elevator"
+      ],
+      "type": "string"
+    },
+    "ValhallaShapeAttributes": {
+      "description": "Values for each segment between consecutive points of `shape`. Off by default: each list appears only when its `shape_attributes.*` filter is requested.",
+      "properties": {
+        "closure": {
+          "description": "Stretches of `shape` closed to traffic.",
+          "items": {
+            "properties": {
+              "begin_shape_index": {
+                "description": "Index into `shape` where the closure starts.",
+                "type": "integer"
+              },
+              "end_shape_index": {
+                "description": "Index into `shape` where the closure ends.",
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "congestion": {
+          "description": "Congestion on each segment, from live traffic.",
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "length": {
+          "description": "Length of each segment, in kilometers.",
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "speed": {
+          "description": "Speed on each segment, in km/h.",
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "speed_limit": {
+          "description": "Posted speed limit on each segment, in km/h.",
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        },
+        "time": {
+          "description": "Time to travel each segment, in seconds.",
+          "items": {
+            "type": "number"
+          },
+          "type": "array"
+        }
+      },
+      "type": "object",
+      "x-requested-by": "filters"
+    },
+    "ValhallaTraceAttributesPath": {
+      "description": "One alternate match of the trace.",
+      "properties": {
+        "admins": {
+          "description": "Countries and states the path passes through.",
+          "items": {
+            "$ref": "#/$defs/ValhallaAdmin"
+          },
+          "type": "array"
+        },
+        "confidence_score": {
+          "description": "How confident the matcher is, from 0 to 1.",
+          "type": "number"
+        },
+        "edges": {
+          "description": "Edges of this match, in order.",
+          "items": {
+            "$ref": "#/$defs/ValhallaTraceEdge"
+          },
+          "type": "array"
+        },
+        "elevation": {
+          "description": "Elevation along the path.",
+          "items": {
+            "type": "number"
+          },
+          "type": "array",
+          "x-requested-by": "elevation_interval"
+        },
+        "elevation_interval": {
+          "description": "Spacing of the `elevation` samples.",
+          "type": "number",
+          "x-requested-by": "elevation_interval"
+        },
+        "matched_points": {
+          "description": "One entry per input point.",
+          "items": {
+            "$ref": "#/$defs/ValhallaMatchedPoint"
+          },
+          "type": "array"
+        },
+        "osm_changeset": {
+          "description": "OpenStreetMap changeset the tiles were built from.",
+          "format": "int64",
+          "type": "integer"
+        },
+        "raw_score": {
+          "description": "Unnormalized matching score. Lower is a closer match.",
+          "type": "number"
+        },
+        "shape": {
+          "description": "The matched path, as an encoded polyline.",
+          "type": "string"
+        },
+        "shape_attributes": {
+          "$ref": "#/$defs/ValhallaShapeAttributes"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaTraceEdge": {
+      "description": "One edge of the matched path. Speeds are in km/h, or mph when `units` is `miles`.",
+      "properties": {
+        "begin_heading": {
+          "description": "Compass bearing at the start of the edge, in degrees.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "begin_shape_index": {
+          "description": "Index into `shape` where the edge starts.",
+          "type": "integer"
+        },
+        "bicycle_network": {
+          "description": "Signed bicycle networks, as a bit mask. 1 national, 2 regional, 4 local, 8 mountain.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "bicycle_type": {
+          "description": "Bicycle type, for bicycle edges.",
+          "enum": [
+            "road",
+            "cross",
+            "hybrid",
+            "mountain"
+          ],
+          "type": "string",
+          "x-secondary": true
+        },
+        "bridge": {
+          "description": "Whether the edge is a bridge.",
+          "type": "boolean"
+        },
+        "country_crossing": {
+          "description": "Whether the edge crosses a country border.",
+          "type": "boolean",
+          "x-secondary": true
+        },
+        "curvature": {
+          "description": "Curvature, from 0 for straight to 15. Off by default.",
+          "type": "integer",
+          "x-requested-by": "filters",
+          "x-secondary": true
+        },
+        "cycle_lane": {
+          "description": "Cycle lane on the edge.",
+          "enum": [
+            "none",
+            "shared",
+            "dedicated",
+            "separated"
+          ],
+          "type": "string",
+          "x-secondary": true
+        },
+        "density": {
+          "description": "Road density around the edge, from 0 to 15.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "drive_on_right": {
+          "description": "Whether traffic drives on the right.",
+          "type": "boolean",
+          "x-secondary": true
+        },
+        "end_heading": {
+          "description": "Compass bearing at the end of the edge, in degrees.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "end_node": {
+          "$ref": "#/$defs/ValhallaTraceNode"
+        },
+        "end_shape_index": {
+          "description": "Index into `shape` where the edge ends.",
+          "type": "integer"
+        },
+        "forward": {
+          "description": "Whether the path runs in the direction of the edge's shape.",
+          "type": "boolean"
+        },
+        "hov_type": {
+          "description": "Occupancy requirement, meaningful only on HOV-only edges. Off by default; once requested it is on every edge, and ordinary roads read `HOV-2`.",
+          "enum": [
+            "HOV-2",
+            "HOV-3"
+          ],
+          "type": "string",
+          "x-requested-by": "filters",
+          "x-secondary": true
+        },
+        "id": {
+          "description": "Graph edge identifier.",
+          "format": "int64",
+          "type": "integer"
+        },
+        "internal_intersection": {
+          "description": "Whether the edge is internal to an intersection.",
+          "type": "boolean",
+          "x-secondary": true
+        },
+        "lane_connectivity": {
+          "description": "Which lanes on the incoming way lead to which lanes on this edge. Present only when the data has lane connectivity.",
+          "items": {
+            "properties": {
+              "from": {
+                "description": "OpenStreetMap way the lanes come from.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "from_lanes": {
+                "description": "Lanes on that way, as a `|`-separated list of lane numbers.",
+                "type": "string"
+              },
+              "to_lanes": {
+                "description": "Lanes on this edge they lead to, in the same form.",
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array",
+          "x-secondary": true
+        },
+        "lane_count": {
+          "description": "Number of lanes in the direction of travel.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "length": {
+          "description": "Length of the traversed part of the edge, in the response's units.",
+          "type": "number"
+        },
+        "levels": {
+          "description": "Building levels the edge spans, as `[from, to]` pairs. Present only where the data has levels.",
+          "items": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array"
+          },
+          "type": "array",
+          "x-secondary": true
+        },
+        "max_downward_grade": {
+          "description": "Steepest downward slope, in degrees. -500 when the tiles have no elevation data.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "max_upward_grade": {
+          "description": "Steepest upward slope, in degrees. -500 when the tiles have no elevation data.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "mean_elevation": {
+          "description": "Mean elevation in meters, or feet when `units` is `miles`. Absent when the tiles have no elevation data.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "names": {
+          "description": "Street names and route numbers. Absent when the edge has none.",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "node_id": {
+          "description": "OpenStreetMap node the edge starts at. Present only when the tiles were built with node identifiers.",
+          "format": "int64",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "pedestrian_type": {
+          "description": "Traveler type, for pedestrian edges.",
+          "enum": [
+            "foot",
+            "wheelchair"
+          ],
+          "type": "string",
+          "x-secondary": true
+        },
+        "road_class": {
+          "description": "Road class.",
+          "enum": [
+            "motorway",
+            "trunk",
+            "primary",
+            "secondary",
+            "tertiary",
+            "unclassified",
+            "residential",
+            "service_other"
+          ],
+          "type": "string"
+        },
+        "roundabout": {
+          "description": "Whether the edge is part of a roundabout.",
+          "type": "boolean"
+        },
+        "sac_scale": {
+          "description": "Hiking difficulty, from 0 for none to 6 for difficult alpine hiking.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "shoulder": {
+          "description": "Whether the edge has a shoulder.",
+          "type": "boolean",
+          "x-secondary": true
+        },
+        "sidewalk": {
+          "description": "Which sides of the edge have a sidewalk.",
+          "enum": [
+            "none",
+            "left",
+            "right",
+            "both"
+          ],
+          "type": "string",
+          "x-secondary": true
+        },
+        "sign": {
+          "description": "Guide-sign text on the edge. Present only where the edge has signs, and each list only when the sign carries it.",
+          "properties": {
+            "exit_branch": {
+              "description": "Route numbers or street names the exit leads onto.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "exit_name": {
+              "description": "Names of the exit.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "exit_number": {
+              "description": "Exit numbers.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "exit_toward": {
+              "description": "Destinations the exit leads toward.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "type": "object",
+          "x-secondary": true
+        },
+        "source_percent_along": {
+          "description": "Where the path enters the edge, from 0 to 1. Present only when not 0.",
+          "type": "number",
+          "x-secondary": true
+        },
+        "speed": {
+          "description": "Speed the router used for the edge.",
+          "type": "integer"
+        },
+        "speed_limit": {
+          "description": "Posted speed limit, or `unlimited`. Absent when unknown.",
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "enum": [
+                "unlimited"
+              ],
+              "type": "string"
+            }
+          ]
+        },
+        "speed_type": {
+          "description": "Whether the speed came from a tagged maxspeed or was assigned by road class.",
+          "enum": [
+            "tagged",
+            "classified"
+          ],
+          "type": "string",
+          "x-secondary": true
+        },
+        "speeds_faded": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/ValhallaTraceEdgeSpeeds"
+            }
+          ],
+          "x-requested-by": "date_time"
+        },
+        "speeds_non_faded": {
+          "$ref": "#/$defs/ValhallaTraceEdgeSpeeds"
+        },
+        "surface": {
+          "$ref": "#/$defs/ValhallaEdgeSurface"
+        },
+        "target_percent_along": {
+          "description": "Where the path leaves the edge, from 0 to 1. Present only when not 1.",
+          "type": "number",
+          "x-secondary": true
+        },
+        "toll": {
+          "description": "Whether the edge is a toll road.",
+          "type": "boolean"
+        },
+        "traffic_segments": {
+          "description": "Traffic segments the edge belongs to. Present only when traffic segment data is loaded.",
+          "items": {
+            "properties": {
+              "begin_percent": {
+                "description": "Where the edge starts along the segment, from 0 to 1.",
+                "type": "number"
+              },
+              "end_percent": {
+                "description": "Where the edge ends along the segment, from 0 to 1.",
+                "type": "number"
+              },
+              "ends_segment": {
+                "description": "Whether the segment ends on this edge.",
+                "type": "boolean"
+              },
+              "segment_id": {
+                "description": "Segment identifier.",
+                "format": "int64",
+                "type": "integer"
+              },
+              "starts_segment": {
+                "description": "Whether the segment starts on this edge.",
+                "type": "boolean"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array",
+          "x-secondary": true
+        },
+        "traffic_signal": {
+          "description": "Whether there is a traffic signal on the edge.",
+          "type": "boolean"
+        },
+        "travel_mode": {
+          "description": "Mode of travel on the edge.",
+          "enum": [
+            "drive",
+            "pedestrian",
+            "bicycle"
+          ],
+          "type": "string"
+        },
+        "traversability": {
+          "description": "Which directions the edge can be traveled in by the request's mode.",
+          "enum": [
+            "none",
+            "forward",
+            "backward",
+            "both"
+          ],
+          "type": "string",
+          "x-secondary": true
+        },
+        "truck_route": {
+          "description": "Whether the edge is a designated truck route.",
+          "type": "boolean",
+          "x-secondary": true
+        },
+        "truck_speed": {
+          "description": "Truck speed. Absent when the edge has none.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "tunnel": {
+          "description": "Whether the edge is a tunnel.",
+          "type": "boolean"
+        },
+        "unpaved": {
+          "description": "Whether the edge is unpaved.",
+          "type": "boolean"
+        },
+        "use": {
+          "$ref": "#/$defs/ValhallaEdgeUse"
+        },
+        "vehicle_type": {
+          "description": "Vehicle type, for drive edges: `car`, `motorcycle`, `bus`, or `truck`. Motor scooter costing returns the string `null`.",
+          "type": "string",
+          "x-secondary": true
+        },
+        "way_id": {
+          "description": "OpenStreetMap way the edge was built from.",
+          "format": "int64",
+          "type": "integer"
+        },
+        "weighted_grade": {
+          "description": "Grade in percent, weighted toward steeper sections.",
+          "type": "number",
+          "x-secondary": true
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaTraceEdgeSpeeds": {
+      "description": "The speed from each traffic source. `speeds_non_faded` is the source's own value; `speeds_faded` blends live traffic into the historical speed with distance from the start of the route, and appears only when the request's `date_time` is the current time. Each source is absent when the edge has none, except `no_flow`.",
+      "properties": {
+        "constrained_flow": {
+          "description": "Typical daytime speed.",
+          "type": "integer"
+        },
+        "current_flow": {
+          "description": "Live traffic speed.",
+          "type": "integer"
+        },
+        "free_flow": {
+          "description": "Typical speed at night.",
+          "type": "integer"
+        },
+        "no_flow": {
+          "description": "Speed with no traffic data, from tags or road class.",
+          "type": "integer"
+        },
+        "predicted_flow": {
+          "description": "Historical speed at the time of travel.",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaTraceNode": {
+      "description": "The node at the end of an edge.",
+      "properties": {
+        "admin_index": {
+          "description": "Index into `admins` of the area the node is in.",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "elapsed_cost": {
+          "description": "Cost from the start of the path to the node.",
+          "type": "number",
+          "x-secondary": true
+        },
+        "elapsed_time": {
+          "description": "Time from the start of the path to the node, in seconds.",
+          "type": "number"
+        },
+        "fork": {
+          "description": "Whether the node is a fork in the road.",
+          "type": "boolean"
+        },
+        "intersecting_edges": {
+          "description": "Other edges meeting at the node. Absent when there are none.",
+          "items": {
+            "properties": {
+              "begin_heading": {
+                "description": "Compass bearing leaving the node, in degrees.",
+                "type": "integer"
+              },
+              "cyclability": {
+                "description": "Directions a bicycle can travel the edge in. Absent when none.",
+                "enum": [
+                  "forward",
+                  "backward",
+                  "both"
+                ],
+                "type": "string"
+              },
+              "driveability": {
+                "description": "Directions a car can travel the edge in. Absent when none.",
+                "enum": [
+                  "forward",
+                  "backward",
+                  "both"
+                ],
+                "type": "string"
+              },
+              "from_edge_name_consistency": {
+                "description": "Whether the edge shares a name with the edge entering the node.",
+                "type": "boolean"
+              },
+              "road_class": {
+                "description": "Road class.",
+                "enum": [
+                  "motorway",
+                  "trunk",
+                  "primary",
+                  "secondary",
+                  "tertiary",
+                  "unclassified",
+                  "residential",
+                  "service_other"
+                ],
+                "type": "string"
+              },
+              "to_edge_name_consistency": {
+                "description": "Whether the edge shares a name with the edge leaving the node.",
+                "type": "boolean"
+              },
+              "use": {
+                "$ref": "#/$defs/ValhallaEdgeUse"
+              },
+              "walkability": {
+                "description": "Directions a pedestrian can travel the edge in. Absent when none.",
+                "enum": [
+                  "forward",
+                  "backward",
+                  "both"
+                ],
+                "type": "string"
+              }
+            },
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "node_id": {
+          "description": "OpenStreetMap node. Present only when the tiles were built with node identifiers.",
+          "format": "int64",
+          "type": "integer",
+          "x-secondary": true
+        },
+        "time_zone": {
+          "description": "IANA time zone at the node. Absent when unknown.",
+          "type": "string"
+        },
+        "traffic_signal": {
+          "description": "Whether the node has a traffic signal.",
+          "type": "boolean"
+        },
+        "transition_time": {
+          "description": "Time spent passing through the node, as for a turn, in seconds.",
+          "type": "number",
+          "x-secondary": true
+        },
+        "type": {
+          "$ref": "#/$defs/ValhallaNodeType"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaTripWarning": {
+      "description": "A non-fatal note about the request.",
+      "properties": {
+        "code": {
+          "description": "Valhalla warning code.",
+          "type": "integer"
+        },
+        "text": {
+          "description": "Human-readable warning.",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

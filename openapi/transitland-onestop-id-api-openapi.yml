@@ -1,0 +1,38 @@
+openapi: 3.2.0
+info:
+  title: Transitland Onestop Id API
+  version: 2.0.0
+  contact:
+    email: info@interline.io
+  description: 'Operations tagged Onestop Id across 2 of this provider''s published API definitions: transitland-rest-openapi.json, transitland-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: Transitland REST API
+  url: https://transit.land/api/v2/rest
+tags:
+- name: Onestop Id
+paths:
+  /onestop_id/{onestop_id}:
+    get:
+      parameters:
+      - description: Onestop ID lookup key
+        in: path
+        name: onestop_id
+        required: true
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirect to entity by Onestop ID
+        '404':
+          description: Onestop ID not found or invalid format
+      summary: Onestop ID Entity Redirect
+      tags:
+      - Onestop Id
+      operationId: getOnestopIdByOnestopId
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+x-refined-from:
+- transitland-rest-openapi.json
+- transitland-rest-openapi.yml

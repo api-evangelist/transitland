@@ -1,0 +1,11 @@
+{
+ "url": "https://transit.land/api/v2/routing/openapi.json",
+ "final": "https://transit.land/api/v2/routing/openapi.json",
+ "status": 200,
+ "bytes": 218613,
+ "sha256": "1999440cd9721569da8745770e156412bf83eeffb31fa13c5ac97ca7cc7bfbcc",
+ "fetched_at": "2026-10-20",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "re-fetched to source an original the capability-gap pilot (roadmap#979) saved without a fetch record"
+}

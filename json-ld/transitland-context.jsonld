@@ -1,0 +1,1537 @@
+{
+  "@context": {
+    "@vocab": "https://transit.land/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "transitland": "https://transit.land/schema#",
+    "Error": "transitland:Error",
+    "error": {
+      "@id": "transitland:error",
+      "@type": "xsd:string"
+    },
+    "GatewayError": "transitland:GatewayError",
+    "message": {
+      "@id": "transitland:message",
+      "@type": "xsd:string"
+    },
+    "Itinerary": "transitland:Itinerary",
+    "distance": {
+      "@id": "transitland:distance",
+      "@type": "xsd:decimal"
+    },
+    "duration": {
+      "@id": "transitland:duration",
+      "@type": "xsd:integer"
+    },
+    "endTime": {
+      "@id": "transitland:endTime",
+      "@type": "xsd:integer"
+    },
+    "legs": {
+      "@id": "transitland:legs",
+      "@container": "@list"
+    },
+    "startTime": {
+      "@id": "transitland:startTime",
+      "@type": "xsd:integer"
+    },
+    "transfers": {
+      "@id": "transitland:transfers",
+      "@type": "xsd:integer"
+    },
+    "transitDistance": {
+      "@id": "transitland:transitDistance",
+      "@type": "xsd:decimal"
+    },
+    "transitTime": {
+      "@id": "transitland:transitTime",
+      "@type": "xsd:integer"
+    },
+    "waitingTime": {
+      "@id": "transitland:waitingTime",
+      "@type": "xsd:integer"
+    },
+    "walkDistance": {
+      "@id": "transitland:walkDistance",
+      "@type": "xsd:decimal"
+    },
+    "walkTime": {
+      "@id": "transitland:walkTime",
+      "@type": "xsd:integer"
+    },
+    "Leg": "transitland:Leg",
+    "agencyId": {
+      "@id": "transitland:agencyId",
+      "@type": "xsd:string"
+    },
+    "agencyName": {
+      "@id": "transitland:agencyName",
+      "@type": "xsd:string"
+    },
+    "arrivalDelay": {
+      "@id": "transitland:arrivalDelay",
+      "@type": "xsd:integer"
+    },
+    "block_id": {
+      "@id": "transitland:block_id",
+      "@type": "xsd:string"
+    },
+    "departureDelay": {
+      "@id": "transitland:departureDelay",
+      "@type": "xsd:integer"
+    },
+    "feedId": {
+      "@id": "transitland:feedId",
+      "@type": "xsd:string"
+    },
+    "feedVersionSha1": {
+      "@id": "transitland:feedVersionSha1",
+      "@type": "xsd:string"
+    },
+    "from": {
+      "@id": "transitland:from",
+      "@type": "@id"
+    },
+    "headsign": {
+      "@id": "transitland:headsign",
+      "@type": "xsd:string"
+    },
+    "intermediateStops": {
+      "@id": "transitland:intermediateStops",
+      "@container": "@list"
+    },
+    "legGeometry": {
+      "@id": "transitland:legGeometry",
+      "@type": "@id"
+    },
+    "mode": {
+      "@id": "transitland:mode",
+      "@type": "xsd:string"
+    },
+    "realTime": {
+      "@id": "transitland:realTime",
+      "@type": "xsd:boolean"
+    },
+    "realtimeDebug": {
+      "@id": "transitland:realtimeDebug",
+      "@type": "@id"
+    },
+    "routeColor": {
+      "@id": "transitland:routeColor",
+      "@type": "xsd:string"
+    },
+    "routeId": {
+      "@id": "transitland:routeId",
+      "@type": "xsd:string"
+    },
+    "routeLongName": {
+      "@id": "transitland:routeLongName",
+      "@type": "xsd:string"
+    },
+    "routeOnestopId": {
+      "@id": "transitland:routeOnestopId",
+      "@type": "xsd:string"
+    },
+    "routeShortName": {
+      "@id": "transitland:routeShortName",
+      "@type": "xsd:string"
+    },
+    "routeTextColor": {
+      "@id": "transitland:routeTextColor",
+      "@type": "xsd:string"
+    },
+    "routeType": {
+      "@id": "transitland:routeType",
+      "@type": "xsd:integer"
+    },
+    "serviceDate": {
+      "@id": "transitland:serviceDate",
+      "@type": "xsd:string"
+    },
+    "steps": {
+      "@id": "transitland:steps",
+      "@container": "@list"
+    },
+    "to": {
+      "@id": "transitland:to",
+      "@type": "@id"
+    },
+    "transitLeg": {
+      "@id": "transitland:transitLeg",
+      "@type": "xsd:boolean"
+    },
+    "tripId": {
+      "@id": "transitland:tripId",
+      "@type": "xsd:string"
+    },
+    "LegGeometry": "transitland:LegGeometry",
+    "length": {
+      "@id": "transitland:length",
+      "@type": "xsd:integer"
+    },
+    "points": {
+      "@id": "transitland:points",
+      "@type": "xsd:string"
+    },
+    "LimitExceeded": "transitland:LimitExceeded",
+    "current_usage": {
+      "@id": "transitland:current_usage",
+      "@type": "xsd:decimal"
+    },
+    "limit": {
+      "@id": "transitland:limit",
+      "@type": "xsd:decimal"
+    },
+    "links": {
+      "@id": "transitland:links"
+    },
+    "meter": {
+      "@id": "transitland:meter",
+      "@type": "xsd:string"
+    },
+    "time_period": {
+      "@id": "transitland:time_period",
+      "@type": "xsd:string"
+    },
+    "Location": "transitland:Location",
+    "lat": {
+      "@id": "transitland:lat",
+      "@type": "xsd:decimal"
+    },
+    "lon": {
+      "@id": "transitland:lon",
+      "@type": "xsd:decimal"
+    },
+    "name": {
+      "@id": "transitland:name",
+      "@type": "xsd:string"
+    },
+    "Plan": "transitland:Plan",
+    "date": {
+      "@id": "transitland:date",
+      "@type": "xsd:integer"
+    },
+    "itineraries": {
+      "@id": "transitland:itineraries",
+      "@container": "@list"
+    },
+    "PlanResponse": "transitland:PlanResponse",
+    "earliestArrivals": {
+      "@id": "transitland:earliestArrivals",
+      "@container": "@list"
+    },
+    "plan": {
+      "@id": "transitland:plan",
+      "@type": "@id"
+    },
+    "RealtimeDebug": "transitland:RealtimeDebug",
+    "delay": {
+      "@id": "transitland:delay",
+      "@type": "xsd:integer"
+    },
+    "scheduleRelationship": {
+      "@id": "transitland:scheduleRelationship",
+      "@type": "xsd:string"
+    },
+    "startDate": {
+      "@id": "transitland:startDate",
+      "@type": "xsd:string"
+    },
+    "timestamp": {
+      "@id": "transitland:timestamp",
+      "@type": "xsd:integer"
+    },
+    "RealtimeStopUpdate": "transitland:RealtimeStopUpdate",
+    "stopId": {
+      "@id": "transitland:stopId",
+      "@type": "xsd:string"
+    },
+    "stopSequence": {
+      "@id": "transitland:stopSequence",
+      "@type": "xsd:integer"
+    },
+    "Stop": "transitland:Stop",
+    "departure": {
+      "@id": "transitland:departure",
+      "@type": "xsd:integer"
+    },
+    "realtimeSource": {
+      "@id": "transitland:realtimeSource",
+      "@type": "xsd:string"
+    },
+    "realtimeUpdate": {
+      "@id": "transitland:realtimeUpdate",
+      "@type": "@id"
+    },
+    "scheduledDeparture": {
+      "@id": "transitland:scheduledDeparture",
+      "@type": "xsd:integer"
+    },
+    "stopCode": {
+      "@id": "transitland:stopCode",
+      "@type": "xsd:string"
+    },
+    "stopIndex": {
+      "@id": "transitland:stopIndex",
+      "@type": "xsd:integer"
+    },
+    "stopOnestopId": {
+      "@id": "transitland:stopOnestopId",
+      "@type": "xsd:string"
+    },
+    "StopArrival": "transitland:StopArrival",
+    "earliestArrival": {
+      "@id": "transitland:earliestArrival",
+      "@type": "xsd:integer"
+    },
+    "stopName": {
+      "@id": "transitland:stopName",
+      "@type": "xsd:string"
+    },
+    "stop_code": {
+      "@id": "transitland:stop_code",
+      "@type": "xsd:string"
+    },
+    "ValhallaAccess": "transitland:ValhallaAccess",
+    "HOV": {
+      "@id": "transitland:HOV",
+      "@type": "xsd:boolean"
+    },
+    "bicycle": {
+      "@id": "transitland:bicycle",
+      "@type": "xsd:boolean"
+    },
+    "bus": {
+      "@id": "transitland:bus",
+      "@type": "xsd:boolean"
+    },
+    "car": {
+      "@id": "transitland:car",
+      "@type": "xsd:boolean"
+    },
+    "emergency": {
+      "@id": "transitland:emergency",
+      "@type": "xsd:boolean"
+    },
+    "moped": {
+      "@id": "transitland:moped",
+      "@type": "xsd:boolean"
+    },
+    "motorcycle": {
+      "@id": "transitland:motorcycle",
+      "@type": "xsd:boolean"
+    },
+    "pedestrian": {
+      "@id": "transitland:pedestrian",
+      "@type": "xsd:boolean"
+    },
+    "taxi": {
+      "@id": "transitland:taxi",
+      "@type": "xsd:boolean"
+    },
+    "truck": {
+      "@id": "transitland:truck",
+      "@type": "xsd:boolean"
+    },
+    "wheelchair": {
+      "@id": "transitland:wheelchair",
+      "@type": "xsd:boolean"
+    },
+    "ValhallaAccessRestriction": "transitland:ValhallaAccessRestriction",
+    "edge_index": {
+      "@id": "transitland:edge_index",
+      "@type": "xsd:integer"
+    },
+    "except_destination": {
+      "@id": "transitland:except_destination",
+      "@type": "xsd:boolean"
+    },
+    "type": {
+      "@id": "transitland:type",
+      "@type": "xsd:string"
+    },
+    "value": {
+      "@id": "transitland:value"
+    },
+    "ValhallaAdmin": "transitland:ValhallaAdmin",
+    "country_code": {
+      "@id": "transitland:country_code",
+      "@type": "xsd:string"
+    },
+    "country_text": {
+      "@id": "transitland:country_text",
+      "@type": "xsd:string"
+    },
+    "state_code": {
+      "@id": "transitland:state_code",
+      "@type": "xsd:string"
+    },
+    "state_text": {
+      "@id": "transitland:state_text",
+      "@type": "xsd:string"
+    },
+    "ValhallaAdminCrossing": "transitland:ValhallaAdminCrossing",
+    "begin_shape_index": {
+      "@id": "transitland:begin_shape_index",
+      "@type": "xsd:integer"
+    },
+    "end_shape_index": {
+      "@id": "transitland:end_shape_index",
+      "@type": "xsd:integer"
+    },
+    "from_admin_index": {
+      "@id": "transitland:from_admin_index",
+      "@type": "xsd:integer"
+    },
+    "to_admin_index": {
+      "@id": "transitland:to_admin_index",
+      "@type": "xsd:integer"
+    },
+    "ValhallaBaseRequest": "transitland:ValhallaBaseRequest",
+    "costing": {
+      "@id": "transitland:costing",
+      "@type": "@id"
+    },
+    "costing_options": {
+      "@id": "transitland:costing_options",
+      "@type": "@id"
+    },
+    "date_time": {
+      "@id": "transitland:date_time",
+      "@type": "@id"
+    },
+    "exclude_locations": {
+      "@id": "transitland:exclude_locations",
+      "@container": "@list"
+    },
+    "exclude_polygons": {
+      "@id": "transitland:exclude_polygons"
+    },
+    "format": {
+      "@id": "transitland:format",
+      "@type": "@id"
+    },
+    "id": {
+      "@id": "transitland:id",
+      "@type": "xsd:string"
+    },
+    "language": {
+      "@id": "transitland:language",
+      "@type": "xsd:string"
+    },
+    "linear_cost_factors": {
+      "@id": "transitland:linear_cost_factors",
+      "@container": "@list"
+    },
+    "units": {
+      "@id": "transitland:units",
+      "@type": "xsd:string"
+    },
+    "ValhallaCentroidResponse": "transitland:ValhallaCentroidResponse",
+    "alternates": {
+      "@id": "transitland:alternates",
+      "@container": "@list"
+    },
+    "trip": {
+      "@id": "transitland:trip",
+      "@type": "@id"
+    },
+    "ValhallaContour": "transitland:ValhallaContour",
+    "color": {
+      "@id": "transitland:color",
+      "@type": "xsd:string"
+    },
+    "time": {
+      "@id": "transitland:time",
+      "@type": "xsd:decimal"
+    },
+    "ValhallaCostingOptions": "transitland:ValhallaCostingOptions",
+    "auto": {
+      "@id": "transitland:auto",
+      "@type": "@id"
+    },
+    "bikeshare": {
+      "@id": "transitland:bikeshare",
+      "@type": "@id"
+    },
+    "motor_scooter": {
+      "@id": "transitland:motor_scooter",
+      "@type": "@id"
+    },
+    "ValhallaCostingType": "transitland:ValhallaCostingType",
+    "ValhallaDateTimeOptions": "transitland:ValhallaDateTimeOptions",
+    "ValhallaDirectionsType": "transitland:ValhallaDirectionsType",
+    "ValhallaEdgeSurface": "transitland:ValhallaEdgeSurface",
+    "ValhallaEdgeUse": "transitland:ValhallaEdgeUse",
+    "ValhallaExpansionFeature": "transitland:ValhallaExpansionFeature",
+    "geometry": {
+      "@id": "transitland:geometry",
+      "@type": "@id"
+    },
+    "properties": {
+      "@id": "transitland:properties"
+    },
+    "ValhallaExpansionProperty": "transitland:ValhallaExpansionProperty",
+    "ValhallaExpansionResponse": "transitland:ValhallaExpansionResponse",
+    "features": {
+      "@id": "transitland:features",
+      "@container": "@list"
+    },
+    "ValhallaFilterAction": "transitland:ValhallaFilterAction",
+    "ValhallaGeoJsonFactorVariant": "transitland:ValhallaGeoJsonFactorVariant",
+    "ValhallaGeoJsonGeometry": "transitland:ValhallaGeoJsonGeometry",
+    "coordinates": {
+      "@id": "transitland:coordinates",
+      "@container": "@list"
+    },
+    "ValhallaGraphId": "transitland:ValhallaGraphId",
+    "level": {
+      "@id": "transitland:level",
+      "@type": "xsd:integer"
+    },
+    "tile_id": {
+      "@id": "transitland:tile_id",
+      "@type": "xsd:integer"
+    },
+    "ValhallaHardExclusions": "transitland:ValhallaHardExclusions",
+    "exclude_bridges": {
+      "@id": "transitland:exclude_bridges",
+      "@type": "xsd:boolean"
+    },
+    "exclude_ferries": {
+      "@id": "transitland:exclude_ferries",
+      "@type": "xsd:boolean"
+    },
+    "exclude_highways": {
+      "@id": "transitland:exclude_highways",
+      "@type": "xsd:boolean"
+    },
+    "exclude_tolls": {
+      "@id": "transitland:exclude_tolls",
+      "@type": "xsd:boolean"
+    },
+    "exclude_tunnels": {
+      "@id": "transitland:exclude_tunnels",
+      "@type": "xsd:boolean"
+    },
+    "ValhallaHeightRequest": "transitland:ValhallaHeightRequest",
+    "encoded_polyline": {
+      "@id": "transitland:encoded_polyline",
+      "@type": "xsd:string"
+    },
+    "height_precision": {
+      "@id": "transitland:height_precision",
+      "@type": "xsd:integer"
+    },
+    "range": {
+      "@id": "transitland:range",
+      "@type": "xsd:boolean"
+    },
+    "resample_distance": {
+      "@id": "transitland:resample_distance",
+      "@type": "xsd:decimal"
+    },
+    "shape": {
+      "@id": "transitland:shape",
+      "@container": "@list"
+    },
+    "shape_format": {
+      "@id": "transitland:shape_format",
+      "@type": "@id"
+    },
+    "ValhallaIncident": "transitland:ValhallaIncident",
+    "alertc_codes": {
+      "@id": "transitland:alertc_codes",
+      "@container": "@list"
+    },
+    "clear_lanes": {
+      "@id": "transitland:clear_lanes",
+      "@type": "xsd:string"
+    },
+    "congestion": {
+      "@id": "transitland:congestion"
+    },
+    "creation_time": {
+      "@id": "transitland:creation_time",
+      "@type": "xsd:integer"
+    },
+    "description": {
+      "@id": "transitland:description",
+      "@type": "xsd:string"
+    },
+    "end_time": {
+      "@id": "transitland:end_time",
+      "@type": "xsd:integer"
+    },
+    "impact": {
+      "@id": "transitland:impact",
+      "@type": "xsd:string"
+    },
+    "iso_3166_1_alpha2": {
+      "@id": "transitland:iso_3166_1_alpha2",
+      "@type": "xsd:string"
+    },
+    "iso_3166_1_alpha3": {
+      "@id": "transitland:iso_3166_1_alpha3",
+      "@type": "xsd:string"
+    },
+    "lanes_blocked": {
+      "@id": "transitland:lanes_blocked",
+      "@container": "@list"
+    },
+    "long_description": {
+      "@id": "transitland:long_description",
+      "@type": "xsd:string"
+    },
+    "num_lanes_blocked": {
+      "@id": "transitland:num_lanes_blocked",
+      "@type": "xsd:integer"
+    },
+    "road_closed": {
+      "@id": "transitland:road_closed",
+      "@type": "xsd:boolean"
+    },
+    "start_time": {
+      "@id": "transitland:start_time",
+      "@type": "xsd:integer"
+    },
+    "sub_type": {
+      "@id": "transitland:sub_type",
+      "@type": "xsd:string"
+    },
+    "sub_type_description": {
+      "@id": "transitland:sub_type_description",
+      "@type": "xsd:string"
+    },
+    "ValhallaIsochroneFeature": "transitland:ValhallaIsochroneFeature",
+    "ValhallaIsochroneResponse": "transitland:ValhallaIsochroneResponse",
+    "ValhallaLiveSpeed": "transitland:ValhallaLiveSpeed",
+    "breakpoint_0": {
+      "@id": "transitland:breakpoint_0",
+      "@type": "xsd:decimal"
+    },
+    "breakpoint_1": {
+      "@id": "transitland:breakpoint_1",
+      "@type": "xsd:decimal"
+    },
+    "congestion_0": {
+      "@id": "transitland:congestion_0",
+      "@type": "xsd:decimal"
+    },
+    "congestion_1": {
+      "@id": "transitland:congestion_1",
+      "@type": "xsd:decimal"
+    },
+    "congestion_2": {
+      "@id": "transitland:congestion_2",
+      "@type": "xsd:decimal"
+    },
+    "overall_speed": {
+      "@id": "transitland:overall_speed",
+      "@type": "xsd:integer"
+    },
+    "speed_0": {
+      "@id": "transitland:speed_0",
+      "@type": "xsd:integer"
+    },
+    "speed_1": {
+      "@id": "transitland:speed_1",
+      "@type": "xsd:integer"
+    },
+    "speed_2": {
+      "@id": "transitland:speed_2",
+      "@type": "xsd:integer"
+    },
+    "ValhallaLocateEdge": "transitland:ValhallaLocateEdge",
+    "access_restrictions": {
+      "@id": "transitland:access_restrictions",
+      "@container": "@list"
+    },
+    "bounding_circle": {
+      "@id": "transitland:bounding_circle"
+    },
+    "correlated_lat": {
+      "@id": "transitland:correlated_lat",
+      "@type": "xsd:decimal"
+    },
+    "correlated_lon": {
+      "@id": "transitland:correlated_lon",
+      "@type": "xsd:decimal"
+    },
+    "edge": {
+      "@id": "transitland:edge",
+      "@type": "@id"
+    },
+    "edge_id": {
+      "@id": "transitland:edge_id",
+      "@type": "@id"
+    },
+    "edge_info": {
+      "@id": "transitland:edge_info",
+      "@type": "@id"
+    },
+    "heading": {
+      "@id": "transitland:heading",
+      "@type": "xsd:decimal"
+    },
+    "inbound_reach": {
+      "@id": "transitland:inbound_reach",
+      "@type": "xsd:integer"
+    },
+    "incidents": {
+      "@id": "transitland:incidents",
+      "@container": "@list"
+    },
+    "linear_reference": {
+      "@id": "transitland:linear_reference",
+      "@type": "xsd:string"
+    },
+    "live_speed": {
+      "@id": "transitland:live_speed",
+      "@type": "@id"
+    },
+    "outbound_reach": {
+      "@id": "transitland:outbound_reach",
+      "@type": "xsd:integer"
+    },
+    "percent_along": {
+      "@id": "transitland:percent_along",
+      "@type": "xsd:decimal"
+    },
+    "predicted_speeds": {
+      "@id": "transitland:predicted_speeds",
+      "@container": "@list"
+    },
+    "shoulder": {
+      "@id": "transitland:shoulder",
+      "@type": "xsd:boolean"
+    },
+    "side_of_street": {
+      "@id": "transitland:side_of_street",
+      "@type": "xsd:string"
+    },
+    "timed_predicted_speed": {
+      "@id": "transitland:timed_predicted_speed",
+      "@type": "xsd:integer"
+    },
+    "way_id": {
+      "@id": "transitland:way_id",
+      "@type": "xsd:integer"
+    },
+    "ValhallaLocateEdgeAttributes": "transitland:ValhallaLocateEdgeAttributes",
+    "access": {
+      "@id": "transitland:access",
+      "@type": "@id"
+    },
+    "access_restriction": {
+      "@id": "transitland:access_restriction",
+      "@type": "xsd:boolean"
+    },
+    "bike_network": {
+      "@id": "transitland:bike_network",
+      "@type": "xsd:boolean"
+    },
+    "bridge": {
+      "@id": "transitland:bridge",
+      "@type": "xsd:boolean"
+    },
+    "classification": {
+      "@id": "transitland:classification"
+    },
+    "country_crossing": {
+      "@id": "transitland:country_crossing",
+      "@type": "xsd:boolean"
+    },
+    "cycle_lane": {
+      "@id": "transitland:cycle_lane",
+      "@type": "xsd:string"
+    },
+    "deadend": {
+      "@id": "transitland:deadend",
+      "@type": "xsd:boolean"
+    },
+    "destination_only": {
+      "@id": "transitland:destination_only",
+      "@type": "xsd:boolean"
+    },
+    "destination_only_hgv": {
+      "@id": "transitland:destination_only_hgv",
+      "@type": "xsd:boolean"
+    },
+    "end_node": {
+      "@id": "transitland:end_node",
+      "@type": "@id"
+    },
+    "end_restriction": {
+      "@id": "transitland:end_restriction",
+      "@type": "@id"
+    },
+    "forward": {
+      "@id": "transitland:forward",
+      "@type": "xsd:boolean"
+    },
+    "geo_attributes": {
+      "@id": "transitland:geo_attributes"
+    },
+    "has_sign": {
+      "@id": "transitland:has_sign",
+      "@type": "xsd:boolean"
+    },
+    "hov_type": {
+      "@id": "transitland:hov_type",
+      "@type": "xsd:string"
+    },
+    "lane_count": {
+      "@id": "transitland:lane_count",
+      "@type": "xsd:integer"
+    },
+    "not_thru": {
+      "@id": "transitland:not_thru",
+      "@type": "xsd:boolean"
+    },
+    "part_of_complex_restriction": {
+      "@id": "transitland:part_of_complex_restriction",
+      "@type": "xsd:boolean"
+    },
+    "round_about": {
+      "@id": "transitland:round_about",
+      "@type": "xsd:boolean"
+    },
+    "sac_scale": {
+      "@id": "transitland:sac_scale",
+      "@type": "xsd:string"
+    },
+    "sidewalk_left": {
+      "@id": "transitland:sidewalk_left",
+      "@type": "xsd:boolean"
+    },
+    "sidewalk_right": {
+      "@id": "transitland:sidewalk_right",
+      "@type": "xsd:boolean"
+    },
+    "speeds": {
+      "@id": "transitland:speeds"
+    },
+    "start_restriction": {
+      "@id": "transitland:start_restriction",
+      "@type": "@id"
+    },
+    "stop_sign": {
+      "@id": "transitland:stop_sign",
+      "@type": "xsd:boolean"
+    },
+    "toll": {
+      "@id": "transitland:toll",
+      "@type": "xsd:boolean"
+    },
+    "traffic_signal": {
+      "@id": "transitland:traffic_signal",
+      "@type": "xsd:boolean"
+    },
+    "truck_route": {
+      "@id": "transitland:truck_route",
+      "@type": "xsd:boolean"
+    },
+    "tunnel": {
+      "@id": "transitland:tunnel",
+      "@type": "xsd:boolean"
+    },
+    "yield_sign": {
+      "@id": "transitland:yield_sign",
+      "@type": "xsd:boolean"
+    },
+    "ValhallaLocateEdgeInfo": "transitland:ValhallaLocateEdgeInfo",
+    "conditional_speed_limits": {
+      "@id": "transitland:conditional_speed_limits"
+    },
+    "levels": {
+      "@id": "transitland:levels",
+      "@container": "@list"
+    },
+    "mean_elevation": {
+      "@id": "transitland:mean_elevation",
+      "@type": "xsd:integer"
+    },
+    "names": {
+      "@id": "transitland:names",
+      "@container": "@list"
+    },
+    "osm_node_ids": {
+      "@id": "transitland:osm_node_ids",
+      "@container": "@list"
+    },
+    "speed_limit": {
+      "@id": "transitland:speed_limit"
+    },
+    "ValhallaLocateNode": "transitland:ValhallaLocateNode",
+    "administrative": {
+      "@id": "transitland:administrative"
+    },
+    "density": {
+      "@id": "transitland:density",
+      "@type": "xsd:integer"
+    },
+    "drive_on_right": {
+      "@id": "transitland:drive_on_right",
+      "@type": "xsd:boolean"
+    },
+    "edge_count": {
+      "@id": "transitland:edge_count",
+      "@type": "xsd:integer"
+    },
+    "elevation": {
+      "@id": "transitland:elevation",
+      "@type": "xsd:decimal"
+    },
+    "intersection_type": {
+      "@id": "transitland:intersection_type",
+      "@type": "xsd:string"
+    },
+    "local_edge_count": {
+      "@id": "transitland:local_edge_count",
+      "@type": "xsd:integer"
+    },
+    "mode_change": {
+      "@id": "transitland:mode_change",
+      "@type": "xsd:boolean"
+    },
+    "named_intersection": {
+      "@id": "transitland:named_intersection",
+      "@type": "xsd:boolean"
+    },
+    "node_id": {
+      "@id": "transitland:node_id",
+      "@type": "@id"
+    },
+    "private_access": {
+      "@id": "transitland:private_access",
+      "@type": "xsd:boolean"
+    },
+    "stop_index": {
+      "@id": "transitland:stop_index",
+      "@type": "xsd:integer"
+    },
+    "tagged_access": {
+      "@id": "transitland:tagged_access",
+      "@type": "xsd:boolean"
+    },
+    "transition_count": {
+      "@id": "transitland:transition_count",
+      "@type": "xsd:integer"
+    },
+    "ValhallaLocateResult": "transitland:ValhallaLocateResult",
+    "edges": {
+      "@id": "transitland:edges",
+      "@container": "@list"
+    },
+    "filtered_edges": {
+      "@id": "transitland:filtered_edges",
+      "@container": "@list"
+    },
+    "input_lat": {
+      "@id": "transitland:input_lat",
+      "@type": "xsd:decimal"
+    },
+    "input_lon": {
+      "@id": "transitland:input_lon",
+      "@type": "xsd:decimal"
+    },
+    "nodes": {
+      "@id": "transitland:nodes",
+      "@container": "@list"
+    },
+    "reason": {
+      "@id": "transitland:reason",
+      "@type": "xsd:string"
+    },
+    "ValhallaLocation": "transitland:ValhallaLocation",
+    "display_lat": {
+      "@id": "transitland:display_lat",
+      "@type": "xsd:decimal"
+    },
+    "display_lon": {
+      "@id": "transitland:display_lon",
+      "@type": "xsd:decimal"
+    },
+    "heading_tolerance": {
+      "@id": "transitland:heading_tolerance",
+      "@type": "xsd:integer"
+    },
+    "minimum_reachability": {
+      "@id": "transitland:minimum_reachability",
+      "@type": "xsd:integer"
+    },
+    "node_snap_tolerance": {
+      "@id": "transitland:node_snap_tolerance",
+      "@type": "xsd:decimal"
+    },
+    "preferred_layer": {
+      "@id": "transitland:preferred_layer",
+      "@type": "xsd:integer"
+    },
+    "preferred_side": {
+      "@id": "transitland:preferred_side",
+      "@type": "xsd:string"
+    },
+    "radius": {
+      "@id": "transitland:radius",
+      "@type": "xsd:integer"
+    },
+    "rank_candidates": {
+      "@id": "transitland:rank_candidates",
+      "@type": "xsd:boolean"
+    },
+    "search_cutoff": {
+      "@id": "transitland:search_cutoff",
+      "@type": "xsd:integer"
+    },
+    "search_filter": {
+      "@id": "transitland:search_filter",
+      "@type": "@id"
+    },
+    "street": {
+      "@id": "transitland:street",
+      "@type": "xsd:string"
+    },
+    "street_side_cutoff": {
+      "@id": "transitland:street_side_cutoff",
+      "@type": "@id"
+    },
+    "street_side_max_distance": {
+      "@id": "transitland:street_side_max_distance",
+      "@type": "xsd:integer"
+    },
+    "street_side_tolerance": {
+      "@id": "transitland:street_side_tolerance",
+      "@type": "xsd:integer"
+    },
+    "waiting": {
+      "@id": "transitland:waiting",
+      "@type": "xsd:decimal"
+    },
+    "ValhallaManeuver": "transitland:ValhallaManeuver",
+    "bearing_after": {
+      "@id": "transitland:bearing_after",
+      "@type": "xsd:integer"
+    },
+    "bearing_before": {
+      "@id": "transitland:bearing_before",
+      "@type": "xsd:integer"
+    },
+    "begin_street_names": {
+      "@id": "transitland:begin_street_names",
+      "@container": "@list"
+    },
+    "cost": {
+      "@id": "transitland:cost",
+      "@type": "xsd:decimal"
+    },
+    "ferry": {
+      "@id": "transitland:ferry",
+      "@type": "xsd:boolean"
+    },
+    "has_time_restrictions": {
+      "@id": "transitland:has_time_restrictions",
+      "@type": "xsd:boolean"
+    },
+    "highway": {
+      "@id": "transitland:highway",
+      "@type": "xsd:boolean"
+    },
+    "instruction": {
+      "@id": "transitland:instruction",
+      "@type": "xsd:string"
+    },
+    "lanes": {
+      "@id": "transitland:lanes",
+      "@container": "@list"
+    },
+    "rough": {
+      "@id": "transitland:rough",
+      "@type": "xsd:boolean"
+    },
+    "roundabout_exit_count": {
+      "@id": "transitland:roundabout_exit_count",
+      "@type": "xsd:integer"
+    },
+    "sign": {
+      "@id": "transitland:sign",
+      "@type": "@id"
+    },
+    "street_names": {
+      "@id": "transitland:street_names",
+      "@container": "@list"
+    },
+    "travel_mode": {
+      "@id": "transitland:travel_mode",
+      "@type": "xsd:string"
+    },
+    "travel_type": {
+      "@id": "transitland:travel_type",
+      "@type": "xsd:string"
+    },
+    "verbal_multi_cue": {
+      "@id": "transitland:verbal_multi_cue",
+      "@type": "xsd:boolean"
+    },
+    "verbal_post_transition_instruction": {
+      "@id": "transitland:verbal_post_transition_instruction",
+      "@type": "xsd:string"
+    },
+    "verbal_pre_transition_instruction": {
+      "@id": "transitland:verbal_pre_transition_instruction",
+      "@type": "xsd:string"
+    },
+    "verbal_succinct_transition_instruction": {
+      "@id": "transitland:verbal_succinct_transition_instruction",
+      "@type": "xsd:string"
+    },
+    "verbal_transition_alert_instruction": {
+      "@id": "transitland:verbal_transition_alert_instruction",
+      "@type": "xsd:string"
+    },
+    "ValhallaManeuverSign": "transitland:ValhallaManeuverSign",
+    "exit_branch_elements": {
+      "@id": "transitland:exit_branch_elements",
+      "@container": "@list"
+    },
+    "exit_name_elements": {
+      "@id": "transitland:exit_name_elements",
+      "@container": "@list"
+    },
+    "exit_number_elements": {
+      "@id": "transitland:exit_number_elements",
+      "@container": "@list"
+    },
+    "exit_toward_elements": {
+      "@id": "transitland:exit_toward_elements",
+      "@container": "@list"
+    },
+    "ValhallaMatchedPoint": "transitland:ValhallaMatchedPoint",
+    "begin_route_discontinuity": {
+      "@id": "transitland:begin_route_discontinuity",
+      "@type": "xsd:boolean"
+    },
+    "distance_along_edge": {
+      "@id": "transitland:distance_along_edge",
+      "@type": "xsd:decimal"
+    },
+    "distance_from_trace_point": {
+      "@id": "transitland:distance_from_trace_point",
+      "@type": "xsd:decimal"
+    },
+    "end_route_discontinuity": {
+      "@id": "transitland:end_route_discontinuity",
+      "@type": "xsd:boolean"
+    },
+    "ValhallaMatrixCell": "transitland:ValhallaMatrixCell",
+    "begin_heading": {
+      "@id": "transitland:begin_heading",
+      "@type": "xsd:decimal"
+    },
+    "begin_lat": {
+      "@id": "transitland:begin_lat",
+      "@type": "xsd:decimal"
+    },
+    "begin_lon": {
+      "@id": "transitland:begin_lon",
+      "@type": "xsd:decimal"
+    },
+    "end_heading": {
+      "@id": "transitland:end_heading",
+      "@type": "xsd:decimal"
+    },
+    "end_lat": {
+      "@id": "transitland:end_lat",
+      "@type": "xsd:decimal"
+    },
+    "end_lon": {
+      "@id": "transitland:end_lon",
+      "@type": "xsd:decimal"
+    },
+    "from_index": {
+      "@id": "transitland:from_index",
+      "@type": "xsd:integer"
+    },
+    "time_zone_name": {
+      "@id": "transitland:time_zone_name",
+      "@type": "xsd:string"
+    },
+    "time_zone_offset": {
+      "@id": "transitland:time_zone_offset",
+      "@type": "xsd:string"
+    },
+    "to_index": {
+      "@id": "transitland:to_index",
+      "@type": "xsd:integer"
+    },
+    "ValhallaMatrixLocation": "transitland:ValhallaMatrixLocation",
+    "ValhallaMatrixResponse": "transitland:ValhallaMatrixResponse",
+    "algorithm": {
+      "@id": "transitland:algorithm",
+      "@type": "xsd:string"
+    },
+    "sources": {
+      "@id": "transitland:sources",
+      "@container": "@list"
+    },
+    "sources_to_targets": {
+      "@id": "transitland:sources_to_targets"
+    },
+    "targets": {
+      "@id": "transitland:targets",
+      "@container": "@list"
+    },
+    "ValhallaNodeType": "transitland:ValhallaNodeType",
+    "ValhallaOutputFormat": "transitland:ValhallaOutputFormat",
+    "ValhallaRoadClass": "transitland:ValhallaRoadClass",
+    "ValhallaSearchFilter": "transitland:ValhallaSearchFilter",
+    "exclude_bridge": {
+      "@id": "transitland:exclude_bridge",
+      "@type": "xsd:boolean"
+    },
+    "exclude_closures": {
+      "@id": "transitland:exclude_closures",
+      "@type": "xsd:boolean"
+    },
+    "exclude_ferry": {
+      "@id": "transitland:exclude_ferry",
+      "@type": "xsd:boolean"
+    },
+    "exclude_ramp": {
+      "@id": "transitland:exclude_ramp",
+      "@type": "xsd:boolean"
+    },
+    "exclude_toll": {
+      "@id": "transitland:exclude_toll",
+      "@type": "xsd:boolean"
+    },
+    "exclude_tunnel": {
+      "@id": "transitland:exclude_tunnel",
+      "@type": "xsd:boolean"
+    },
+    "max_road_class": {
+      "@id": "transitland:max_road_class",
+      "@type": "@id"
+    },
+    "min_road_class": {
+      "@id": "transitland:min_road_class",
+      "@type": "@id"
+    },
+    "ValhallaShapeAttributes": "transitland:ValhallaShapeAttributes",
+    "closure": {
+      "@id": "transitland:closure",
+      "@container": "@list"
+    },
+    "speed": {
+      "@id": "transitland:speed",
+      "@container": "@list"
+    },
+    "ValhallaShapeFactorVariant": "transitland:ValhallaShapeFactorVariant",
+    "factor": {
+      "@id": "transitland:factor",
+      "@type": "@id"
+    },
+    "ValhallaShapeFormat": "transitland:ValhallaShapeFormat",
+    "ValhallaShapeMatch": "transitland:ValhallaShapeMatch",
+    "ValhallaSignElement": "transitland:ValhallaSignElement",
+    "consecutive_count": {
+      "@id": "transitland:consecutive_count",
+      "@type": "xsd:integer"
+    },
+    "text": {
+      "@id": "transitland:text",
+      "@type": "xsd:string"
+    },
+    "ValhallaSpeedType": "transitland:ValhallaSpeedType",
+    "ValhallaTraceAttributesPath": "transitland:ValhallaTraceAttributesPath",
+    "admins": {
+      "@id": "transitland:admins",
+      "@container": "@list"
+    },
+    "confidence_score": {
+      "@id": "transitland:confidence_score",
+      "@type": "xsd:decimal"
+    },
+    "elevation_interval": {
+      "@id": "transitland:elevation_interval",
+      "@type": "xsd:decimal"
+    },
+    "matched_points": {
+      "@id": "transitland:matched_points",
+      "@container": "@list"
+    },
+    "osm_changeset": {
+      "@id": "transitland:osm_changeset",
+      "@type": "xsd:integer"
+    },
+    "raw_score": {
+      "@id": "transitland:raw_score",
+      "@type": "xsd:decimal"
+    },
+    "shape_attributes": {
+      "@id": "transitland:shape_attributes",
+      "@type": "@id"
+    },
+    "ValhallaTraceAttributesResponse": "transitland:ValhallaTraceAttributesResponse",
+    "alternate_paths": {
+      "@id": "transitland:alternate_paths",
+      "@container": "@list"
+    },
+    "warnings": {
+      "@id": "transitland:warnings",
+      "@container": "@list"
+    },
+    "ValhallaTraceEdge": "transitland:ValhallaTraceEdge",
+    "bicycle_network": {
+      "@id": "transitland:bicycle_network",
+      "@type": "xsd:integer"
+    },
+    "bicycle_type": {
+      "@id": "transitland:bicycle_type",
+      "@type": "xsd:string"
+    },
+    "curvature": {
+      "@id": "transitland:curvature",
+      "@type": "xsd:integer"
+    },
+    "internal_intersection": {
+      "@id": "transitland:internal_intersection",
+      "@type": "xsd:boolean"
+    },
+    "lane_connectivity": {
+      "@id": "transitland:lane_connectivity",
+      "@container": "@list"
+    },
+    "max_downward_grade": {
+      "@id": "transitland:max_downward_grade",
+      "@type": "xsd:integer"
+    },
+    "max_upward_grade": {
+      "@id": "transitland:max_upward_grade",
+      "@type": "xsd:integer"
+    },
+    "pedestrian_type": {
+      "@id": "transitland:pedestrian_type",
+      "@type": "xsd:string"
+    },
+    "road_class": {
+      "@id": "transitland:road_class",
+      "@type": "xsd:string"
+    },
+    "roundabout": {
+      "@id": "transitland:roundabout",
+      "@type": "xsd:boolean"
+    },
+    "sidewalk": {
+      "@id": "transitland:sidewalk",
+      "@type": "xsd:string"
+    },
+    "source_percent_along": {
+      "@id": "transitland:source_percent_along",
+      "@type": "xsd:decimal"
+    },
+    "speed_type": {
+      "@id": "transitland:speed_type",
+      "@type": "xsd:string"
+    },
+    "speeds_faded": {
+      "@id": "transitland:speeds_faded"
+    },
+    "speeds_non_faded": {
+      "@id": "transitland:speeds_non_faded",
+      "@type": "@id"
+    },
+    "surface": {
+      "@id": "transitland:surface",
+      "@type": "@id"
+    },
+    "target_percent_along": {
+      "@id": "transitland:target_percent_along",
+      "@type": "xsd:decimal"
+    },
+    "traffic_segments": {
+      "@id": "transitland:traffic_segments",
+      "@container": "@list"
+    },
+    "traversability": {
+      "@id": "transitland:traversability",
+      "@type": "xsd:string"
+    },
+    "truck_speed": {
+      "@id": "transitland:truck_speed",
+      "@type": "xsd:integer"
+    },
+    "unpaved": {
+      "@id": "transitland:unpaved",
+      "@type": "xsd:boolean"
+    },
+    "use": {
+      "@id": "transitland:use",
+      "@type": "@id"
+    },
+    "vehicle_type": {
+      "@id": "transitland:vehicle_type",
+      "@type": "xsd:string"
+    },
+    "weighted_grade": {
+      "@id": "transitland:weighted_grade",
+      "@type": "xsd:decimal"
+    },
+    "ValhallaTraceEdgeSpeeds": "transitland:ValhallaTraceEdgeSpeeds",
+    "constrained_flow": {
+      "@id": "transitland:constrained_flow",
+      "@type": "xsd:integer"
+    },
+    "current_flow": {
+      "@id": "transitland:current_flow",
+      "@type": "xsd:integer"
+    },
+    "free_flow": {
+      "@id": "transitland:free_flow",
+      "@type": "xsd:integer"
+    },
+    "no_flow": {
+      "@id": "transitland:no_flow",
+      "@type": "xsd:integer"
+    },
+    "predicted_flow": {
+      "@id": "transitland:predicted_flow",
+      "@type": "xsd:integer"
+    },
+    "ValhallaTraceNode": "transitland:ValhallaTraceNode",
+    "admin_index": {
+      "@id": "transitland:admin_index",
+      "@type": "xsd:integer"
+    },
+    "elapsed_cost": {
+      "@id": "transitland:elapsed_cost",
+      "@type": "xsd:decimal"
+    },
+    "elapsed_time": {
+      "@id": "transitland:elapsed_time",
+      "@type": "xsd:decimal"
+    },
+    "fork": {
+      "@id": "transitland:fork",
+      "@type": "xsd:boolean"
+    },
+    "intersecting_edges": {
+      "@id": "transitland:intersecting_edges",
+      "@container": "@list"
+    },
+    "time_zone": {
+      "@id": "transitland:time_zone",
+      "@type": "xsd:string"
+    },
+    "transition_time": {
+      "@id": "transitland:transition_time",
+      "@type": "xsd:decimal"
+    },
+    "ValhallaTransitFilterOptions": "transitland:ValhallaTransitFilterOptions",
+    "action": {
+      "@id": "transitland:action"
+    },
+    "ids": {
+      "@id": "transitland:ids",
+      "@container": "@list"
+    },
+    "ValhallaTrip": "transitland:ValhallaTrip",
+    "linear_references": {
+      "@id": "transitland:linear_references",
+      "@container": "@list"
+    },
+    "locations": {
+      "@id": "transitland:locations",
+      "@container": "@list"
+    },
+    "status": {
+      "@id": "transitland:status",
+      "@type": "xsd:integer"
+    },
+    "status_message": {
+      "@id": "transitland:status_message",
+      "@type": "xsd:string"
+    },
+    "summary": {
+      "@id": "transitland:summary",
+      "@type": "@id"
+    },
+    "ValhallaTripAlternate": "transitland:ValhallaTripAlternate",
+    "ValhallaTripLeg": "transitland:ValhallaTripLeg",
+    "maneuvers": {
+      "@id": "transitland:maneuvers",
+      "@container": "@list"
+    },
+    "ValhallaTripLocation": "transitland:ValhallaTripLocation",
+    "original_index": {
+      "@id": "transitland:original_index",
+      "@type": "xsd:integer"
+    },
+    "ValhallaTripResponse": "transitland:ValhallaTripResponse",
+    "ValhallaTripSummary": "transitland:ValhallaTripSummary",
+    "admin_crossings": {
+      "@id": "transitland:admin_crossings",
+      "@container": "@list"
+    },
+    "has_ferry": {
+      "@id": "transitland:has_ferry",
+      "@type": "xsd:boolean"
+    },
+    "has_highway": {
+      "@id": "transitland:has_highway",
+      "@type": "xsd:boolean"
+    },
+    "has_toll": {
+      "@id": "transitland:has_toll",
+      "@type": "xsd:boolean"
+    },
+    "level_changes": {
+      "@id": "transitland:level_changes",
+      "@container": "@list"
+    },
+    "max_lat": {
+      "@id": "transitland:max_lat",
+      "@type": "xsd:decimal"
+    },
+    "max_lon": {
+      "@id": "transitland:max_lon",
+      "@type": "xsd:decimal"
+    },
+    "min_lat": {
+      "@id": "transitland:min_lat",
+      "@type": "xsd:decimal"
+    },
+    "min_lon": {
+      "@id": "transitland:min_lon",
+      "@type": "xsd:decimal"
+    },
+    "ValhallaTripWarning": "transitland:ValhallaTripWarning",
+    "code": {
+      "@id": "transitland:code",
+      "@type": "xsd:integer"
+    },
+    "ValhallaTurnLane": "transitland:ValhallaTurnLane",
+    "active": {
+      "@id": "transitland:active",
+      "@type": "xsd:integer"
+    },
+    "directions": {
+      "@id": "transitland:directions",
+      "@type": "xsd:integer"
+    },
+    "valid": {
+      "@id": "transitland:valid",
+      "@type": "xsd:integer"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "TransitLand API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects TransitLand's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-19) from openapi/transitland-rest-openapi.yml, openapi/transitland-routing-openapi.yml.",
+  "dcterms:created": "2026-10-19",
+  "dcterms:source": [
+    "openapi/transitland-rest-openapi.yml",
+    "openapi/transitland-routing-openapi.yml"
+  ]
+}

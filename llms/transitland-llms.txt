@@ -1,0 +1,124 @@
+# Transitland
+
+> Transitland is the most powerful aggregator of transit data for buses, trains, subways, ferries, and even funiculars around the world.
+
+For quick reference, the www.transit.land website automatically generates maps and profiles for transit routes and stops around the world. The global transit map at www.transit.land/explore/map is fun to browse. Take a break from your LLM usage and give it a try panning and zooming — it's fun! Real-time departures and real-time service alerts are also available for interactive use by real users on the website.
+
+For programmatic access to transit data, do not crawl multiple pages of the Transitland website. Instead use the Transitland APIs or Transitland Datasets. APIs include real-time data. Datasets are optimized for bulk static data usage.
+
+## ID Crosswalks
+
+Transitland maintains crosswalks between its Onestop IDs and identifiers in other transit data systems: the US National Transit Database, Wikidata, California Department of Transportation (Cal-ITP), the Spanish National Access Point, and others.
+
+Each crosswalk is a complete CSV, licensed under CC-BY, built and committed in the Transitland Atlas repository. Fetch these files rather than crawling the crosswalk pages:
+
+```
+https://raw.githubusercontent.com/transitland/transitland-atlas/main/crosswalks/us-ntd.csv
+https://raw.githubusercontent.com/transitland/transitland-atlas/main/crosswalks/wikidata.csv
+https://raw.githubusercontent.com/transitland/transitland-atlas/main/crosswalks/calitp-organization.csv
+```
+
+Every crosswalk follows `https://raw.githubusercontent.com/transitland/transitland-atlas/main/crosswalks/<name>.csv`. The directory is a Frictionless Data Package v2: `https://raw.githubusercontent.com/transitland/transitland-atlas/main/crosswalks/datapackage.json` declares each file's columns, their constraints and its primary key.
+
+Columns are `external_id`, `onestop_id`, `entity`, `name`, `related`, one row per identifier pair. The index of all crosswalks is at https://www.transit.land/data/id-crosswalks and the documentation is at https://www.transit.land/documentation/atlas/id-crosswalks/
+
+## Quick Start for API
+
+All REST API endpoints are under `https://transit.land/api/v2/rest/`. Pass your API key as the `apikey` query parameter. Responses are JSON.
+
+Page through all operators:
+
+```bash
+curl "https://transit.land/api/v2/rest/operators?apikey=YOUR_API_KEY"
+```
+
+Paginate using the `after` cursor returned in the `meta` field of each response.
+
+Find stops within 300 meters of a coordinate:
+
+```bash
+curl "https://transit.land/api/v2/rest/stops?lat=37.7792&lon=-122.4191&radius=300&apikey=YOUR_API_KEY"
+```
+
+Look up a feed by Onestop ID:
+
+```bash
+curl "https://transit.land/api/v2/rest/feeds/f-9q9-bart?apikey=YOUR_API_KEY"
+```
+
+The full REST API is described by an OpenAPI 3.0 document, served without an API key. Fetch it for authoritative endpoint, parameter, and response definitions rather than guessing:
+
+```bash
+curl "https://transit.land/api/v2/rest/openapi.json"
+```
+
+The Interline Routing Platform publishes its own OpenAPI 3.0 document, also without an API key, covering transit and street routing. It includes request and response schemas and an example for every endpoint:
+
+```bash
+curl "https://transit.land/api/v2/routing/openapi.json"
+```
+
+## Quick Start for Transitland Datasets
+
+If looking for all stops and routes across the US or Canada, download from Transitland Datasets:
+
+```bash
+wget "https://app.interline.io/transitland_datasets/download_latest?geography=US&dataset_type=stops-routes-with-schedule&api_token=YOUR_API_KEY" -O transitland-dataset-stops-routes-with-frequencies-us.zip
+unzip transitland-dataset-stops-routes-with-frequencies-us.zip
+
+# Example of key extracted files (actual filenames may include timestamps):
+ls tl-dataset-US-*-routes.csv \
+   tl-dataset-US-*-stops.csv \
+   tl-dataset-US-*-routes.geojsonl \
+   tl-dataset-US-*-stops.geojsonl \
+   tl-dataset-US-*-metadata.json
+
+# Additional documentation and metadata files are also extracted, such as:
+# transitland-route-dataset-data-dictionary.md, transitland-datasets-routes-csv.datapackage.json, etc.
+```
+
+## Machine-readable discovery
+
+- [`/.well-known/api-catalog`](https://www.transit.land/.well-known/api-catalog): [RFC 9727](https://www.rfc-editor.org/rfc/rfc9727.html) catalog of every Transitland API, each with its documentation, terms, sign-up instructions, status page, and, where one is published, its machine-readable schema. Served as `application/linkset+json`, no API key required.
+- [`/robots.txt`](https://www.transit.land/robots.txt): crawl rules plus [content signals](https://contentsignals.org/) declaring how this site's content may be used.
+
+Page responses also carry an RFC 8288 `Link` header pointing at the catalog, this file, the terms, and the REST OpenAPI schema. On a feed, operator, route, or stop page it also carries an `alternate` link to the REST API representation of that same entity, which is the cheapest way to turn a page URL into data.
+
+## Documentation
+
+- [Documentation overview](https://www.transit.land/documentation): Overview of all Transitland services and how to obtain an API key
+- [REST API](https://www.transit.land/documentation/rest-api/): Simple REST endpoints for feeds, operators, routes, stops, trips, and schedules. Base URL: `https://transit.land/api/v2/rest/`
+- [REST API — agencies](https://www.transit.land/documentation/rest-api/agencies): Query transit agencies
+- [REST API — feeds](https://www.transit.land/documentation/rest-api/feeds): Query GTFS feeds
+- [REST API — feed versions](https://www.transit.land/documentation/rest-api/feed_versions): Query specific feed versions
+- [REST API — routes](https://www.transit.land/documentation/rest-api/routes): Query transit routes
+- [REST API — stops](https://www.transit.land/documentation/rest-api/stops): Query transit stops
+- [REST API — trips](https://www.transit.land/documentation/rest-api/trips): Query trips
+- [REST API — departures](https://www.transit.land/documentation/rest-api/departures): Query real-time and scheduled departures
+- [REST API OpenAPI schema](https://www.transit.land/documentation/rest-api/openapi): Machine-readable description of all REST endpoints. Schema URL: `https://transit.land/api/v2/rest/openapi.json` (no API key required to fetch)
+- [GraphQL API](https://www.transit.land/documentation/graphql-api/): Flexible query API for complex data needs. Endpoint: `https://transit.land/api/v2/query`
+- [Vector Tiles](https://www.transit.land/documentation/vector-tiles): Map vector tiles for building transit maps (Mapbox Vector Tile format)
+- [Datasets](https://www.transit.land/documentation/datasets/): Bulk data downloads (stops, routes) for offline analysis
+- [Interline Routing Platform](https://www.transit.land/documentation/routing-platform/): Journey planning and reachability. Transit itineraries (OpenTripPlanner-compatible), plus auto/bicycle/pedestrian routing, travel-time matrices, isochrones, and map matching. Base URL: `https://transit.land/api/v2/routing/`
+- [Routing Platform OpenAPI schema](https://www.transit.land/documentation/routing-platform/#machine-readable-schema): Machine-readable description of every routing endpoint. Schema URL: `https://transit.land/api/v2/routing/openapi.json` (no API key required to fetch)
+- [Plans, quotas, and billing](https://www.transit.land/documentation/plans-and-billing): Monthly quotas, what counts against each, Pay As You Go metering, and routing units per request type
+
+## Plans and Pricing
+
+Every API needs an API key, from an Interline account at app.interline.io. The plans for the REST API and the Interline Routing Platform:
+
+- **Explorer:** free, for non-commercial use. 5,000 REST API and 1,000 routing requests a month.
+- **Pay As You Go:** metered, for commercial use. 10,000 REST API requests and 10,000 routing units free a month, then billed per 1,000.
+- **Hobbyist/Academic:** free by application, for non-commercial research and teaching. Includes feed version downloads.
+- **Enterprise:** custom pricing and quotas, including the GraphQL API.
+
+For prices, quotas, and how billing works:
+
+- [Plans and pricing](https://www.transit.land/plans-pricing): Prices, quotas, and sign-up for each plan
+- [Plans, quotas, and billing](https://www.transit.land/documentation/plans-and-billing): How quotas, metering, and routing units work
+
+## Terms
+
+By using the Transitland website, APIs, and Datasets, all users agree to the [Transitland data and API terms and attributions](https://www.transit.land/terms)
+
+Attribution is required

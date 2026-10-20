@@ -1,0 +1,751 @@
+openapi: 3.2.0
+info:
+  title: Transitland Transit routing API
+  version: 1.0.0
+  contact:
+    email: info@interline.io
+  description: 'Operations tagged Transit routing across 2 of this provider''s published API definitions: transitland-routing-openapi.json, transitland-routing-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: Interline Routing Platform
+  url: https://transit.land/api/v2/routing
+security:
+- apikeyHeader: []
+- apikeyQuery: []
+tags:
+- description: Transit and walking itineraries from the Transitland Routing API.
+  name: Transit routing
+paths:
+  /otp/plan:
+    get:
+      description: Returns transit and walking route itineraries between the specified origin and destination. The endpoint accepts parameters to control departure/arrival times, walking distances, transit leg limits, transfer penalties, and more.
+      operationId: otpPlan
+      parameters:
+      - description: Origin in `lat,lon` format.
+        in: query
+        name: fromPlace
+        required: true
+        schema:
+          example: 37.7757,-122.4198
+          type: string
+      - description: Destination in `lat,lon` format.
+        in: query
+        name: toPlace
+        required: true
+        schema:
+          example: 37.7857,-122.4064
+          type: string
+      - description: 'Time of departure (or arrival if `arriveBy` is true) in local time at the origin (at the destination if `arriveBy` is true). Format: `HH:MM` or `HH:MM:SS` on a 24-hour clock, up to `48:00:00`. A time past `24:00` continues into the next day, so `25:30` is 01:30 the day after. A 12-hour time such as `8:30am` is rejected. When `time`, `date` and `relative_date` are all omitted, the request plans from now; `time` alone is that time today. Required when `date` or `relative_date` is given, and when `arriveBy` is true.'
+        in: query
+        name: time
+        schema:
+          example: 08:30
+          pattern: ^\d{1,2}:[0-5]\d(:[0-5]\d)?$
+          type: string
+      - description: Date of travel in `YYYY-MM-DD` format. `MM-DD-YYYY` is also accepted, with the month first. Defaults to today in the time zone of the origin (of the destination if `arriveBy` is true). Requires `time`. Cannot be combined with `relative_date`.
+        in: query
+        name: date
+        schema:
+          example: '2026-08-17'
+          pattern: ^(\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])|(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])-\d{4})$
+          type: string
+      - description: Date of travel relative to today in the time zone of the origin (of the destination if `arriveBy` is true), instead of `date`. `TODAY`, `YESTERDAY` or `TOMORROW`. `MONDAY` through `SUNDAY` is the next such day, or today if today is that day. `NEXT_MONDAY` through `NEXT_SUNDAY` is the next such day after today. Also accepted as `relativeDate`. Requires `time`.
+        in: query
+        name: relative_date
+        schema:
+          enum:
+          - TODAY
+          - YESTERDAY
+          - TOMORROW
+          - MONDAY
+          - TUESDAY
+          - WEDNESDAY
+          - THURSDAY
+          - FRIDAY
+          - SATURDAY
+          - SUNDAY
+          - NEXT_MONDAY
+          - NEXT_TUESDAY
+          - NEXT_WEDNESDAY
+          - NEXT_THURSDAY
+          - NEXT_FRIDAY
+          - NEXT_SATURDAY
+          - NEXT_SUNDAY
+          example: TOMORROW
+          type: string
+      - description: If true, the specified `time` and `date` are treated as the target arrival time at the destination rather than the departure time. Requires `time`.
+        in: query
+        name: arriveBy
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - description: Maximum number of itineraries to return. Also available as `numItineraries`.
+        in: query
+        name: maxItineraries
+        schema:
+          default: 10
+          example: 3
+          type: integer
+      - description: Maximum walking distance (in meters) allowed from the origin to the first transit stop or from the last transit stop to the destination. Also available as `maxWalkDistance`.
+        in: query
+        name: maxWalkingDistance
+        schema:
+          default: 800
+          example: 800
+          type: number
+      - description: Maximum straight-line distance (in meters) allowed for transfers between stops.
+        in: query
+        name: maxTransferWalkingDistance
+        schema:
+          default: 400
+          example: 400
+          type: number
+      - description: Walking speed in meters per second. (Fixed at 1.0 in the beta release.)
+        in: query
+        name: walkingSpeed
+        schema:
+          default: 1
+          example: 1
+          type: number
+          exclusiveMinimum: 0
+      - description: Minimum duration (in seconds) of a transit leg.
+        in: query
+        name: minRideLength
+        schema:
+          default: 120
+          example: 120
+          type: integer
+      - description: Maximum number of transit legs allowed in an itinerary.
+        in: query
+        name: maxK
+        schema:
+          default: 8
+          example: 8
+          type: integer
+      - description: Maximum total itinerary time (in seconds).
+        in: query
+        name: maxTripTime
+        schema:
+          default: 14400
+          example: 14400
+          type: integer
+      - description: Amount of padding to add (in seconds) when considering a transfer. For example, when alighting from the end of the first transit leg and walking to the departure stop for the next leg, only transfers to new trips departing at least 120s from that moment will be considered
+        in: query
+        name: transferTimePenalty
+        schema:
+          default: 120
+          example: 120
+          type: integer
+      - description: Use "fallback" service dates if the requested date is outside the service period of a given feed. For instance, if a feed only contains service from 2023-01-01 through 2023-01-31, and a date of 2023-05-01 is specified, an equivalent weekday (in this case, Monday) will be selected within the valid service range, such as 2023-01-09.
+        in: query
+        name: useFallbackDates
+        schema:
+          default: true
+          example: true
+          type: boolean
+      - description: Always include a walking-only itinerary alongside transit results.
+        in: query
+        name: includeWalkingItinerary
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - description: Return a walking-only itinerary if no transit trips are found.
+        in: query
+        name: fallbackWalkingItinerary
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - description: Automatically include a walking-only itinerary if the origin and destination are within the maximum walking distance.
+        in: query
+        name: allowWalkingItinerary
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - description: Include a table of the earliest arrival times at stops during trip planning.
+        in: query
+        name: includeEarliestArrivals
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - description: If true, stops that cannot improve the final arrival time are ignored. Set to false to include all stops, useful for generating isochrones.
+        in: query
+        name: useTargetStopPruning
+        schema:
+          default: true
+          example: true
+          type: boolean
+      - description: If true, the plan uses the schedule alone, without the realtime trip updates the server applies.
+        in: query
+        name: ignoreRealtimeUpdates
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - description: If true, the plan rides only trips that a realtime trip update matches, whatever the update predicts. Cannot be combined with `ignoreRealtimeUpdates`.
+        in: query
+        name: realtimeOnly
+        schema:
+          default: false
+          example: false
+          type: boolean
+      - description: If true, each transit leg whose run a trip update matched also carries `realtimeDebug`, the update's trip descriptor, and each of its stops carries its scheduled departure, the source of its departure, and the stop time update placed there.
+        in: query
+        name: debugRealtime
+        schema:
+          default: false
+          example: false
+          type: boolean
+      responses:
+        '200':
+          content:
+            application/json:
+              examples:
+                default:
+                  summary: A trip with one rail leg
+                  value:
+                    plan:
+                      date: 1786980600000
+                      from:
+                        lat: 37.7757
+                        lon: -122.4198
+                        name: Origin
+                      itineraries:
+                      - distance: 1840.6016926765926
+                        duration: 491
+                        endTime: 1786981112000
+                        legs:
+                        - distance: 159.23557715082868
+                          duration: 159
+                          endTime: 1786980780000
+                          from:
+                            departure: 1786980621000
+                            lat: 37.7757
+                            lon: -122.4198
+                            name: ''
+                          legGeometry:
+                            length: 15
+                            points: caqeFvbejV??_@BCg@CS??|ASZETCPALCOOACC@??
+                          mode: WALK
+                          startTime: 1786980621000
+                          steps: []
+                          to:
+                            departure: 1786980780000
+                            lat: 37.77513
+                            lon: -122.41925
+                            name: Metro Van Ness Station
+                            stopCode: '15419'
+                            stopId: '15419'
+                            stopOnestopId: s-9q8yykc00d-metrovannessstation
+                          transitLeg: false
+                        - agencyId: SF
+                          agencyName: San Francisco Municipal Transportation Agency
+                          block_id: SF:9504_M21
+                          distance: 1504.2311526571011
+                          duration: 155
+                          endTime: 1786980935000
+                          feedId: f-sf~bay~area~rg
+                          feedVersionSha1: 3aea27cbde2ce8cb05696e3a19b22db08a145e63
+                          from:
+                            departure: 1786980780000
+                            lat: 37.77513
+                            lon: -122.41925
+                            name: Metro Van Ness Station
+                            stopCode: '15419'
+                            stopId: '15419'
+                            stopIndex: 19
+                            stopOnestopId: s-9q8yykc00d-metrovannessstation
+                            stopSequence: 19
+                          headsign: Embarcadero Station
+                          intermediateStops:
+                          - departure: 1786980855000
+                            lat: 37.77971
+                            lon: -122.41335
+                            name: Metro Civic Center Station/Downtn
+                            stopCode: '15727'
+                            stopId: '15727'
+                            stopIndex: 20
+                            stopOnestopId: s-9q8yymt6f0-metrociviccenterstation~downtn
+                            stopSequence: 20
+                          legGeometry:
+                            length: 15
+                            points: u}peFl_ejVwAqB_EmF}DqF{@gAwDmFoEeGoCuDuAkBw@eAqEkGqEkGmCoDkCsDCE
+                          mode: RAIL
+                          routeColor: 942D83
+                          routeId: SF:L
+                          routeLongName: TARAVAL
+                          routeOnestopId: r-9q8yv-l
+                          routeShortName: L
+                          routeTextColor: FFFFFF
+                          routeType: 0
+                          startTime: 1786980780000
+                          steps: []
+                          to:
+                            departure: 1786980935000
+                            lat: 37.78465
+                            lon: -122.40709
+                            name: Metro Powell Station/Downtown
+                            stopCode: '15417'
+                            stopId: '15417'
+                            stopIndex: 21
+                            stopOnestopId: s-9q8yyw3zs1-metropowellstation~downtown
+                            stopSequence: 21
+                          transitLeg: true
+                          tripId: SF:12083617_M21
+                        - distance: 177.13496286866288
+                          duration: 177
+                          endTime: 1786981112000
+                          from:
+                            departure: 1786980935000
+                            lat: 37.78465
+                            lon: -122.40709
+                            name: Metro Powell Station/Downtown
+                            stopCode: '15417'
+                            stopId: '15417'
+                            stopOnestopId: s-9q8yyw3zs1-metropowellstation~downtown
+                          legGeometry:
+                            length: 17
+                            points: ayreFhsbjV??FEa@i@cB}BSYILCDEDSVCEO@??AL?@A???
+                          mode: WALK
+                          startTime: 1786980935000
+                          steps: []
+                          to:
+                            departure: 1786981112000
+                            lat: 37.7857
+                            lon: -122.4064
+                            name: ''
+                          transitLeg: false
+                        startTime: 1786980621000
+                        transfers: 0
+                        transitDistance: 1504.2311526571011
+                        transitTime: 155
+                        waitingTime: 0
+                        walkDistance: 336.37054001949156
+                        walkTime: 336
+                      to:
+                        lat: 37.7857
+                        lon: -122.4064
+                        name: Destination
+              schema:
+                $ref: '#/components/schemas/PlanResponse'
+          description: Successful routing plan response.
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: 'Invalid request parameters: a missing `fromPlace` or `toPlace`, a place, `date`, `time` or `relative_date` that does not parse, a `date` or `relative_date` without a `time`, both `date` and `relative_date`, `arriveBy` without a `time`, a `walkingSpeed` that is not positive, an origin (a destination, with `arriveBy`) outside every time zone, or `realtimeOnly` with `ignoreRealtimeUpdates` or on a server that applies no realtime updates.'
+        '401':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Missing or invalid API key.
+        '429':
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - $ref: '#/components/schemas/LimitExceeded'
+                - $ref: '#/components/schemas/GatewayError'
+          description: Rate limit or usage limit reached. The edge proxy answers its own rate limit with a JSON `message`; this API answers a usage limit with the meter, the limit and links to plans.
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: Server error.
+      summary: OTP-compatible transit routing plan (GET)
+      tags:
+      - Transit routing
+    servers:
+    - description: Interline Routing Platform
+      url: https://transit.land/api/v2/routing
+components:
+  schemas:
+    StopArrival:
+      properties:
+        earliestArrival:
+          description: Earliest arrival time at the stop, as Unix time in seconds.
+          format: int64
+          type: integer
+        lat:
+          description: Latitude of the stop.
+          format: double
+          maximum: 90
+          minimum: -90
+          type: number
+        lon:
+          description: Longitude of the stop.
+          format: double
+          maximum: 180
+          minimum: -180
+          type: number
+        stopId:
+          description: GTFS stop identifier from the source feed.
+          type: string
+        stopName:
+          description: Name of the stop.
+          type: string
+        stop_code:
+          description: GTFS stop code, when the feed provides one.
+          type: string
+      type: object
+    Error:
+      description: Error reported by this API.
+      properties:
+        error:
+          description: Human-readable error message.
+          type: string
+      type: object
+    Plan:
+      properties:
+        date:
+          description: Epoch timestamp (in milliseconds) representing the date of the plan.
+          format: int64
+          type: integer
+        from:
+          $ref: '#/components/schemas/Location'
+        itineraries:
+          description: Candidate trips, best first. Empty when no trip was found.
+          items:
+            $ref: '#/components/schemas/Itinerary'
+          type: array
+        to:
+          $ref: '#/components/schemas/Location'
+      type: object
+    Itinerary:
+      properties:
+        distance:
+          description: Total distance of the itinerary (in meters).
+          type: number
+        duration:
+          description: Total duration of the itinerary in seconds.
+          format: int64
+          type: integer
+        endTime:
+          description: Epoch timestamp (in milliseconds) for the end time of the itinerary.
+          format: int64
+          type: integer
+        legs:
+          description: Segments of the trip in order, each either a walk or a single transit ride.
+          items:
+            $ref: '#/components/schemas/Leg'
+          type: array
+        startTime:
+          description: Epoch timestamp (in milliseconds) for the start time of the itinerary.
+          format: int64
+          type: integer
+        transfers:
+          description: Number of transfers in the itinerary.
+          type: integer
+        transitDistance:
+          description: Total transit distance (in meters) for the itinerary.
+          type: number
+        transitTime:
+          description: Total transit time (in seconds) for the itinerary.
+          format: int64
+          type: integer
+        waitingTime:
+          description: Total waiting time (in seconds) for the itinerary.
+          format: int64
+          type: integer
+        walkDistance:
+          description: Total walking distance (in meters) for the itinerary.
+          type: number
+        walkTime:
+          description: Total walking time (in seconds) for the itinerary.
+          format: int64
+          type: integer
+      type: object
+    LegGeometry:
+      properties:
+        length:
+          description: Number of points in `points`.
+          type: integer
+        points:
+          description: The leg's shape as an encoded polyline, precision 5.
+          type: string
+      type: object
+    RealtimeDebug:
+      description: The trip update matched to a leg's run, with `debugRealtime` set.
+      properties:
+        delay:
+          description: The update's trip-level delay, in seconds.
+          format: int32
+          type: integer
+        scheduleRelationship:
+          description: The trip descriptor's schedule relationship.
+          type: string
+        startDate:
+          description: The trip descriptor's `start_date`, when given.
+          type: string
+        startTime:
+          description: The trip descriptor's `start_time`, when given.
+          type: string
+        timestamp:
+          description: The update's timestamp, in epoch milliseconds.
+          format: int64
+          type: integer
+        tripId:
+          description: The trip descriptor's `trip_id`.
+          type: string
+      type: object
+    RealtimeStopUpdate:
+      description: The stop time update placed at a stop, with `debugRealtime` set.
+      properties:
+        scheduleRelationship:
+          description: The update's schedule relationship.
+          type: string
+        stopId:
+          description: The update's `stop_id`, when given.
+          type: string
+        stopSequence:
+          description: The update's `stop_sequence`, when given.
+          minimum: 0
+          type: integer
+      type: object
+    GatewayError:
+      description: Error reported by the edge proxy, which answers before the request reaches this API.
+      properties:
+        message:
+          description: Human-readable error message.
+          type: string
+      required:
+      - message
+      type: object
+    Leg:
+      properties:
+        agencyId:
+          description: Transit agency identifier.
+          type: string
+        agencyName:
+          description: Transit agency name.
+          type: string
+        arrivalDelay:
+          description: The run's delay where the rider alights, in seconds. Tiles keep departures only, so this is the delay on the departure from that stop.
+          format: int64
+          type: integer
+        block_id:
+          description: GTFS `block_id` of the trip, when the feed sets one. Named in snake_case unlike the rest of this object, which is how the API emits it.
+          type: string
+        departureDelay:
+          description: 'The run''s delay where the rider boards, in seconds: the departure routing used less the scheduled one.'
+          format: int64
+          type: integer
+        distance:
+          description: Distance of the leg in meters.
+          type: number
+        duration:
+          description: Duration of the leg in seconds.
+          format: int64
+          type: integer
+        endTime:
+          description: Epoch timestamp (in milliseconds) for the leg's end time.
+          format: int64
+          type: integer
+        feedId:
+          description: GTFS feed identifier.
+          type: string
+        feedVersionSha1:
+          description: SHA-1 hash representing the GTFS feed version.
+          pattern: ^[0-9a-f]{40}$
+          type: string
+        from:
+          $ref: '#/components/schemas/Stop'
+        headsign:
+          description: Destination or headsign for the transit leg.
+          type: string
+        intermediateStops:
+          description: Optional list of intermediate stops (only present on some transit legs).
+          items:
+            $ref: '#/components/schemas/Stop'
+          type: array
+        legGeometry:
+          $ref: '#/components/schemas/LegGeometry'
+        mode:
+          description: Mode of travel for the leg (e.g., WALK, RAIL).
+          type: string
+        realTime:
+          description: Whether a realtime trip update matched the leg's run.
+          type: boolean
+        realtimeDebug:
+          $ref: '#/components/schemas/RealtimeDebug'
+        routeColor:
+          description: Hex color code for the route.
+          type: string
+        routeId:
+          description: Identifier for the route.
+          type: string
+        routeLongName:
+          description: Long name/description of the route.
+          type: string
+        routeOnestopId:
+          description: One-stop identifier for the route.
+          type: string
+        routeShortName:
+          description: Short name of the route.
+          type: string
+        routeTextColor:
+          description: Hex text color for the route.
+          type: string
+        routeType:
+          description: Type of the transit route (e.g., 1 for rail).
+          type: integer
+        serviceDate:
+          description: The run's service date (YYYYMMDD).
+          type: string
+        startTime:
+          description: Epoch timestamp (in milliseconds) for the leg's start time.
+          format: int64
+          type: integer
+        steps:
+          description: List of navigation steps (structure undefined; may be empty).
+          items:
+            type: object
+          type: array
+        to:
+          $ref: '#/components/schemas/Stop'
+        transitLeg:
+          description: Indicates if the leg is a transit leg.
+          type: boolean
+        tripId:
+          description: Identifier for the transit trip.
+          type: string
+      type: object
+    LimitExceeded:
+      description: Error reported by this API when the account has reached a usage limit.
+      properties:
+        current_usage:
+          description: Usage counted against it, when known.
+          type: number
+        error:
+          description: Human-readable error message.
+          type: string
+        limit:
+          description: The limit, when known.
+          type: number
+        links:
+          description: Where to compare plans and manage the account.
+          properties:
+            account:
+              description: Account page.
+              format: uri
+              type: string
+            plans:
+              description: Plans and pricing.
+              format: uri
+              type: string
+          required:
+          - plans
+          - account
+          type: object
+        meter:
+          description: Usage meter that reached its limit.
+          type: string
+        time_period:
+          description: Its period, such as monthly, when known.
+          type: string
+      required:
+      - error
+      - meter
+      - links
+      type: object
+    Stop:
+      properties:
+        departure:
+          description: Epoch timestamp (in milliseconds) for the departure time from this stop.
+          format: int64
+          type: integer
+        lat:
+          description: Latitude coordinate of the stop.
+          format: double
+          maximum: 90
+          minimum: -90
+          type: number
+        lon:
+          description: Longitude coordinate of the stop.
+          format: double
+          maximum: 180
+          minimum: -180
+          type: number
+        name:
+          description: Stop name (may be empty).
+          type: string
+        realtimeSource:
+          description: 'With `debugRealtime` set: the source of `departure`. `none` is the schedule; `time` and `delay` come from the stop''s own update; `carried` is a delay carried from an earlier stop''s update or the trip''s own delay; `noData` and `skipped` mean the stop''s update says NO_DATA or SKIPPED.'
+          enum:
+          - none
+          - time
+          - delay
+          - carried
+          - noData
+          - skipped
+          type: string
+        realtimeUpdate:
+          $ref: '#/components/schemas/RealtimeStopUpdate'
+        scheduledDeparture:
+          description: 'With `debugRealtime` set, on a transit leg''s stop whose run a trip update matched: the scheduled departure, in epoch milliseconds.'
+          format: int64
+          type: integer
+        stopCode:
+          description: Stop code.
+          type: string
+        stopId:
+          description: Stop identifier.
+          type: string
+        stopIndex:
+          description: 'On a transit leg''s stop: the stop''s position in the leg''s trip, counting from 0.'
+          type: integer
+        stopOnestopId:
+          description: One-stop identifier for the stop.
+          type: string
+        stopSequence:
+          description: 'On a transit leg''s stop: the stop''s GTFS `stop_sequence` in the leg''s trip.'
+          type: integer
+      type: object
+    Location:
+      properties:
+        lat:
+          description: Latitude coordinate.
+          format: double
+          maximum: 90
+          minimum: -90
+          type: number
+        lon:
+          description: Longitude coordinate.
+          format: double
+          maximum: 180
+          minimum: -180
+          type: number
+        name:
+          description: Name of the location (may be empty).
+          type: string
+      type: object
+    PlanResponse:
+      properties:
+        earliestArrivals:
+          description: Earliest arrival time at each reachable stop. Present only when `includeEarliestArrivals` is true.
+          items:
+            $ref: '#/components/schemas/StopArrival'
+          type: array
+        plan:
+          $ref: '#/components/schemas/Plan'
+      type: object
+  securitySchemes:
+    apikeyHeader:
+      description: API key sent as a request header. Preferred, since query strings are logged by intermediaries. `apikey`, `api_key`, `api_token`, and `access_token` are accepted equivalently, and headers may be spelled with a dash or an underscore.
+      in: header
+      name: apikey
+      type: apiKey
+    apikeyQuery:
+      description: API key sent as a query parameter, for callers that cannot set headers. `apikey`, `api_key`, `api_token`, and `access_token` are accepted equivalently, and headers may be spelled with a dash or an underscore.
+      in: query
+      name: apikey
+      type: apiKey
+x-refined-from:
+- transitland-routing-openapi.json
+- transitland-routing-openapi.yml

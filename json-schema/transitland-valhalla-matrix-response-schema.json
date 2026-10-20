@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/transitland/main/json-schema/transitland-valhalla-matrix-response-schema.json",
+  "title": "ValhallaMatrixResponse",
+  "description": "Times and distances between every source and every target.",
+  "x-generated": "2026-10-19",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/transitland-routing-openapi.yml#/components/schemas/ValhallaMatrixResponse",
+  "properties": {
+    "algorithm": {
+      "description": "Which matrix algorithm answered the request.",
+      "type": "string"
+    },
+    "sources": {
+      "description": "The requested sources, snapped to the network. Verbose form only.",
+      "items": {
+        "$ref": "#/$defs/ValhallaMatrixLocation"
+      },
+      "type": "array"
+    },
+    "sources_to_targets": {
+      "description": "The matrix itself. Its shape follows the request's `verbose` flag, which defaults to true: verbose gives one row per source holding a cell per target, while `verbose: false` gives two parallel arrays-of-arrays instead.",
+      "oneOf": [
+        {
+          "description": "Verbose form. One row per source, each holding one cell per target.",
+          "items": {
+            "items": {
+              "$ref": "#/$defs/ValhallaMatrixCell"
+            },
+            "type": "array"
+          },
+          "type": "array"
+        },
+        {
+          "description": "Compact form, returned when `verbose` is false.",
+          "properties": {
+            "distances": {
+              "description": "Distance in the response's units, indexed by source then target.",
+              "items": {
+                "items": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "durations": {
+              "description": "Travel time in seconds, indexed by source then target.",
+              "items": {
+                "items": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "type": "array"
+              },
+              "type": "array"
+            },
+            "shapes": {
+              "description": "The route for each pair, indexed by source then target: an encoded polyline at precision 6, or 5 with `shape_format: polyline5`, empty when no route exists; or with `shape_format: geojson`, a GeoJSON geometry, or null when no route exists. Present only when the request sets `shape_format` and the engine uses its CostMatrix algorithm.",
+              "items": {
+                "items": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "$ref": "#/$defs/ValhallaGeoJsonGeometry"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              "type": "array",
+              "x-requested-by": "shape_format"
+            }
+          },
+          "type": "object"
+        }
+      ]
+    },
+    "targets": {
+      "description": "The requested targets, snapped to the network. Verbose form only.",
+      "items": {
+        "$ref": "#/$defs/ValhallaMatrixLocation"
+      },
+      "type": "array"
+    },
+    "units": {
+      "description": "Units the distances are expressed in.",
+      "enum": [
+        "kilometers",
+        "miles"
+      ],
+      "type": "string"
+    }
+  },
+  "type": "object",
+  "$defs": {
+    "ValhallaGeoJsonGeometry": {
+      "description": "A GeoJSON geometry, per RFC 7946.",
+      "properties": {
+        "coordinates": {
+          "description": "Position array, nested to a depth set by `type`.",
+          "items": {},
+          "type": "array"
+        },
+        "type": {
+          "description": "Geometry type, which sets how deeply `coordinates` is nested.",
+          "enum": [
+            "Point",
+            "MultiPoint",
+            "LineString",
+            "MultiLineString",
+            "Polygon",
+            "MultiPolygon"
+          ],
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaMatrixCell": {
+      "description": "One source-target pair.",
+      "properties": {
+        "begin_heading": {
+          "description": "Compass bearing on departure, in degrees.",
+          "type": "number",
+          "x-secondary": true
+        },
+        "begin_lat": {
+          "description": "Latitude where the route leaves the source.",
+          "format": "double",
+          "maximum": 90,
+          "minimum": -90,
+          "type": "number",
+          "x-secondary": true
+        },
+        "begin_lon": {
+          "description": "Longitude where the route leaves the source.",
+          "format": "double",
+          "maximum": 180,
+          "minimum": -180,
+          "type": "number",
+          "x-secondary": true
+        },
+        "cost": {
+          "description": "Cost of the route under the request's costing model, the value the search minimizes.",
+          "type": [
+            "number",
+            "null"
+          ],
+          "x-secondary": true
+        },
+        "date_time": {
+          "description": "The request's `date_time` plus the travel time, as local `YYYY-MM-DDTHH:MM`. Present only when the search starts from the locations that carry the request's `date_time`: for a `depart_at` request searched forward from the sources, it is the arrival time at the target. Absent for pairs beyond the time-dependent distance limit, and for `depart_at` requests with more sources than targets, which are searched from the targets.",
+          "type": "string",
+          "x-requested-by": "date_time"
+        },
+        "distance": {
+          "description": "Distance in the response's units, or null when no route exists between the pair.",
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "end_heading": {
+          "description": "Compass bearing on arrival, in degrees.",
+          "type": "number",
+          "x-secondary": true
+        },
+        "end_lat": {
+          "description": "Latitude where the route reaches the target.",
+          "format": "double",
+          "maximum": 90,
+          "minimum": -90,
+          "type": "number",
+          "x-secondary": true
+        },
+        "end_lon": {
+          "description": "Longitude where the route reaches the target.",
+          "format": "double",
+          "maximum": 180,
+          "minimum": -180,
+          "type": "number",
+          "x-secondary": true
+        },
+        "from_index": {
+          "description": "Index into `sources`.",
+          "type": "integer"
+        },
+        "shape": {
+          "description": "The route between the pair: an encoded polyline at precision 6, or 5 with `shape_format: polyline5`, or a GeoJSON geometry with `shape_format: geojson`. Present only when the request sets `shape_format`, the engine uses its CostMatrix algorithm, and a route exists.",
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "$ref": "#/$defs/ValhallaGeoJsonGeometry"
+            }
+          ],
+          "x-requested-by": "shape_format"
+        },
+        "time": {
+          "description": "Travel time in seconds, or null when no route exists between the pair.",
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "time_zone_name": {
+          "description": "IANA time zone of `date_time`, e.g. `America/Los_Angeles`. Present with `date_time`.",
+          "type": "string",
+          "x-requested-by": "date_time"
+        },
+        "time_zone_offset": {
+          "description": "UTC offset of `date_time`, as `+HH:MM` or `-HH:MM`. Present with `date_time`.",
+          "type": "string",
+          "x-requested-by": "date_time"
+        },
+        "to_index": {
+          "description": "Index into `targets`.",
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "ValhallaMatrixLocation": {
+      "description": "A matrix endpoint snapped to the network.",
+      "properties": {
+        "lat": {
+          "description": "Latitude of the snapped location.",
+          "format": "double",
+          "maximum": 90,
+          "minimum": -90,
+          "type": "number"
+        },
+        "lon": {
+          "description": "Longitude of the snapped location.",
+          "format": "double",
+          "maximum": 180,
+          "minimum": -180,
+          "type": "number"
+        }
+      },
+      "type": "object"
+    }
+  }
+}

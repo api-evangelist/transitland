@@ -1,0 +1,436 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/transitland-agencies-api-openapi.yml
+- openapi/transitland-feed-versions-api-openapi.yml
+- openapi/transitland-feeds-api-openapi.yml
+- openapi/transitland-onestop-id-api-openapi.yml
+- openapi/transitland-operators-api-openapi.yml
+vocabulary:
+  name: TransitLand Domain Vocabulary
+  description: 'Terms declared by TransitLand''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-20'
+  terms:
+  - term: Street routing
+    definition: Auto, pedestrian, and bicycle routing from Valhalla over OpenStreetMap.
+    tags:
+    - Resource Group
+    source: openapi/transitland-street-routing-api-openapi.yml
+  - term: Transit routing
+    definition: Transit and walking itineraries from the Transitland Routing API.
+    tags:
+    - Resource Group
+    source: openapi/transitland-transit-routing-api-openapi.yml
+  - term: ValhallaFactor
+    definition: Cost multiplier applied to matched edges (min dependent on service configuration, default 1).
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaFactor
+  - term: ValhallaLocation
+    definition: 'Object declared by the contract with fields: date_time, display_lat, display_lon, heading, heading_tolerance, lat, lon, minimum_reachability,
+      name, node_snap_tolerance, preferred_layer, preferred_side. (10 more)'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLocation
+  - term: ValhallaCentroidResponse
+    definition: 'Routes from every requested location to the one convergence point: `trip` from the first location, and `alternates` from the
+      others.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaCentroidResponse
+  - term: ValhallaTraceAttributesPath
+    definition: One alternate match of the trace.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTraceAttributesPath
+  - term: ValhallaNodeType
+    definition: What the node is.
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaNodeType
+  - term: ValhallaEdgeUse
+    definition: What the edge is used for.
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaEdgeUse
+  - term: ValhallaTrip
+    definition: A route through the network, split into legs between the requested locations.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTrip
+  - term: ValhallaIncident
+    definition: A traffic incident, as supplied by the incident feed.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaIncident
+  - term: ValhallaLocateEdge
+    definition: One candidate edge. Without `verbose`, only `way_id`, the correlated point, `side_of_street`, and `percent_along`; with it, every
+      field but `way_id`, which moves into `edge_info`.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLocateEdge
+  - term: ValhallaLocateEdgeInfo
+    definition: Attributes shared by both directions of the edge.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLocateEdgeInfo
+  - term: ValhallaLiveSpeed
+    definition: Live traffic on the edge, in km/h. Empty when the edge has no live traffic. The edge is split into up to three segments at the
+      breakpoints, each with its own speed and congestion.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLiveSpeed
+  - term: ValhallaExpansionResponse
+    definition: The edges the router explored, as GeoJSON LineStrings. Each requested entry in `expansion_properties` appears as a property on
+      every feature; with none requested the properties object is empty.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaExpansionResponse
+  - term: ValhallaAdminCrossing
+    definition: One border crossing along a leg.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaAdminCrossing
+  - term: ValhallaAccess
+    definition: Which travelers may pass. Node access omits `moped` and `motorcycle`.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaAccess
+  - term: ValhallaManeuver
+    definition: One turn-by-turn step. When the request sets `recostings`, it also holds `time_` for each named recosting, as on the summary.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaManeuver
+  - term: ValhallaMatrixLocation
+    definition: A matrix endpoint snapped to the network.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaMatrixLocation
+  - term: ValhallaGeoJsonFactorVariant
+    definition: 'Object declared by the contract with fields: geometry, properties, type.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaGeoJsonFactorVariant
+  - term: ValhallaTraceAttributesResponse
+    definition: Attributes of the road network along a matched trace.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTraceAttributesResponse
+  - term: ValhallaMatchedPoint
+    definition: How one input point was matched to the network.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaMatchedPoint
+  - term: ValhallaGeoJsonGeometry
+    definition: A GeoJSON geometry, per RFC 7946.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaGeoJsonGeometry
+  - term: ValhallaTripAlternate
+    definition: One more route, beside the response's main trip. Valhalla writes only the trip here; the request's `id` is on the response itself.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTripAlternate
+  - term: ValhallaOutputFormat
+    definition: Not all formats are supported by all endpoints, e.g. `geotiff` is isochrone-only.
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaOutputFormat
+  - term: ValhallaShapeFactorVariant
+    definition: 'Object declared by the contract with fields: factor, shape.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaShapeFactorVariant
+  - term: ValhallaTripWarning
+    definition: A non-fatal note about the request.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTripWarning
+  - term: ValhallaShapeMatch
+    definition: 'Enumeration declared by the contract with values: map_snap, edge_walk, walk_or_snap.'
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaShapeMatch
+  - term: ValhallaDateTimeOptions
+    definition: 'Object declared by the contract with fields: type, value.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaDateTimeOptions
+  - term: ValhallaCostingOptions
+    definition: Costing options keyed by costing model name.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaCostingOptions
+  - term: ValhallaBaseCostingOptions
+    definition: Options shared by all costing models. Parsed in src/sif/dynamiccost.cc.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaBaseCostingOptions
+  - term: ValhallaTraceNode
+    definition: The node at the end of an edge.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTraceNode
+  - term: ValhallaIsochroneResponse
+    definition: Reachable areas as GeoJSON. Contours come back as LineStrings by default, or Polygons when `polygons` is true; `show_locations`
+      adds Point and MultiPoint features for the input and snapped locations.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaIsochroneResponse
+  - term: ValhallaTraceEdgeSpeeds
+    definition: The speed from each traffic source. `speeds_non_faded` is the source's own value; `speeds_faded` blends live traffic into the
+      historical speed with distance from the start of the route, and appears only when the request's `date_time` is the current time. Each source
+      is absent when the edge has none, except `no_flow`.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTraceEdgeSpeeds
+  - term: ValhallaTripSummary
+    definition: 'Totals for a trip or a single leg. When the request sets `recostings`, it also holds `time_` for each named recosting: the travel
+      time in seconds under that costing, or null when the route is not passable under it.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTripSummary
+  - term: ValhallaLocateNode
+    definition: A node at the end of a candidate edge. Without `verbose`, only `lat` and `lon`.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLocateNode
+  - term: ValhallaLocateResponse
+    definition: One entry per requested location, in the order requested.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLocateResponse
+  - term: ValhallaTraceEdge
+    definition: One edge of the matched path. Speeds are in km/h, or mph when `units` is `miles`.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTraceEdge
+  - term: ValhallaExpansionFeature
+    definition: 'Object declared by the contract with fields: geometry, properties, type.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaExpansionFeature
+  - term: ValhallaSignElement
+    definition: One piece of sign text.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaSignElement
+  - term: ValhallaGraphId
+    definition: 'A graph identifier: the hierarchy level, the tile within it, and the object''s index in that tile, plus `value`, all three packed
+      into one integer.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaGraphId
+  - term: ValhallaHardExclusions
+    definition: '**EXPERIMENTAL** — Hard exclusion options available for all costing methods. These options are not available by default; the
+      server config must have `service_limits.allow_hard_exclusions` set to true in order to allow them. If not allowed and any of the hard excludes
+      is set to true, the server will return a warning and ignore the hard excludes.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaHardExclusions
+  - term: ValhallaBaseRequest
+    definition: 'Object declared by the contract with fields: costing, costing_options, date_time, exclude_locations, exclude_polygons, format,
+      id, language, linear_cost_factors, units.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaBaseRequest
+  - term: ValhallaMatrixCell
+    definition: One source-target pair.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaMatrixCell
+  - term: ValhallaIsochroneFeature
+    definition: One contour, or one located point when `show_locations` is set.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaIsochroneFeature
+  - term: ValhallaRoadClass
+    definition: 'Enumeration declared by the contract with values: motorway, trunk, primary, secondary, tertiary, unclassified, residential, service_other.'
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaRoadClass
+  - term: ValhallaLinearCostFactor
+    definition: Either an encoded-polyline form or a GeoJSON LineString feature. In case of passing GeoJSON, the factor must be passed as a feature
+      property. Note that the geometry must align with shapes present in Valhalla's graph.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLinearCostFactor
+  - term: ValhallaTripLeg
+    definition: One segment of a trip, between two break locations.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTripLeg
+  - term: ValhallaFilterAction
+    definition: 'Enumeration declared by the contract with values: include, exclude.'
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaFilterAction
+  - term: ValhallaDirectionsType
+    definition: 'Enumeration declared by the contract with values: none, maneuvers, instructions.'
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaDirectionsType
+  - term: ValhallaLocateEdgeAttributes
+    definition: The directed edge as stored in the routing graph.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLocateEdgeAttributes
+  - term: ValhallaAccessRestriction
+    definition: One restriction on travel along an edge, and the travelers it applies to.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaAccessRestriction
+  - term: ValhallaMatrixResponse
+    definition: Times and distances between every source and every target.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaMatrixResponse
+  - term: ValhallaSearchFilter
+    definition: Optional filters to exclude candidate edges based on their attribution.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaSearchFilter
+  - term: ValhallaContour
+    definition: At least one of time or distance must be specified. You can only specify one metric per contour, i.e. time or distance.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaContour
+  - term: ValhallaShapeFormat
+    definition: Not all formats are supported by all endpoints, e.g. `no_shape` is not valid for isochrone.
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaShapeFormat
+  - term: ValhallaTurnLane
+    definition: 'One lane. Directions are bit masks: 1 none, 2 through, 4 sharp left, 8 left, 16 slight left, 32 slight right, 64 right, 128 sharp
+      right, 256 reverse, 512 merge to left, 1024 merge to right.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTurnLane
+  - term: ValhallaAdmin
+    definition: A country and, where known, the state or province within it.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaAdmin
+  - term: ValhallaCostingType
+    definition: '`multimodal` is not available. The street graph has no transit; use transit routing at `/api/v2/routing/otp/plan`.'
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaCostingType
+  - term: ValhallaTripResponse
+    definition: A single routed trip.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTripResponse
+  - term: ValhallaLocateResult
+    definition: What the router found near one requested coordinate. The request's `verbose` flag sets how much each edge and node carries.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaLocateResult
+  - term: ValhallaManeuverSign
+    definition: 'Guide-sign text for the maneuver: exit numbers, branch names, toward names, and exit names. Present only at junctions with signage,
+      and each list only when the sign carries it.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaManeuverSign
+  - term: ValhallaShapeAttributes
+    definition: 'Values for each segment between consecutive points of `shape`. Off by default: each list appears only when its `shape_attributes.*`
+      filter is requested.'
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaShapeAttributes
+  - term: ValhallaEdgeSurface
+    definition: Road surface, from smoothest to roughest.
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaEdgeSurface
+  - term: ValhallaSpeedType
+    definition: A speed source that may be used when costing edges.
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaSpeedType
+  - term: ValhallaExpansionProperty
+    definition: GeoJSON property key to include in the expansion response. Each additional property increases output size by roughly 10%. By default
+      an empty properties object is returned.
+    tags:
+    - Enumeration
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaExpansionProperty
+  - term: ValhallaTripLocation
+    definition: A requested location after snapping to the network.
+    tags:
+    - Object
+    source: openapi/transitland-street-routing-api-openapi.yml#/components/schemas/ValhallaTripLocation
+  - term: StopArrival
+    definition: 'Object declared by the contract with fields: earliestArrival, lat, lon, stopId, stopName, stop_code.'
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/StopArrival
+  - term: Error
+    definition: Error reported by this API.
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/Error
+  - term: Plan
+    definition: 'Object declared by the contract with fields: date, from, itineraries, to.'
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/Plan
+  - term: Itinerary
+    definition: 'Object declared by the contract with fields: distance, duration, endTime, legs, startTime, transfers, transitDistance, transitTime,
+      waitingTime, walkDistance, walkTime.'
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/Itinerary
+  - term: LegGeometry
+    definition: 'Object declared by the contract with fields: length, points.'
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/LegGeometry
+  - term: RealtimeDebug
+    definition: The trip update matched to a leg's run, with `debugRealtime` set.
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/RealtimeDebug
+  - term: RealtimeStopUpdate
+    definition: The stop time update placed at a stop, with `debugRealtime` set.
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/RealtimeStopUpdate
+  - term: GatewayError
+    definition: Error reported by the edge proxy, which answers before the request reaches this API.
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/GatewayError
+  - term: Leg
+    definition: 'Object declared by the contract with fields: agencyId, agencyName, arrivalDelay, block_id, departureDelay, distance, duration,
+      endTime, feedId, feedVersionSha1, from, headsign. (18 more)'
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/Leg
+  - term: LimitExceeded
+    definition: Error reported by this API when the account has reached a usage limit.
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/LimitExceeded
+  - term: Stop
+    definition: 'Object declared by the contract with fields: departure, lat, lon, name, realtimeSource, realtimeUpdate, scheduledDeparture, stopCode,
+      stopId, stopIndex, stopOnestopId, stopSequence.'
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/Stop
+  - term: Location
+    definition: 'Object declared by the contract with fields: lat, lon, name.'
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/Location
+  - term: PlanResponse
+    definition: 'Object declared by the contract with fields: earliestArrivals, plan.'
+    tags:
+    - Object
+    source: openapi/transitland-transit-routing-api-openapi.yml#/components/schemas/PlanResponse
+  - term: Agencies
+    definition: 'Resource group in the contract; its operation GET /agencies: Search for agencies'
+    tags:
+    - Resource Group
+    source: openapi/transitland-agencies-api-openapi.yml

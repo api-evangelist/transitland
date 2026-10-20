@@ -1,0 +1,6 @@
+generated: '2026-10-19'
+method: probed
+generator: harvest-llms.py
+source: https://www.transit.land/llms.txt
+bytes: 8620
+note: saved verbatim; the provider's own document

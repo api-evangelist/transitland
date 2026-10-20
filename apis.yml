@@ -23,34 +23,347 @@ accessModel:
   method: derived
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/transitland.png
 name: TransitLand
-description: "Transit Aggregation"
-url: https://www.transit.land/documentation/datastore/api-endpoints.html
+description: Transitland is an open, community-edited aggregation of public transit
+  data from GTFS and GTFS Realtime feeds around the world, operated by Interline Technologies.
+  It offers a REST API and a GraphQL API over agencies, routes, stops, trips, feeds
+  and feed versions, real-time departures, plus the Interline Routing Platform for
+  transit and street routing, isochrones and matrices.
+url: https://www.transit.land
 specificationVersion: '0.23'
 created: '2026-05-28'
-modified: '2026-05-28'
+modified: '2026-10-19'
 x-source: public-apis/public-apis
-x-category: "Transportation"
-x-tier: 3
+x-category: Transportation
+x-tier: "3"
 x-tier-reason: bulk-registered-from-public-apis
 tags:
-  - Transportation
-  - Public APIs
-apis:
-  - name: TransitLand
-    description: "Transit Aggregation"
-    humanURL: https://www.transit.land/documentation/datastore/api-endpoints.html
-    tags:
-      - Transportation
-    properties:
-      - type: Documentation
-        url: https://www.transit.land/documentation/datastore/api-endpoints.html
-common:
-  - type: DomainSecurity
-    url: security/transitland-domain-security.yml
-  - type: Website
-    url: https://www.transit.land/documentation/datastore/api-endpoints.html
-  - type: PublicAPIsListing
-    url: https://github.com/public-apis/public-apis
+- Transportation
+- Public APIs
+- Transit
+- GTFS
+- Open Data
+- Routing
+- Geospatial
 maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+- FN: Kin Lane
+  email: kin@apievangelist.com
+common:
+- type: Conventions
+  url: conventions/transitland-conventions.yml
+- type: Lifecycle
+  url: lifecycle/transitland-lifecycle.yml
+- type: AgenticAccess
+  url: agentic-access/transitland-agentic-access.yml
+- type: RateLimits
+  url: rate-limits/transitland-rate-limits.yml
+- type: Plans
+  url: plans/transitland-plans-pricing.yml
+- type: Spectral
+  url: rules/transitland-rules.yml
+- type: JSONLD
+  url: json-ld/transitland-context.jsonld
+- type: Vocabulary
+  url: vocabulary/transitland-vocabulary.yml
+- type: DataModel
+  url: data-model/transitland-data-model.yml
+- type: ErrorCatalog
+  url: errors/transitland-problem-types.yml
+- type: Conformance
+  url: conformance/transitland-conformance.yml
+- type: LLMsTxt
+  url: llms/transitland-llms.txt
+- type: WellKnown
+  url: well-known/transitland-well-known.yml
+- type: Hosts
+  url: hosts/transitland-hosts.yml
+- type: Vendors
+  url: vendors/transitland-vendors.yml
+- type: StatusPage
+  url: https://status.transit.land/
+- type: Newsroom
+  url: https://www.transit.land/news/2015/11/05/citylab
+- type: APIReference
+  url: https://www.transit.land/llms.txt
+- type: Authentication
+  url: authentication/transitland-authentication.yml
+- type: Website
+  url: https://www.transit.land
+- type: DomainSecurity
+  url: security/transitland-domain-security.yml
+- type: PublicAPIsListing
+  url: https://github.com/public-apis/public-apis
+- type: Documentation
+  url: https://www.transit.land/documentation
+- type: GitHubOrganization
+  url: https://github.com/transitland
+- type: Pricing
+  url: https://www.transit.land/plans-pricing
+- type: TermsOfService
+  url: https://www.transit.land/terms
+- type: SignUp
+  url: https://app.interline.io
+apis:
+- name: Transitland GraphQL API
+  description: >-
+    Flexible GraphQL query API over the Transitland datastore; available on Enterprise plans (introspection
+    returns 401 without a key).
+  humanURL: https://www.transit.land/documentation/graphql-api/
+  baseURL: https://transit.land/api/v2/query
+  tags:
+  - GraphQL
+  - Transportation
+  properties:
+  - type: Documentation
+    url: https://www.transit.land/documentation/graphql-api/
+  aid: transitland:transitland-graphql-api
+  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/transitland.png
+- aid: transitland:transitland-agencies-api
+  name: TransitLand Agencies API
+  description: The Agencies API from TransitLand — 2 operation(s) for agencies.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Agencies
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-agencies-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+- aid: transitland:transitland-feed-versions-api
+  name: TransitLand Feed Versions API
+  description: The Feed Versions API from TransitLand — 4 operation(s) for feed versions.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Feed Versions
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-feed-versions-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+- aid: transitland:transitland-feeds-api
+  name: TransitLand Feeds API
+  description: The Feeds API from TransitLand — 4 operation(s) for feeds.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Feeds
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-feeds-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+- aid: transitland:transitland-onestop-id-api
+  name: TransitLand Onestop Id API
+  description: The Onestop Id API from TransitLand — 1 operation(s) for onestop id.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Onestop Id
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-onestop-id-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+- aid: transitland:transitland-operators-api
+  name: TransitLand Operators API
+  description: The Operators API from TransitLand — 2 operation(s) for operators.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Operators
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-operators-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+- aid: transitland:transitland-routes-api
+  name: TransitLand Routes API
+  description: The Routes API from TransitLand — 4 operation(s) for routes.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Routes
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-routes-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+- aid: transitland:transitland-stops-api
+  name: TransitLand Stops API
+  description: The Stops API from TransitLand — 3 operation(s) for stops.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Stops
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-stops-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+- aid: transitland:transitland-street-routing-api
+  name: TransitLand Street routing API
+  description: Auto, pedestrian, and bicycle routing from Valhalla over OpenStreetMap.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Street routing
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-street-routing-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+- aid: transitland:transitland-transit-routing-api
+  name: TransitLand Transit routing API
+  description: Transit and walking itineraries from the Transitland Routing API.
+  humanURL: https://www.transit.land/documentation/rest-api/
+  baseURL: https://transit.land/api/v2/rest
+  tags:
+  - Transit routing
+  properties:
+  - type: OpenAPI
+    url: openapi/transitland-transit-routing-api-openapi.yml
+  - type: Documentation
+    url: https://www.transit.land/documentation/rest-api/
+  - type: Documentation
+    url: https://www.transit.land/documentation/routing-platform/
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-attributes-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-response-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-trace-route-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-isochrone-request-schema.json
+  - type: JSONSchema
+    url: json-schema/transitland-valhalla-matrix-request-schema.json
+x-enrichment:
+  date: '2026-10-19'
+  status: enriched
+  artifacts_added: 20
+  pass: local-v5
+x-coverage:
+  state: covered
+  reason: covered
+  detail: >-
+    Full public API surface reached. Transitland serves its own OpenAPI for the REST and routing APIs
+    at transit.land/api/v2/*/openapi.json; both archived byte-identical (2026-10-20).
+  evidence:
+  - url: https://transit.land/api/v2/rest/openapi.json
+    status: 200
+  - url: https://transit.land/api/v2/routing/openapi.json
+    status: 200

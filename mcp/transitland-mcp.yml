@@ -1,0 +1,207 @@
+generated: '2026-10-20'
+method: derived
+generator: derive-mcp-candidate.py
+source:
+- openapi/transitland-agencies-api-openapi.yml
+- openapi/transitland-feed-versions-api-openapi.yml
+- openapi/transitland-feeds-api-openapi.yml
+- openapi/transitland-onestop-id-api-openapi.yml
+- openapi/transitland-operators-api-openapi.yml
+- openapi/transitland-routes-api-openapi.yml
+- openapi/transitland-stops-api-openapi.yml
+- openapi/transitland-street-routing-api-openapi.yml
+- openapi/transitland-transit-routing-api-openapi.yml
+status: candidate
+deployment:
+  mode: none
+  auth: unknown
+  verified: probed
+note: No MCP server was found. The pre-flight posted tools/list to /mcp on www.transit.land, status.transit.land, api.transit.land, transit.land;
+  verdict absent. Candidate tools below are derived from the 37 operation(s) in the provider's own OpenAPI (37 listed); they describe what a server
+  WOULD expose, not one that exists.
+tools:
+- name: get_agencies
+  operationId: getAgencies
+  method: GET
+  path: /agencies
+  description: Search for agencies
+- name: get_feed_versions
+  operationId: getFeedVersions
+  method: GET
+  path: /feed_versions
+  description: Search for feed versions
+- name: get_feeds
+  operationId: getFeeds
+  method: GET
+  path: /feeds
+  description: Search for feeds
+- name: get_onestop_id_by_onestop_id
+  operationId: getOnestopIdByOnestopId
+  method: GET
+  path: /onestop_id/{onestop_id}
+  description: Onestop ID Entity Redirect
+- name: get_operators
+  operationId: getOperators
+  method: GET
+  path: /operators
+  description: Search for operators
+- name: get_routes
+  operationId: getRoutes
+  method: GET
+  path: /routes
+  description: Search for routes
+- name: get_stops
+  operationId: getStops
+  method: GET
+  path: /stops
+  description: Search for stops
+- name: valhalla_centroid_get
+  operationId: valhallaCentroidGet
+  method: GET
+  path: /valhalla/centroid
+  description: Calculate a convergence point
+- name: otp_plan
+  operationId: otpPlan
+  method: GET
+  path: /otp/plan
+  description: OTP-compatible transit routing plan (GET)
+- name: get_agencies_by_agency_key
+  operationId: getAgenciesByAgencyKey
+  method: GET
+  path: /agencies/{agency_key}
+  description: Agencies
+- name: post_feed_versions_export
+  operationId: postFeedVersionsExport
+  method: POST
+  path: /feed_versions/export
+  description: Export feed versions with transformations
+- name: get_feeds_by_feed_key
+  operationId: getFeedsByFeedKey
+  method: GET
+  path: /feeds/{feed_key}
+  description: Feeds
+- name: get_operators_by_operator_key
+  operationId: getOperatorsByOperatorKey
+  method: GET
+  path: /operators/{operator_key}
+  description: Operators
+- name: get_routes_by_route_key
+  operationId: getRoutesByRouteKey
+  method: GET
+  path: /routes/{route_key}
+  description: Search for routes
+- name: get_stops_by_stop_key
+  operationId: getStopsByStopKey
+  method: GET
+  path: /stops/{stop_key}
+  description: Search for stops
+- name: valhalla_centroid_post
+  operationId: valhallaCentroidPost
+  method: POST
+  path: /valhalla/centroid
+  description: Calculate a convergence point
+- name: get_feed_versions_by_feed_version_key
+  operationId: getFeedVersionsByFeedVersionKey
+  method: GET
+  path: /feed_versions/{feed_version_key}
+  description: Feed Versions
+- name: get_feeds_by_feed_key_download_latest_feed_version
+  operationId: getFeedsByFeedKeyDownloadLatestFeedVersion
+  method: GET
+  path: /feeds/{feed_key}/download_latest_feed_version
+  description: Download latest feed version
+- name: get_routes_by_route_key_trips
+  operationId: getRoutesByRouteKeyTrips
+  method: GET
+  path: /routes/{route_key}/trips
+  description: Search for trips
+- name: get_stops_by_stop_key_departures
+  operationId: getStopsByStopKeyDepartures
+  method: GET
+  path: /stops/{stop_key}/departures
+  description: Departures from a given stop based on static and real-time data
+- name: valhalla_expansion_get
+  operationId: valhallaExpansionGet
+  method: GET
+  path: /valhalla/expansion
+  description: Trace the routing graph expansion
+- name: get_feed_versions_by_feed_version_key_download
+  operationId: getFeedVersionsByFeedVersionKeyDownload
+  method: GET
+  path: /feed_versions/{feed_version_key}/download
+  description: Download feed version
+- name: get_feeds_by_feed_key_download_latest_rt_by_rt_type}{format
+  operationId: getFeedsByFeedKeyDownloadLatestRtByRtType}{format
+  method: GET
+  path: /feeds/{feed_key}/download_latest_rt/{rt_type}.{format}
+  description: Download latest GTFS Realtime feed data
+- name: get_routes_by_route_key_trips_by_id
+  operationId: getRoutesByRouteKeyTripsById
+  method: GET
+  path: /routes/{route_key}/trips/{id}
+  description: Search for trips
+- name: valhalla_expansion_post
+  operationId: valhallaExpansionPost
+  method: POST
+  path: /valhalla/expansion
+  description: Trace the routing graph expansion
+- name: valhalla_isochrone_get
+  operationId: valhallaIsochroneGet
+  method: GET
+  path: /valhalla/isochrone
+  description: Calculate an isochrone
+- name: valhalla_isochrone_post
+  operationId: valhallaIsochronePost
+  method: POST
+  path: /valhalla/isochrone
+  description: Calculate an isochrone
+- name: valhalla_locate_get
+  operationId: valhallaLocateGet
+  method: GET
+  path: /valhalla/locate
+  description: Snap coordinates to the network
+- name: valhalla_locate_post
+  operationId: valhallaLocatePost
+  method: POST
+  path: /valhalla/locate
+  description: Snap coordinates to the network
+- name: valhalla_optimized_route_get
+  operationId: valhallaOptimizedRouteGet
+  method: GET
+  path: /valhalla/optimized_route
+  description: Calculate an optimized route
+- name: valhalla_optimized_route_post
+  operationId: valhallaOptimizedRoutePost
+  method: POST
+  path: /valhalla/optimized_route
+  description: Calculate an optimized route
+- name: valhalla_route_get
+  operationId: valhallaRouteGet
+  method: GET
+  path: /valhalla/route
+  description: Calculate a route
+- name: valhalla_route_post
+  operationId: valhallaRoutePost
+  method: POST
+  path: /valhalla/route
+  description: Calculate a route
+- name: valhalla_sources_to_targets_get
+  operationId: valhallaSourcesToTargetsGet
+  method: GET
+  path: /valhalla/sources_to_targets
+  description: Calculate a time-distance matrix
+- name: valhalla_sources_to_targets_post
+  operationId: valhallaSourcesToTargetsPost
+  method: POST
+  path: /valhalla/sources_to_targets
+  description: Calculate a time-distance matrix
+- name: valhalla_trace_attributes
+  operationId: valhallaTraceAttributes
+  method: POST
+  path: /valhalla/trace_attributes
+  description: Get attributes along a GPS trace
+- name: valhalla_trace_route
+  operationId: valhallaTraceRoute
+  method: POST
+  path: /valhalla/trace_route
+  description: Match a GPS trace to a route

@@ -1,0 +1,176 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://www.transit.land/.well-known/api-catalog",
+      "item": [
+        {
+          "href": "https://transit.land/api/v2/rest/",
+          "title": "Transitland v2 REST API"
+        },
+        {
+          "href": "https://transit.land/api/v2/query",
+          "title": "Transitland v2 GraphQL API"
+        },
+        {
+          "href": "https://transit.land/api/v2/tiles/",
+          "title": "Transitland v2 Map Vector Tiles"
+        },
+        {
+          "href": "https://transit.land/api/v2/routing/",
+          "title": "Interline Routing Platform (Transitland Routing API and Valhalla)"
+        },
+        {
+          "href": "https://app.interline.io/transitland_datasets",
+          "title": "Transitland Datasets (bulk stop and route downloads)"
+        }
+      ]
+    },
+    {
+      "anchor": "https://transit.land/api/v2/rest/",
+      "service-desc": [
+        {
+          "href": "https://transit.land/api/v2/rest/openapi.json",
+          "type": "application/json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.transit.land/documentation/rest-api/",
+          "type": "text/html"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://www.transit.land/terms",
+          "type": "text/html",
+          "title": "Transitland data and API terms and attributions"
+        },
+        {
+          "href": "https://www.transit.land/documentation/#sign-up",
+          "type": "text/html",
+          "title": "How to obtain a Transitland API key"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://status.transit.land",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://transit.land/api/v2/query",
+      "service-doc": [
+        {
+          "href": "https://www.transit.land/documentation/graphql-api/",
+          "type": "text/html"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://www.transit.land/terms",
+          "type": "text/html",
+          "title": "Transitland data and API terms and attributions"
+        },
+        {
+          "href": "https://www.transit.land/documentation/#sign-up",
+          "type": "text/html",
+          "title": "How to obtain a Transitland API key"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://status.transit.land",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://transit.land/api/v2/tiles/",
+      "service-doc": [
+        {
+          "href": "https://www.transit.land/documentation/vector-tiles",
+          "type": "text/html"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://www.transit.land/terms",
+          "type": "text/html",
+          "title": "Transitland data and API terms and attributions"
+        },
+        {
+          "href": "https://www.transit.land/documentation/#sign-up",
+          "type": "text/html",
+          "title": "How to obtain a Transitland API key"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://status.transit.land",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://transit.land/api/v2/routing/",
+      "service-desc": [
+        {
+          "href": "https://transit.land/api/v2/routing/openapi.json",
+          "type": "application/json"
+        }
+      ],
+      "service-doc": [
+        {
+          "href": "https://www.transit.land/documentation/routing-platform/",
+          "type": "text/html"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://www.transit.land/terms",
+          "type": "text/html",
+          "title": "Transitland data and API terms and attributions"
+        },
+        {
+          "href": "https://www.transit.land/documentation/#sign-up",
+          "type": "text/html",
+          "title": "How to obtain a Transitland API key"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://status.interline.io",
+          "type": "text/html"
+        }
+      ]
+    },
+    {
+      "anchor": "https://app.interline.io/transitland_datasets",
+      "service-doc": [
+        {
+          "href": "https://www.transit.land/documentation/datasets/",
+          "type": "text/html"
+        }
+      ],
+      "service-meta": [
+        {
+          "href": "https://www.transit.land/terms",
+          "type": "text/html",
+          "title": "Transitland data and API terms and attributions"
+        },
+        {
+          "href": "https://www.transit.land/documentation/datasets/downloading",
+          "type": "text/html",
+          "title": "How to obtain a Transitland Datasets API token"
+        }
+      ],
+      "status": [
+        {
+          "href": "https://status.interline.io",
+          "type": "text/html"
+        }
+      ]
+    }
+  ]
+}

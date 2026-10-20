@@ -1,0 +1,1012 @@
+openapi: 3.2.0
+info:
+  title: Transitland Feeds API
+  version: 2.0.0
+  contact:
+    email: info@interline.io
+  description: 'Operations tagged Feeds across 2 of this provider''s published API definitions: transitland-rest-openapi.json, transitland-rest-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- description: Transitland REST API
+  url: https://transit.land/api/v2/rest
+tags:
+- name: Feeds
+paths:
+  /feeds:
+    get:
+      parameters:
+      - description: Feed lookup key; can be a Onestop ID or an internal database integer ID
+        in: query
+        name: feed_key
+        schema:
+          type: string
+      - description: Type of data contained in this feed
+        in: query
+        name: spec
+        schema:
+          enum:
+          - gtfs
+          - gtfs-rt
+          - gbfs
+          - mds
+          type: string
+      - description: Search for feeds with or without a fetch error
+        in: query
+        name: fetch_error
+        schema:
+          enum:
+          - 'true'
+          - 'false'
+          type: string
+      - description: Search for feeds with a tag. Combine with tag_value also query for the value of the tag.
+        in: query
+        name: tag_key
+        schema:
+          type: string
+      - description: Search for feeds tagged with a given value. Must be combined with tag_key.
+        in: query
+        name: tag_value
+        schema:
+          type: string
+      - $ref: '#/components/parameters/idParam'
+      - $ref: '#/components/parameters/afterParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/formatParam'
+      - $ref: '#/components/parameters/searchParam'
+      - $ref: '#/components/parameters/onestopParam'
+      - $ref: '#/components/parameters/lonParam'
+      - $ref: '#/components/parameters/latParam'
+      - $ref: '#/components/parameters/radiusParam'
+        x-description: Search for feeds geographically; radius is in meters, requires lon and lat
+      - $ref: '#/components/parameters/bboxParam'
+      - $ref: '#/components/parameters/licenseCommercialUseAllowedParam'
+      - $ref: '#/components/parameters/licenseShareAlikeOptionalParam'
+      - $ref: '#/components/parameters/licenseCreateDerivedProductParam'
+      - $ref: '#/components/parameters/licenseRedistributionAllowedParam'
+      - $ref: '#/components/parameters/licenseUseWithoutAttributionParam'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  feeds:
+                    description: List or search for Feeds (metadata about data sources)
+                    items:
+                      properties:
+                        authorization:
+                          description: Authorization metadata for fetching data from this feed (e.g., API keys, headers)
+                          properties:
+                            info_url:
+                              description: Website to visit to sign up for an account
+                              title: info_url
+                              type: string
+                              x-order: 57
+                            param_name:
+                              description: Name of the request parameter that carries the secret (query string key, header name, or URL path placeholder, depending on `type`); unused for `basic_auth` and `replace_url`
+                              title: param_name
+                              type: string
+                              x-order: 55
+                            type:
+                              description: 'Method for inserting the authorization secret into the request: `header`, `basic_auth`, `query_param`, `path_segment`, or `replace_url`'
+                              title: type
+                              type: string
+                              x-order: 53
+                          title: authorization
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedAuthorization
+                          x-order: 58
+                        feed_state:
+                          description: Current state of this feed (e.g. the active feed version)
+                          properties:
+                            feed_version:
+                              description: The active feed version for this feed. This is the version currently used for queries
+                              properties:
+                                feed_version_gtfs_import:
+                                  description: Database import status
+                                  properties:
+                                    exception_log:
+                                      description: Error log accumulated during import; empty on success
+                                      title: exception_log
+                                      type: string
+                                      x-order: 79
+                                    id:
+                                      description: Internal integer ID
+                                      title: id
+                                      type: integer
+                                      x-order: 73
+                                    in_progress:
+                                      description: True if the import is currently running
+                                      title: in_progress
+                                      type: boolean
+                                      x-order: 75
+                                    success:
+                                      description: True if the import completed successfully
+                                      title: success
+                                      type: boolean
+                                      x-order: 77
+                                  title: feed_version_gtfs_import
+                                  type:
+                                  - object
+                                  - 'null'
+                                  x-graphql-type: FeedVersionGtfsImport
+                                  x-order: 80
+                                fetched_at:
+                                  description: Time when the file was fetched from the URL
+                                  example: '2019-11-15T00:45:55.409906'
+                                  format: datetime
+                                  title: fetched_at
+                                  type: string
+                                  x-order: 68
+                                geometry:
+                                  description: Convex hull of all stop coordinates in this feed version
+                                  title: geometry
+                                  type:
+                                  - object
+                                  - 'null'
+                                  x-graphql-type: Polygon
+                                  x-order: 70
+                                id:
+                                  description: Internal integer ID
+                                  title: id
+                                  type: integer
+                                  x-order: 62
+                                sha1:
+                                  description: SHA1 hash of the zip file
+                                  example: ab5bdc8b6cedd06792d42186a9b542504c5eef9a
+                                  title: sha1
+                                  type: string
+                                  x-order: 64
+                                url:
+                                  description: URL used to fetch the file
+                                  title: url
+                                  type: string
+                                  x-order: 66
+                              title: feed_version
+                              type:
+                              - object
+                              - 'null'
+                              x-graphql-type: FeedVersion
+                              x-order: 81
+                          title: feed_state
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedState
+                          x-order: 82
+                        feed_versions:
+                          description: Versions of this feed that have been fetched, archived, and imported
+                          items:
+                            properties:
+                              earliest_calendar_date:
+                                description: The earliest date with scheduled service
+                                example: '2020-01-01'
+                                format: date
+                                title: earliest_calendar_date
+                                type: string
+                                x-order: 93
+                              fetched_at:
+                                description: Time when the file was fetched from the URL
+                                example: '2019-11-15T00:45:55.409906'
+                                format: datetime
+                                title: fetched_at
+                                type: string
+                                x-order: 89
+                              id:
+                                description: Internal integer ID
+                                title: id
+                                type: integer
+                                x-order: 85
+                              latest_calendar_date:
+                                description: The latest date with scheduled service
+                                example: '2020-12-31'
+                                format: date
+                                title: latest_calendar_date
+                                type: string
+                                x-order: 95
+                              sha1:
+                                description: SHA1 hash of the zip file
+                                example: ab5bdc8b6cedd06792d42186a9b542504c5eef9a
+                                title: sha1
+                                type: string
+                                x-order: 87
+                              url:
+                                description: URL used to fetch the file
+                                title: url
+                                type: string
+                                x-order: 91
+                            type: object
+                            x-graphql-type: FeedVersion
+                          title: feed_versions
+                          type: array
+                          x-order: 96
+                        id:
+                          description: Internal integer ID
+                          title: id
+                          type: integer
+                          x-order: 2
+                        languages:
+                          description: Language(s) included in this feed (BCP 47 tags)
+                          items:
+                            type: string
+                          title: languages
+                          type:
+                          - array
+                          - 'null'
+                          x-order: 10
+                        license:
+                          description: Feed license metadata
+                          properties:
+                            attribution_instructions:
+                              description: Instructions for how consumers must provide attribution
+                              title: attribution_instructions
+                              type: string
+                              x-order: 49
+                            attribution_text:
+                              description: Attribution text that consumers must include when using this feed
+                              title: attribution_text
+                              type: string
+                              x-order: 47
+                            commercial_use_allowed:
+                              description: Whether feed consumers may use the feed for commercial purposes
+                              title: commercial_use_allowed
+                              type: string
+                              x-order: 43
+                            create_derived_product:
+                              description: Whether feed consumers may create and share derived products
+                              title: create_derived_product
+                              type: string
+                              x-order: 39
+                            redistribution_allowed:
+                              description: Whether feed consumers may redistribute the feed in its entirety
+                              title: redistribution_allowed
+                              type: string
+                              x-order: 41
+                            share_alike_optional:
+                              description: Whether feed consumers may keep their modifications of this feed private
+                              title: share_alike_optional
+                              type: string
+                              x-order: 45
+                            spdx_identifier:
+                              description: SPDX identifier for a common license (see https://spdx.org/licenses/); empty if no SPDX license applies
+                              title: spdx_identifier
+                              type: string
+                              x-order: 33
+                            url:
+                              description: URL to a custom license; empty if a SPDX license is used or no license is recorded
+                              title: url
+                              type: string
+                              x-order: 35
+                            use_without_attribution:
+                              description: Whether feed consumers may use the feed without attribution
+                              title: use_without_attribution
+                              type: string
+                              x-order: 37
+                          title: license
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedLicense
+                          x-order: 50
+                        name:
+                          description: A common name for this feed; alternatively use `associated_operators[].name`
+                          title: name
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 6
+                        onestop_id:
+                          description: 'Onestop ID for this feed.
+
+                            Format: `f-geohash-name`.
+
+                            Example: `f-9q9-bart`.'
+                          title: onestop_id
+                          type: string
+                          x-order: 8
+                        spec:
+                          description: 'Type of feed: `GTFS`, `GTFS_RT`, `GBFS`, or `MDS`'
+                          enum:
+                          - GTFS
+                          - GTFS_RT
+                          - GBFS
+                          - MDS
+                          - null
+                          title: spec
+                          type:
+                          - string
+                          - 'null'
+                          x-graphql-type: FeedSpecTypes
+                          x-order: 4
+                        tags:
+                          description: Atlas tags providing additional metadata for this feed
+                          title: tags
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: Tags
+                          x-order: 12
+                        urls:
+                          description: URLs associated with this feed
+                          properties:
+                            gbfs_auto_discovery:
+                              description: URL for the GBFS auto-discovery file (`gbfs.json`)
+                              title: gbfs_auto_discovery
+                              type: string
+                              x-order: 27
+                            mds_provider:
+                              description: URL for the MDS (Mobility Data Specification) provider endpoint
+                              title: mds_provider
+                              type: string
+                              x-order: 29
+                            realtime_alerts:
+                              description: URL for GTFS-RT Alert messages
+                              title: realtime_alerts
+                              type: string
+                              x-order: 25
+                            realtime_trip_updates:
+                              description: URL for GTFS-RT TripUpdate messages
+                              title: realtime_trip_updates
+                              type: string
+                              x-order: 23
+                            realtime_vehicle_positions:
+                              description: URL for GTFS-RT VehiclePosition messages
+                              title: realtime_vehicle_positions
+                              type: string
+                              x-order: 21
+                            static_current:
+                              description: URL for the static feed that represents today's service
+                              title: static_current
+                              type: string
+                              x-order: 15
+                            static_historic:
+                              description: URLs for static feeds that represent past service that is no longer in effect
+                              items:
+                                type: string
+                              title: static_historic
+                              type: array
+                              x-order: 17
+                            static_planned:
+                              description: URLs for static feeds representing planned future service (typically schedule changes due to take effect)
+                              items:
+                                type: string
+                              title: static_planned
+                              type: array
+                              x-order: 19
+                          title: urls
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedUrls
+                          x-order: 30
+                      type: object
+                      x-graphql-type: Feed
+                    title: feeds
+                    type: array
+                    x-order: 97
+                title: data
+          description: ok
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Bad request - invalid parameters
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Internal server error
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Unexpected error
+      summary: Search for feeds
+      x-alternates:
+      - method: GET
+        path: /feeds.{format}
+        summary: Request feeds in specified format
+      - method: GET
+        path: /feeds/{feed_key}
+        summary: Request a feed by ID or Onestop ID
+      - method: GET
+        path: /feeds/{feed_key}.{format}
+        summary: Request a feed by ID or Onestop ID in specified format
+      tags:
+      - Feeds
+      operationId: getFeeds
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+  /feeds/{feed_key}:
+    get:
+      parameters:
+      - description: Feed lookup key; can be a Onestop ID or an internal database integer ID
+        in: path
+        name: feed_key
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/formatParam'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  feeds:
+                    description: List or search for Feeds (metadata about data sources)
+                    items:
+                      properties:
+                        authorization:
+                          description: Authorization metadata for fetching data from this feed (e.g., API keys, headers)
+                          properties:
+                            info_url:
+                              description: Website to visit to sign up for an account
+                              title: info_url
+                              type: string
+                              x-order: 57
+                            param_name:
+                              description: Name of the request parameter that carries the secret (query string key, header name, or URL path placeholder, depending on `type`); unused for `basic_auth` and `replace_url`
+                              title: param_name
+                              type: string
+                              x-order: 55
+                            type:
+                              description: 'Method for inserting the authorization secret into the request: `header`, `basic_auth`, `query_param`, `path_segment`, or `replace_url`'
+                              title: type
+                              type: string
+                              x-order: 53
+                          title: authorization
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedAuthorization
+                          x-order: 58
+                        feed_state:
+                          description: Current state of this feed (e.g. the active feed version)
+                          properties:
+                            feed_version:
+                              description: The active feed version for this feed. This is the version currently used for queries
+                              properties:
+                                feed_version_gtfs_import:
+                                  description: Database import status
+                                  properties:
+                                    exception_log:
+                                      description: Error log accumulated during import; empty on success
+                                      title: exception_log
+                                      type: string
+                                      x-order: 79
+                                    id:
+                                      description: Internal integer ID
+                                      title: id
+                                      type: integer
+                                      x-order: 73
+                                    in_progress:
+                                      description: True if the import is currently running
+                                      title: in_progress
+                                      type: boolean
+                                      x-order: 75
+                                    success:
+                                      description: True if the import completed successfully
+                                      title: success
+                                      type: boolean
+                                      x-order: 77
+                                  title: feed_version_gtfs_import
+                                  type:
+                                  - object
+                                  - 'null'
+                                  x-graphql-type: FeedVersionGtfsImport
+                                  x-order: 80
+                                fetched_at:
+                                  description: Time when the file was fetched from the URL
+                                  example: '2019-11-15T00:45:55.409906'
+                                  format: datetime
+                                  title: fetched_at
+                                  type: string
+                                  x-order: 68
+                                geometry:
+                                  description: Convex hull of all stop coordinates in this feed version
+                                  title: geometry
+                                  type:
+                                  - object
+                                  - 'null'
+                                  x-graphql-type: Polygon
+                                  x-order: 70
+                                id:
+                                  description: Internal integer ID
+                                  title: id
+                                  type: integer
+                                  x-order: 62
+                                sha1:
+                                  description: SHA1 hash of the zip file
+                                  example: ab5bdc8b6cedd06792d42186a9b542504c5eef9a
+                                  title: sha1
+                                  type: string
+                                  x-order: 64
+                                url:
+                                  description: URL used to fetch the file
+                                  title: url
+                                  type: string
+                                  x-order: 66
+                              title: feed_version
+                              type:
+                              - object
+                              - 'null'
+                              x-graphql-type: FeedVersion
+                              x-order: 81
+                          title: feed_state
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedState
+                          x-order: 82
+                        feed_versions:
+                          description: Versions of this feed that have been fetched, archived, and imported
+                          items:
+                            properties:
+                              earliest_calendar_date:
+                                description: The earliest date with scheduled service
+                                example: '2020-01-01'
+                                format: date
+                                title: earliest_calendar_date
+                                type: string
+                                x-order: 93
+                              fetched_at:
+                                description: Time when the file was fetched from the URL
+                                example: '2019-11-15T00:45:55.409906'
+                                format: datetime
+                                title: fetched_at
+                                type: string
+                                x-order: 89
+                              id:
+                                description: Internal integer ID
+                                title: id
+                                type: integer
+                                x-order: 85
+                              latest_calendar_date:
+                                description: The latest date with scheduled service
+                                example: '2020-12-31'
+                                format: date
+                                title: latest_calendar_date
+                                type: string
+                                x-order: 95
+                              sha1:
+                                description: SHA1 hash of the zip file
+                                example: ab5bdc8b6cedd06792d42186a9b542504c5eef9a
+                                title: sha1
+                                type: string
+                                x-order: 87
+                              url:
+                                description: URL used to fetch the file
+                                title: url
+                                type: string
+                                x-order: 91
+                            type: object
+                            x-graphql-type: FeedVersion
+                          title: feed_versions
+                          type: array
+                          x-order: 96
+                        id:
+                          description: Internal integer ID
+                          title: id
+                          type: integer
+                          x-order: 2
+                        languages:
+                          description: Language(s) included in this feed (BCP 47 tags)
+                          items:
+                            type: string
+                          title: languages
+                          type:
+                          - array
+                          - 'null'
+                          x-order: 10
+                        license:
+                          description: Feed license metadata
+                          properties:
+                            attribution_instructions:
+                              description: Instructions for how consumers must provide attribution
+                              title: attribution_instructions
+                              type: string
+                              x-order: 49
+                            attribution_text:
+                              description: Attribution text that consumers must include when using this feed
+                              title: attribution_text
+                              type: string
+                              x-order: 47
+                            commercial_use_allowed:
+                              description: Whether feed consumers may use the feed for commercial purposes
+                              title: commercial_use_allowed
+                              type: string
+                              x-order: 43
+                            create_derived_product:
+                              description: Whether feed consumers may create and share derived products
+                              title: create_derived_product
+                              type: string
+                              x-order: 39
+                            redistribution_allowed:
+                              description: Whether feed consumers may redistribute the feed in its entirety
+                              title: redistribution_allowed
+                              type: string
+                              x-order: 41
+                            share_alike_optional:
+                              description: Whether feed consumers may keep their modifications of this feed private
+                              title: share_alike_optional
+                              type: string
+                              x-order: 45
+                            spdx_identifier:
+                              description: SPDX identifier for a common license (see https://spdx.org/licenses/); empty if no SPDX license applies
+                              title: spdx_identifier
+                              type: string
+                              x-order: 33
+                            url:
+                              description: URL to a custom license; empty if a SPDX license is used or no license is recorded
+                              title: url
+                              type: string
+                              x-order: 35
+                            use_without_attribution:
+                              description: Whether feed consumers may use the feed without attribution
+                              title: use_without_attribution
+                              type: string
+                              x-order: 37
+                          title: license
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedLicense
+                          x-order: 50
+                        name:
+                          description: A common name for this feed; alternatively use `associated_operators[].name`
+                          title: name
+                          type:
+                          - string
+                          - 'null'
+                          x-order: 6
+                        onestop_id:
+                          description: 'Onestop ID for this feed.
+
+                            Format: `f-geohash-name`.
+
+                            Example: `f-9q9-bart`.'
+                          title: onestop_id
+                          type: string
+                          x-order: 8
+                        spec:
+                          description: 'Type of feed: `GTFS`, `GTFS_RT`, `GBFS`, or `MDS`'
+                          enum:
+                          - GTFS
+                          - GTFS_RT
+                          - GBFS
+                          - MDS
+                          - null
+                          title: spec
+                          type:
+                          - string
+                          - 'null'
+                          x-graphql-type: FeedSpecTypes
+                          x-order: 4
+                        tags:
+                          description: Atlas tags providing additional metadata for this feed
+                          title: tags
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: Tags
+                          x-order: 12
+                        urls:
+                          description: URLs associated with this feed
+                          properties:
+                            gbfs_auto_discovery:
+                              description: URL for the GBFS auto-discovery file (`gbfs.json`)
+                              title: gbfs_auto_discovery
+                              type: string
+                              x-order: 27
+                            mds_provider:
+                              description: URL for the MDS (Mobility Data Specification) provider endpoint
+                              title: mds_provider
+                              type: string
+                              x-order: 29
+                            realtime_alerts:
+                              description: URL for GTFS-RT Alert messages
+                              title: realtime_alerts
+                              type: string
+                              x-order: 25
+                            realtime_trip_updates:
+                              description: URL for GTFS-RT TripUpdate messages
+                              title: realtime_trip_updates
+                              type: string
+                              x-order: 23
+                            realtime_vehicle_positions:
+                              description: URL for GTFS-RT VehiclePosition messages
+                              title: realtime_vehicle_positions
+                              type: string
+                              x-order: 21
+                            static_current:
+                              description: URL for the static feed that represents today's service
+                              title: static_current
+                              type: string
+                              x-order: 15
+                            static_historic:
+                              description: URLs for static feeds that represent past service that is no longer in effect
+                              items:
+                                type: string
+                              title: static_historic
+                              type: array
+                              x-order: 17
+                            static_planned:
+                              description: URLs for static feeds representing planned future service (typically schedule changes due to take effect)
+                              items:
+                                type: string
+                              title: static_planned
+                              type: array
+                              x-order: 19
+                          title: urls
+                          type:
+                          - object
+                          - 'null'
+                          x-graphql-type: FeedUrls
+                          x-order: 30
+                      type: object
+                      x-graphql-type: Feed
+                    title: feeds
+                    type: array
+                    x-order: 97
+                title: data
+          description: ok
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Bad request - invalid parameters
+        '404':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Not found
+        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Internal server error
+        default:
+          content:
+            application/json:
+              schema:
+                type: object
+          description: Unexpected error
+      summary: Feeds
+      tags:
+      - Feeds
+      operationId: getFeedsByFeedKey
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+  /feeds/{feed_key}/download_latest_feed_version:
+    get:
+      description: Download the latest feed version GTFS zip for this feed, if redistribution is allowed by the source feed's license
+      parameters:
+      - description: Feed lookup key; can be an integer ID or Onestop ID value
+        in: path
+        name: feed_key
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: Success
+        '401':
+          description: Not authorized - feed redistribution not allowed
+        '404':
+          description: Not found - feed not found
+        '429':
+          description: Too many requests - feed version download quota exceeded
+      summary: Download latest feed version
+      x-required-role: tl_download_fv_current
+      tags:
+      - Feeds
+      operationId: getFeedsByFeedKeyDownloadLatestFeedVersion
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+  /feeds/{feed_key}/download_latest_rt/{rt_type}.{format}:
+    get:
+      description: Download the latest snapshot of the specified GTFS Realtime feed, if redistribution is allowed by the source feed's license. Returns 404 if feed or message not found, 401 if redistribution not allowed.
+      parameters:
+      - description: Feed lookup key; can be an integer ID or Onestop ID value
+        in: path
+        name: feed_key
+        required: true
+        schema:
+          type: string
+      - description: GTFS Realtime message types to download
+        in: path
+        name: rt_type
+        required: true
+        schema:
+          enum:
+          - alerts
+          - trip_updates
+          - vehicle_positions
+          type: string
+      - description: Output format (JSON, Protocol Buffers, or GeoJSON for vehicle positions)
+        in: path
+        name: format
+        required: true
+        schema:
+          enum:
+          - json
+          - pb
+          - geojson
+          - geojsonl
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: Success
+        '401':
+          description: Not authorized - feed redistribution not allowed
+        '404':
+          description: Not found - feed or real-time message not found
+      summary: Download latest GTFS Realtime feed data
+      tags:
+      - Feeds
+      operationId: getFeedsByFeedKeyDownloadLatestRtByRtType}{format
+      x-operation-id-source: derived
+    servers:
+    - description: Transitland REST API
+      url: https://transit.land/api/v2/rest
+components:
+  parameters:
+    formatParam:
+      description: Response format
+      in: query
+      name: format
+      schema:
+        enum:
+        - json
+        - geojson
+        - geojsonl
+        type: string
+    licenseCreateDerivedProductParam:
+      description: Filter entities by feed license 'create_derived_product' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_create_derived_product
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    bboxParam:
+      description: Geographic search using a bounding box, with coordinates in (min_lon, min_lat, max_lon, max_lat) order as a comma separated string
+      in: query
+      name: bbox
+      schema:
+        type: string
+    idParam:
+      description: Search for a specific internal ID
+      in: query
+      name: id
+      schema:
+        format: int32
+        type: integer
+    lonParam:
+      description: Longitude
+      in: query
+      name: lon
+      schema:
+        type: number
+    licenseRedistributionAllowedParam:
+      description: Filter entities by feed license 'redistribution_allowed' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_redistribution_allowed
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    searchParam:
+      description: Full text search
+      in: query
+      name: search
+      schema:
+        type: string
+    latParam:
+      description: Latitude
+      in: query
+      name: lat
+      schema:
+        type: number
+    licenseCommercialUseAllowedParam:
+      description: Filter entities by feed license 'commercial_use_allowed' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_commercial_use_allowed
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    licenseShareAlikeOptionalParam:
+      description: Filter entities by feed license 'share_alike_optional' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_share_alike_optional
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    radiusParam:
+      description: Search radius (meters); requires lat and lon
+      in: query
+      name: radius
+      schema:
+        type: number
+    afterParam:
+      description: Pagination cursor value. This should be treated as an opaque value created by the server and returned as the link to the next result page, which may be empty. For historical reasons, this is based on the integer record ID values, but that should not be assumed to be the case in the future.
+      in: query
+      name: after
+      schema:
+        format: int32
+        type: integer
+    limitParam:
+      description: Maximum number of records to return
+      in: query
+      name: limit
+      schema:
+        format: int32
+        type: integer
+    licenseUseWithoutAttributionParam:
+      description: Filter entities by feed license 'use_without_attribution' value. Please see Source Feed concept for details on license values. 'exclude_no' is equivalent to 'yes' and 'unknown'.
+      in: query
+      name: license_use_without_attribution
+      schema:
+        enum:
+        - 'yes'
+        - 'no'
+        - unknown
+        - exclude_no
+        type: string
+    onestopParam:
+      description: Search for a specific Onestop ID
+      in: query
+      name: onestop_id
+      schema:
+        type: string
+x-refined-from:
+- transitland-rest-openapi.json
+- transitland-rest-openapi.yml

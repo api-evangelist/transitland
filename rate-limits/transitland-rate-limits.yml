@@ -1,0 +1,15 @@
+name: TransitLand rate limits
+generated: '2026-10-19'
+method: searched
+source: https://www.transit.land/documentation/plans-and-billing
+note: Limits are monthly quotas per plan; no per-second rate limit or response headers are documented. A request past a quota is refused until the quota resets the next month.
+limits:
+- name: Pay As You Go monthly quota
+  limit_text: On Pay As You Go, each API starts with a quota of 1,000,000 requests a month.
+  window: 1 month
+  max: 1000000
+  scope: per-account per-API
+  plan: Pay As You Go
+- name: Vector tiles fair use
+  limit_text: A fair-use limit on every plan, not a billed quota
+  scope: per-account
