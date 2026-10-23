@@ -2076,3 +2076,9 @@ components:
 x-refined-from:
 - transitland-rest-openapi.json
 - transitland-rest-openapi.yml
+x-provenance:
+  method: harvested
+  publisher: TransitLand
+  source: https://transit.land/api/v2/rest/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
